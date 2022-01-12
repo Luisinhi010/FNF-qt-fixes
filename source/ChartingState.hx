@@ -58,7 +58,6 @@ class ChartingState extends MusicBeatState
 	var curSong:String = 'Dadbattle';
 	var amountSteps:Int = 0;
 	var bullshitUI:FlxGroup;
-	var writingNotesText:FlxText;
 	var highlight:FlxSprite;
 
 	var GRID_SIZE:Int = 40;
@@ -352,16 +351,12 @@ class ChartingState extends MusicBeatState
 		tab_group_note = new FlxUI(null, UI_box);
 		tab_group_note.name = 'Note';
 
-		writingNotesText = new FlxUIText(20, 100, 0, "");
-		writingNotesText.setFormat("Arial", 20, FlxColor.WHITE, FlxTextAlign.LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-
 		stepperSusLength = new FlxUINumericStepper(10, 10, Conductor.stepCrochet / 2, 0, 0, Conductor.stepCrochet * _song.notes[curSection].lengthInSteps * 4);
 		stepperSusLength.value = 0;
 		stepperSusLength.name = 'note_susLength';
 
 		var applyLength:FlxButton = new FlxButton(100, 10, 'Apply');
 
-		tab_group_note.add(writingNotesText);
 		tab_group_note.add(stepperSusLength);
 		tab_group_note.add(applyLength);
 
@@ -518,21 +513,9 @@ class ChartingState extends MusicBeatState
 		return daPos;
 	}
 
-	var writingNotes:Bool = false;
-
 	override function update(elapsed:Float)
 	{
 		curStep = recalculateSteps();
-
-		if (FlxG.keys.justPressed.ALT && UI_box.selected_tab == 0)
-		{
-			writingNotes = !writingNotes;
-		}
-
-		if (writingNotes)
-			writingNotesText.text = "WRITING NOTES";
-		else
-			writingNotesText.text = "";
 
 		Conductor.songPosition = FlxG.sound.music.time;
 		_song.song = typingShit.text;
@@ -543,30 +526,6 @@ class ChartingState extends MusicBeatState
 		var leftP = controls.LEFT_P;
 
 		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
-
-		if ((upP || rightP || downP || leftP) && writingNotes)
-		{
-			for (i in 0...controlArray.length)
-			{
-				if (controlArray[i])
-				{
-					for (n in 0..._song.notes[curSection].sectionNotes.length)
-					{
-						var note = _song.notes[curSection].sectionNotes[n];
-						if (note == null)
-							continue;
-						if (note[0] == Conductor.songPosition && note[1] % 4 == i)
-						{
-							trace('GAMING');
-							_song.notes[curSection].sectionNotes.remove(note);
-						}
-					}
-					trace('adding note');
-					_song.notes[curSection].sectionNotes.push([Conductor.songPosition, i, 0]);
-					updateGrid();
-				}
-			}
-		}
 
 		strumLine.y = getYfromStrum((Conductor.songPosition - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps));
 
@@ -757,13 +716,11 @@ class ChartingState extends MusicBeatState
 			var shiftThing:Int = 1;
 			if (FlxG.keys.pressed.SHIFT)
 				shiftThing = 4;
-			if (!writingNotes)
-			{
-				if (FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D)
-					changeSection(curSection + shiftThing);
-				if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A)
-					changeSection(curSection - shiftThing);
-			}
+			if (FlxG.keys.justPressed.RIGHT || FlxG.keys.justPressed.D)
+				changeSection(curSection + shiftThing);
+			if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.A)
+				changeSection(curSection - shiftThing);
+
 			if (FlxG.keys.justPressed.SPACE)
 			{
 				if (FlxG.sound.music.playing)

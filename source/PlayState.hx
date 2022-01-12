@@ -139,8 +139,9 @@ class PlayState extends MusicBeatState
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
 
-	private var healthBarBG:FlxSprite;
-	private var healthBar:FlxBar;
+	public var healthBarBG:FlxSprite;
+	public var healthBar:FlxBar;
+
 	private var songPositionBar:Float = 0;
 
 	private var generatedMusic:Bool = false;
@@ -171,7 +172,9 @@ class PlayState extends MusicBeatState
 	var limo:FlxSprite;
 	var grpLimoDancers:FlxTypedGroup<BackgroundDancer>;
 	var fastCar:FlxSprite;
-	var songName:FlxText;
+
+	public var songName:FlxText;
+
 	// week 5
 	var upperBoppers:FlxSprite;
 	var bottomBoppers:FlxSprite;
@@ -1756,7 +1759,8 @@ class PlayState extends MusicBeatState
 			songPosBar = new FlxBar(songPosBG.x + 4, songPosBG.y + 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 8), Std.int(songPosBG.height - 8), this,
 				'songPositionBar', 0, 90000);
 			songPosBar.scrollFactor.set();
-			songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
+			// songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
+			songPosBar.createFilledBar(FlxColor.fromString('#' + dad.songPosbarempty), FlxColor.fromString('#' + dad.songPosbar));
 			add(songPosBar);
 
 			var songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - 20, songPosBG.y, 0, SONG.song, 16);
@@ -1786,6 +1790,7 @@ class PlayState extends MusicBeatState
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
 		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		healthBar.createFilledBar(FlxColor.fromString('#' + dad.iconColor), FlxColor.fromString('#' + boyfriend.iconColor));
 		// healthBar
 		add(healthBar);
 
@@ -1927,6 +1932,7 @@ class PlayState extends MusicBeatState
 		qtcantalknow1 = new FlxText(dad.x, dad.y + 100, 0, "", 20); // test
 		qtcantalknow1.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.PINK, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		qtcantalknow1.scrollFactor.set();
+		qtcantalknow1.updateHitbox();
 		qtcantalknow1.alpha = 0;
 		qtcantalknow1.visible = false;
 		// add(qtcantalknow1);
@@ -2770,7 +2776,8 @@ class PlayState extends MusicBeatState
 				- 1000);
 			songPosBar.numDivisions = 1000;
 			songPosBar.scrollFactor.set();
-			songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
+			// songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
+			songPosBar.createFilledBar(FlxColor.fromString('#' + dad.songPosbarempty), FlxColor.fromString('#' + dad.songPosbar));
 			add(songPosBar);
 
 			var songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - 20, songPosBG.y, 0, SONG.song, 16);
@@ -3040,18 +3047,15 @@ class PlayState extends MusicBeatState
 			babyArrow.updateHitbox();
 			babyArrow.scrollFactor.set();
 
-			if (!isStoryMode)
-			{
-				if (SONG.song.toLowerCase() != "censory-overload")
-					babyArrow.y -= 10;
+			if (SONG.song.toLowerCase() != "censory-overload")
+				babyArrow.y -= 10;
 
-				babyArrow.alpha = 0;
+			babyArrow.alpha = 0;
 
-				if (SONG.song.toLowerCase() == "censory-overload")
-					FlxTween.tween(babyArrow, {alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-				else if (!(SONG.song.toLowerCase() == "termination" || SONG.song.toLowerCase() == "terminate"))
-					FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-			}
+			if (SONG.song.toLowerCase() == "censory-overload")
+				FlxTween.tween(babyArrow, {alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+			else if (!(SONG.song.toLowerCase() == "termination" || SONG.song.toLowerCase() == "terminate"))
+				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 
 			babyArrow.ID = i;
 
@@ -3855,7 +3859,25 @@ class PlayState extends MusicBeatState
 					gfSpeed = 1;
 				case 960: // After final drop.
 					qt_tv01.animation.play("idle");
-					// gfSpeed = 2; //Commented out because I like gfSpeed being 1 rather then 2. -Haz
+				// gfSpeed = 2; //Commented out because I like gfSpeed being 1 rather then 2. -Haz
+
+				case 1020:
+					FlxTween.tween(strumLineNotes.members[0], {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+					FlxTween.tween(strumLineNotes.members[4], {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+					FlxTween.tween(scoreTxt, {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+				case 1021:
+					FlxTween.tween(strumLineNotes.members[1], {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+					FlxTween.tween(strumLineNotes.members[5], {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+					FlxTween.tween(iconP1, {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+					FlxTween.tween(iconP2, {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+				case 1022:
+					FlxTween.tween(strumLineNotes.members[2], {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+					FlxTween.tween(strumLineNotes.members[6], {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+					FlxTween.tween(healthBarBG, {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+					FlxTween.tween(healthBar, {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+				case 1023:
+					FlxTween.tween(strumLineNotes.members[3], {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
+					FlxTween.tween(strumLineNotes.members[7], {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
 			}
 		}
 		else if (curSong.toLowerCase() == 'terminate')
@@ -4055,20 +4077,18 @@ class PlayState extends MusicBeatState
 						switch (Math.abs(daNote.noteData))
 						{
 							case 2:
-								camY = -45;
-								camX = 0;
-
+								camY = -60;
+								camX = -50;
 							case 3:
 								camX = 50;
-								camY = 0;
-
+								camY = -20;
 							case 1:
-								camY = 45;
-								camX = 0;
+								camY = 50;
+								camX = -10;
 							case 0:
-								camX = -50;
-								camY = 0;
-						}
+								camX = -70;
+								camY = 30;
+						} // custom camera move :D
 					}
 
 					cpuStrums.forEach(function(spr:FlxSprite)
@@ -4211,6 +4231,8 @@ class PlayState extends MusicBeatState
 			cameramove = false;
 			if (curSong.toLowerCase() == 'censory-overload')
 				Gas_Release('burstLoop');
+			if (FlxG.save.data.songPosition)
+				songPosBar.createFilledBar(FlxColor.fromString('#FF0000FF'), FlxColor.fromString('#' + dad.songPosbar));
 		}
 		else
 		{ // Reset back to normal
@@ -4227,6 +4249,8 @@ class PlayState extends MusicBeatState
 			cameramove = true;
 			if (curSong.toLowerCase() == 'censory-overload')
 				Gas_Release('burst');
+			if (FlxG.save.data.songPosition)
+				songPosBar.createFilledBar(FlxColor.fromString('#' + dad.songPosbarempty), FlxColor.fromString('#' + dad.songPosbar));
 		}
 	}
 
@@ -5181,8 +5205,14 @@ class PlayState extends MusicBeatState
 			// Dodge code, yes it's bad but oh well. -Haz
 			// var dodgeButton = controls.ACCEPT; //I have no idea how to add custom controls so fuck it. -Haz
 
-			if (FlxG.keys.justPressed.SPACE)
+			if (FlxG.keys.justPressed.SPACE && !bfDodging && bfCanDodge)
 				trace('butttonpressed');
+
+			if (FlxG.keys.justPressed.SPACE && bfDodging)
+				trace('butttonpressed but he is dodging');
+
+			if (FlxG.keys.justPressed.SPACE && !bfCanDodge)
+				trace('butttonpressed but he cant dodge');
 
 			if (FlxG.keys.justPressed.SPACE && !bfDodging && bfCanDodge)
 			{
@@ -6203,48 +6233,6 @@ class PlayState extends MusicBeatState
 			}
 		}
 		// ????
-		else if (curSong.toLowerCase() == 'redacted')
-		{
-			switch (curStep)
-			{
-				case 1:
-					boyfriend404.alpha = 0.0125;
-				case 16:
-					FlxTween.tween(strumLineNotes.members[4], {y: strumLineNotes.members[4].y + 10, alpha: 0.8}, 6, {ease: FlxEase.circOut});
-				case 20:
-					FlxTween.tween(strumLineNotes.members[5], {y: strumLineNotes.members[5].y + 10, alpha: 0.8}, 6, {ease: FlxEase.circOut});
-				case 24:
-					FlxTween.tween(strumLineNotes.members[6], {y: strumLineNotes.members[6].y + 10, alpha: 0.8}, 6, {ease: FlxEase.circOut});
-				case 28:
-					FlxTween.tween(strumLineNotes.members[7], {y: strumLineNotes.members[7].y + 10, alpha: 0.8}, 6, {ease: FlxEase.circOut});
-
-				case 584:
-					add(kb_attack_alert);
-					kb_attack_alert.animation.play('alert'); // Doesn't call function since this alert is unique + I don't want sound lmao since it's already in the inst
-				case 588:
-					kb_attack_alert.animation.play('alert');
-				case 600 | 604 | 616 | 620 | 632 | 636 | 648 | 652 | 664 | 668 | 680 | 684 | 696 | 700:
-					kb_attack_alert.animation.play('alert');
-				case 704:
-					qt_tv01.animation.play("part1");
-					FlxTween.tween(strumLineNotes.members[0], {y: strumLineNotes.members[0].y + 10, alpha: 0.1125}, 25, {ease: FlxEase.circOut});
-					FlxTween.tween(strumLineNotes.members[1], {y: strumLineNotes.members[1].y + 10, alpha: 0.1125}, 25, {ease: FlxEase.circOut});
-					FlxTween.tween(strumLineNotes.members[2], {y: strumLineNotes.members[2].y + 10, alpha: 0.1125}, 25, {ease: FlxEase.circOut});
-					FlxTween.tween(strumLineNotes.members[3], {y: strumLineNotes.members[3].y + 10, alpha: 0.1125}, 25, {ease: FlxEase.circOut});
-				case 752:
-					qt_tv01.animation.play("part2");
-				case 800:
-					qt_tv01.animation.play("part3");
-				case 832:
-					qt_tv01.animation.play("part4");
-				case 1216:
-					qt_tv01.animation.play("idle");
-					qtIsBlueScreened = true; // Reusing the 404bluescreen code for swapping BF character.
-					boyfriend.alpha = 0;
-					boyfriend404.alpha = 1;
-					iconP1.animation.play("bf");
-			}
-		}
 
 		// yes this updates every step.
 		// yes this is bad
@@ -6352,8 +6340,18 @@ class PlayState extends MusicBeatState
 			// Probably a better way of doing this lmao but I can't be bothered to clean this shit up -Haz
 			// Cam zooms and gas release effect!
 
+			if (curBeat == 241 || curBeat == 249 || curBeat == 257 || curBeat == 265 || curBeat == 273 || curBeat == 281 || curBeat == 289
+				|| curBeat == 293 || curBeat == 297 || curBeat == 301 || curBeat == 497 || curBeat == 505 || curBeat == 513 || curBeat == 521
+				|| curBeat == 529 || curBeat == 537 || curBeat == 545 || curBeat == 549 || curBeat == 553 || curBeat == 557)
+			{
+				FlxG.camera.zoom += 0.015;
+				camHUD.zoom += 0.03;
+			}
+
 			if (curBeat >= 80 && curBeat <= 208) // first drop
 			{
+				FlxG.camera.zoom += 0.0075;
+				camHUD.zoom += 0.015;
 				// Gas Release effect
 				if (curBeat % 16 == 0 && !Main.qtOptimisation)
 				{
@@ -6525,9 +6523,11 @@ class PlayState extends MusicBeatState
 						}
 					}
 					else
+					{
 						dad.dance();
-				camX = 0;
-				camY = 0;
+						camX = 0;
+						camY = 0;
+					}
 			}
 		}
 

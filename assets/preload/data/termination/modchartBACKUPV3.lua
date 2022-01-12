@@ -17,60 +17,12 @@ end
 function update(elapsed)
 	local currentBeat = (songPos / 1000)*(bpm/60)
 	
-	if curBeat>=704 and curBeat<768 then
+	if curBeat>=704 and curBeat<832 then
 			for i=0,7 do
 				setActorX(_G['defaultStrum'..i..'X'] + 10 * math.sin((currentBeat + i*0.25) * math.pi), i)
 			end
-	elseif curBeat>=768 and curBeat<832 then
-			for i=0,7 do
-				setActorX(_G['defaultStrum'..i..'X'] + 15 * math.sin((currentBeat + i*0.35) * math.pi), i)
-			end
 	elseif curBeat>=512 and curBeat<640 then
-		camHudAngle = 4 * math.sin(currentBeat * math.pi)
-		showOnlyStrums = true
-		for i=1,6 do
-			setActorX(_G['defaultStrum'..i..'X'] + 10 * math.sin((currentBeat + i*0.25) * math.pi), i)
-			setActorY(_G['defaultStrum'..i..'Y'] + 10 * math.cos((currentBeat + i*0.25) * math.pi), i)
-		end
-	elseif curBeat>=640 and curBeat<704 then
-		camHudAngle = originalCamHudAngle
-		showOnlyStrums = false
-		for i = 0, 7 do -- move
-			tweenPosYAngle(i, _G['defaultStrum'..i..'Y'] + 0,getActorAngle(i)- 0, 0.1, 'setDefault')
-		end
-		for i = 0, 7 do -- move
-			tweenPosXAngle(i, _G['defaultStrum'..i..'X'] + 0,getActorAngle(i)+ 0, 0.1, 'setDefault')
-		end
-	elseif curBeat>=832 and curBeat<960 then
-		camHudAngle = originalCamHudAngle
-		for i = 0, 7 do -- move
-			tweenPosYAngle(i, _G['defaultStrum'..i..'Y'] + 0,getActorAngle(i)- 0, 0.1, 'setDefault')
-		end
-		for i = 0, 7 do -- move
-			tweenPosXAngle(i, _G['defaultStrum'..i..'X'] + 0,getActorAngle(i)+ 0, 0.1, 'setDefault')
-		end
-	elseif curBeat>=960 and curBeat<1024 then
-		for i=0,7 do
-			setActorX(_G['defaultStrum'..i..'X'] + 5 * math.sin((currentBeat + i*0.25) * math.pi), i)
-			setActorY(_G['defaultStrum'..i..'Y'] + 15 * math.cos((currentBeat + i*0.25) * math.pi), i)
-		end
-	elseif curBeat>=1024 and curBeat<1088 then
-		for i=0,3 do
-			setActorX(_G['defaultStrum'..i..'X'] + 5 * math.sin((currentBeat + i*0.25) * math.pi), i)
-			setActorY(_G['defaultStrum'..i..'Y'] + 15 * math.cos((currentBeat + i*0.25) * math.pi), i)
-		end
-		for i=4,7 do
-			setActorX(_G['defaultStrum'..i..'X'] + 15 * math.sin((currentBeat + i*0.25) * math.pi), i)
-			setActorY(_G['defaultStrum'..i..'Y'] + 25 * math.cos((currentBeat + i*0.25) * math.pi), i)
-		end
-	elseif curBeat>=1088 and curBeat<1148 then
-		camHudAngle = originalCamHudAngle
-		for i = 0, 7 do -- move
-			tweenPosYAngle(i, _G['defaultStrum'..i..'Y'] + 0,getActorAngle(i)- 0, 0.1, 'setDefault')
-		end
-		for i = 0, 7 do -- move
-			tweenPosXAngle(i, _G['defaultStrum'..i..'X'] + 0,getActorAngle(i)+ 0, 0.1, 'setDefault')
-		end
+		camHudAngle = 4 * math.sin(currentBeat * math.pi) --Code stolen from DarkSheep lmao (please don't kill me KadeDev)
 	else
 		camHudAngle = originalCamHudAngle
 	end
