@@ -1,0 +1,9 @@
+In case you aren't aware,
+the Termination functions are present in tutorial.
+Why?
+So that people can replace the tutorial song and charting with their own song and use modcharts to add their own sawblades and stuff without having to go into the source code!
+I still recomend using the source code if you can as it'll give you far more control over what you're doing but this is for those who may not be able to understand/have access to coding with the source code.
+
+Either way, deleting the contents of this folder or whatever will cause tutorial to crash so don't.
+Oh, and also cuz these images are seperate from Termination, feel free to change them up a bit if you want (like change the alert to be blue or something) as it won't affect Termination.
+-Haz
