@@ -12,7 +12,6 @@ import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 import lime.net.curl.CURLCode;
-
 #if windows
 import Discord.DiscordClient;
 #end
@@ -23,54 +22,18 @@ class StoryMenuState extends MusicBeatState
 {
 	var scoreText:FlxText;
 
-	var weekData:Array<Dynamic> = [
-		['Tutorial'],
-		['Bopeebo', 'Fresh', 'Dadbattle'],
-		['Spookeez', 'South', "Monster"],
-		['Pico', 'Philly', "Blammed"],
-		['Satin-Panties', "High", "Milf"],
-		['Cocoa', 'Eggnog', 'Winter-Horrorland'],
-		['Senpai', 'Roses', 'Thorns'],
-		['Carefree', 'Careless', 'Censory-Overload','Terminate']
-	];
-	//I HAVE NO IDEA WHY THE FUCK THE LAST ITEM IN THE ARRAY JUST DOESN'T WANT TO BE DISPLAYED, SO FUCK YOU I'M DOING THIS DISGUSTING SHIT TO COUNTER IT UNTIL IT'S FIXED
-	//GOD THIS IS TERRIBLE -Upset Haz
-	//Actually, this solution ain't so bad. I can hide the 4th song to be a surprise :3
-	var weekDataSTRING:Array<Dynamic> = [
-		['Tutorial',""],
-		['Bopeebo', 'Fresh', 'Dadbattle',""],
-		['Spookeez', 'South', "Monster",""],
-		['Pico', 'Philly', "Blammed",""],
-		['Satin-Panties', "High", "Milf",""],
-		['Cocoa', 'Eggnog', 'Winter-Horrorland',""],
-		['Senpai', 'Roses', 'Thorns',""],
-		['Carefree', 'Careless', 'Censory-Overload',""]
-	];
+	var weekData:Array<Dynamic> = [['Carefree', 'Careless', 'Censory-Overload', 'Terminate']];
+	// I HAVE NO IDEA WHY THE FUCK THE LAST ITEM IN THE ARRAY JUST DOESN'T WANT TO BE DISPLAYED, SO FUCK YOU I'M DOING THIS DISGUSTING SHIT TO COUNTER IT UNTIL IT'S FIXED
+	// GOD THIS IS TERRIBLE -Upset Haz
+	// Actually, this solution ain't so bad. I can hide the 4th song to be a surprise :3
+	var weekDataSTRING:Array<Dynamic> = [['Carefree', 'Careless', 'Censory-Overload', ""]];
 	var curDifficulty:Int = 1;
 
-	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true, true];
+	public static var weekUnlocked:Array<Bool> = [true];
 
-	var weekCharacters:Array<Dynamic> = [
-		['', 'bf', 'gf'],
-		['dad', 'bf', 'gf'],
-		['spooky', 'bf', 'gf'],
-		['pico', 'bf', 'gf'],
-		['mom', 'bf', 'gf'],
-		['parents-christmas', 'bf', 'gf'],
-		['senpai', 'bf', 'gf'],
-		['qt', 'bf', 'gf']
-	];
+	var weekCharacters:Array<Dynamic> = [['qt', 'bf', 'gf']];
 
-	var weekNames:Array<String> = [
-		"How to Funk",
-		"Daddy Dearest",
-		"Spooky Month",
-		"PICO",
-		"MOMMY MUST MURDER",
-		"RED SNOW",
-		"Hating Simulator ft. Moawling",
-		"Cutie"
-	];
+	var weekNames:Array<String> = ["Cutie"];
 
 	var txtWeekTitle:FlxText;
 
@@ -212,7 +175,8 @@ class StoryMenuState extends MusicBeatState
 
 		trace("Line 165");
 
-		PlayState.cutsceneSkip = false; //Don't ask.
+		PlayState.cutsceneSkip = false; // Don't ask.
+		// i will ask -- Luis
 
 		super.create();
 	}
@@ -400,11 +364,11 @@ class StoryMenuState extends MusicBeatState
 		txtTracklist.text = "Tracks\n";
 		var stringThing:Array<String> = weekDataSTRING[curWeek];
 
-		//Weeks not displaying last song in array? -Haz
-		//Just checked with log, last line is being removed??? WHY?! -Haz
+		// Weeks not displaying last song in array? -Haz
+		// Just checked with log, last line is being removed??? WHY?! -Haz
 		for (i in stringThing)
 		{
-			//FlxG.log.add(i);
+			// FlxG.log.add(i);
 			txtTracklist.text += "\n" + i;
 		}
 

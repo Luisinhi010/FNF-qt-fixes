@@ -35,19 +35,15 @@ function update(elapsed)
 	elseif curBeat>=640 and curBeat<704 then
 		camHudAngle = originalCamHudAngle
 		showOnlyStrums = false
-		for i = 0, 7 do -- move
-			tweenPosYAngle(i, _G['defaultStrum'..i..'Y'] + 0,getActorAngle(i)- 0, 0.1, 'setDefault')
-		end
-		for i = 0, 7 do -- move
-			tweenPosXAngle(i, _G['defaultStrum'..i..'X'] + 0,getActorAngle(i)+ 0, 0.1, 'setDefault')
+		for i=0,7 do
+			setActorX(_G['defaultStrum'..i..'X'],i)
+			setActorY(_G['defaultStrum'..i..'Y'],i)
 		end
 	elseif curBeat>=832 and curBeat<960 then
 		camHudAngle = originalCamHudAngle
-		for i = 0, 7 do -- move
-			tweenPosYAngle(i, _G['defaultStrum'..i..'Y'] + 0,getActorAngle(i)- 0, 0.1, 'setDefault')
-		end
-		for i = 0, 7 do -- move
-			tweenPosXAngle(i, _G['defaultStrum'..i..'X'] + 0,getActorAngle(i)+ 0, 0.1, 'setDefault')
+		for i=0,7 do
+			setActorX(_G['defaultStrum'..i..'X'],i)
+			setActorY(_G['defaultStrum'..i..'Y'],i)
 		end
 	elseif curBeat>=960 and curBeat<1024 then
 		for i=0,7 do
@@ -65,11 +61,9 @@ function update(elapsed)
 		end
 	elseif curBeat>=1088 and curBeat<1148 then
 		camHudAngle = originalCamHudAngle
-		for i = 0, 7 do -- move
-			tweenPosYAngle(i, _G['defaultStrum'..i..'Y'] + 0,getActorAngle(i)- 0, 0.1, 'setDefault')
-		end
-		for i = 0, 7 do -- move
-			tweenPosXAngle(i, _G['defaultStrum'..i..'X'] + 0,getActorAngle(i)+ 0, 0.1, 'setDefault')
+		for i=0,7 do
+			setActorX(_G['defaultStrum'..i..'X'],i)
+			setActorY(_G['defaultStrum'..i..'Y'],i)
 		end
 	else
 		camHudAngle = originalCamHudAngle

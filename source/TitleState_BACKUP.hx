@@ -23,11 +23,9 @@ import flixel.util.FlxTimer;
 import io.newgrounds.NG;
 import lime.app.Application;
 import openfl.Assets;
-
 #if windows
 import Discord.DiscordClient;
 #end
-
 #if cpp
 import sys.thread.Thread;
 #end
@@ -53,7 +51,7 @@ class TitleState extends MusicBeatState
 		#if polymod
 		polymod.Polymod.init({modRoot: "mods", dirs: ['introMod']});
 		#end
-		
+
 		#if sys
 		if (!sys.FileSystem.exists(Sys.getCwd() + "/assets/replays"))
 			sys.FileSystem.createDirectory(Sys.getCwd() + "/assets/replays");
@@ -63,16 +61,16 @@ class TitleState extends MusicBeatState
 		{
 			trace("Loaded " + openfl.Assets.getLibrary("default").assetsLoaded + " assets (DEFAULT)");
 		}
-		
+
 		PlayerSettings.init();
 
 		#if windows
 		DiscordClient.initialize();
 
-		Application.current.onExit.add (function (exitCode) {
+		Application.current.onExit.add(function(exitCode)
+		{
 			DiscordClient.shutdown();
-		 });
-		 
+		});
 		#end
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
@@ -303,41 +301,40 @@ class TitleState extends MusicBeatState
 			transitioning = true;
 			// FlxG.sound.music.stop();
 
-			
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
 				/* Fuck your version checking! I've already spent so much time modifying this version I don't care for future releases >.<
 
-				// Get current version of Kade Engine
+					// Get current version of Kade Engine
 
-				var http = new haxe.Http("https://raw.githubusercontent.com/KadeDev/Kade-Engine/master/version.downloadMe");
+					var http = new haxe.Http("https://raw.githubusercontent.com/KadeDev/Kade-Engine/master/version.downloadMe");
 
-				http.onData = function (data:String) {
-				  
-				  	if (!MainMenuState.kadeEngineVer.contains(data.trim()) && !OutdatedSubState.leftState && MainMenuState.nightly == "")
-					{
-						trace('outdated lmao! ' + data.trim() + ' != ' + MainMenuState.kadeEngineVer);
-						OutdatedSubState.needVer = data;
-						FlxG.switchState(new OutdatedSubState());
+					http.onData = function (data:String) {
+					  
+					  	if (!MainMenuState.kadeEngineVer.contains(data.trim()) && !OutdatedSubState.leftState && MainMenuState.nightly == "")
+						{
+							trace('outdated lmao! ' + data.trim() + ' != ' + MainMenuState.kadeEngineVer);
+							OutdatedSubState.needVer = data;
+							FlxG.switchState(new OutdatedSubState());
+						}
+						else
+						{
+							FlxG.switchState(new MainMenuState());
+						}
 					}
-					else
-					{
-						FlxG.switchState(new MainMenuState());
-					}
-				}
-				
-				http.onError = function (error) {
-				  trace('error: $error');
-				  FlxG.switchState(new MainMenuState()); // fail but we go anyway
-				}
-				
-				http.request();
 
-				*/
+					http.onError = function (error) {
+					  trace('error: $error');
+					  FlxG.switchState(new MainMenuState()); // fail but we go anyway
+					}
+
+					http.request();
+
+				 */
 
 				FlxG.switchState(new MainMenuState());
 			});
-			
+
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
 
@@ -395,13 +392,13 @@ class TitleState extends MusicBeatState
 
 		switch (curBeat)
 		{
-			//Start on beat 2 because beat 1 just doesn't get called? -Haz
+			// Start on beat 2 because beat 1 just doesn't get called? -Haz
 			case 2:
-				//createCoolText(['Original game by']);
+				// createCoolText(['Original game by']);
 				addMoreText('Original game by');
 			// credTextShit.visible = true;
 			case 3:
-				createCoolText(['','ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
+				createCoolText(['', 'ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
 			// credTextShit.text += '\npresent...';
 			// credTextShit.addText();
 			case 4:
@@ -431,11 +428,11 @@ class TitleState extends MusicBeatState
 			// credTextShit.text = 'Shoutouts Tom Fulp';
 			// credTextShit.screenCenter();
 			case 9:
-				//createCoolText([curWacky[0]]);
+				// createCoolText([curWacky[0]]);
 				createCoolText(['Hazard24 and CountNightShade']);
 			// credTextShit.visible = true;
 			case 11:
-				//addMoreText(curWacky[1]);
+				// addMoreText(curWacky[1]);
 				addMoreText('present');
 			// credTextShit.text += '\nlmao';
 			case 12:
