@@ -1,8 +1,11 @@
 
-this is a custom build of qt mod i made for haxe knowledge and for fun, you can use this qt mod source code to make your qt mods, but rembember to credit Hazard 24 and me 
+this is a custom build of qt mod i made for haxe knowledge and for fun, you can use this qt mod source code to make your qt mods, but rembember to credit [Hazard 24](https://www.youtube.com/channel/UCHmVq3lbOtvDKQTeOa5OehQ/videos) and me 
 
 
 ![QT Mod logo](https://raw.githubusercontent.com/Luisinhi010/FNF-qt-fixes/main/art/icon.png)
+
+
+spoiler alert, I'm not allowed to post this, if hazard asks me to take it down, I'll take it down
 
 
 
