@@ -144,6 +144,8 @@ class PlayState extends MusicBeatState
 	// For Censory Overload -Haz
 	var qt_gas01:FlxSprite;
 	var qt_gas02:FlxSprite;
+	var vignette1:FlxSprite;
+	var vignette2:FlxSprite;
 
 	public static var cutsceneSkip:Bool = false;
 
@@ -185,6 +187,9 @@ class PlayState extends MusicBeatState
 	var cameramove:Bool = true;
 	var forcecameramove:Bool = false;
 
+	var kbsawbladecamXdad:Int = 0;
+	var kbsawbladecamXbf:Int = 0;
+
 	var fc:Bool = true;
 
 	public static var campaignScore:Int = 0;
@@ -217,14 +222,14 @@ class PlayState extends MusicBeatState
 
 	private var executeModchart = false;
 
-	// LUA SHIT
-	#if cpp
-	public static var lua:State = null;
-
 	public var qtcantalknow1:FlxText;
 	public var qtcantalknow2:FlxText;
 	public var qtcantalknow3:FlxText;
 	public var qtcantalknow4:FlxText;
+
+	// LUA SHIT
+	#if cpp
+	public static var lua:State = null;
 
 	function callLua(func_name:String, args:Array<Dynamic>, ?type:String):Dynamic
 	{
@@ -1367,26 +1372,20 @@ class PlayState extends MusicBeatState
 		add(healthBar);
 
 		// Add Kade Engine watermark
-		// WHY WON'T THIS WORK?! REEEEE
-		/*
-			var storyDifficultyHAZARDTEXT:String = "Normal";
 
-			if (storyDifficulty == 2)
-				storyDifficultyHAZARDTEXT=="Hard";
-			else if(storyDifficulty == 0)
-				storyDifficultyHAZARDTEXT=="Easy";
-			else */
-
-		kadeEngineWatermark = new FlxText(4, healthBarBG.y
-			+ 50, 0,
-			SONG.song
-			+ " "
-			+ (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy")
-			+ (Main.watermarks ? " - KE " + MainMenuState.kadeEngineVer : ""),
-			16);
+		kadeEngineWatermark = new FlxText(4, healthBarBG.y + 50, 0, "", 16);
+		if (SONG.song.toLowerCase() == 'Cessation')
+			kadeEngineWatermark.text = SONG.song + " " + "Future" + (Main.watermarks ? " - KE " + MainMenuState.kadeEngineVer : "");
+		else if (SONG.song.toLowerCase() == 'Termination')
+			kadeEngineWatermark.text = SONG.song + " " + "Very Hard" + (Main.watermarks ? " - KE " + MainMenuState.kadeEngineVer : "");
+		else
+			kadeEngineWatermark.text = SONG.song
+				+ " "
+				+ (storyDifficulty == 2 ? "Hard" : storyDifficulty == 1 ? "Normal" : "Easy")
+				+ (Main.watermarks ? " - KE " + MainMenuState.kadeEngineVer : "");
 		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
-		add(kadeEngineWatermark);
+		// add(kadeEngineWatermark); //wtf
 
 		if (FlxG.save.data.downscroll)
 			kadeEngineWatermark.y = FlxG.height * 0.9 + 45;
@@ -1398,7 +1397,11 @@ class PlayState extends MusicBeatState
 		scoreTxt.scrollFactor.set();
 		if (offsetTesting)
 			scoreTxt.x += 300;
-		scoreTxt.screenCenter(X);
+		else
+		{
+			scoreTxt.screenCenter(X);
+			scoreTxt.x += 150;
+		}
 		add(scoreTxt);
 
 		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (FlxG.save.data.downscroll ? 100 : -100), 0, "REPLAY", 20);
@@ -1445,41 +1448,6 @@ class PlayState extends MusicBeatState
 		{
 			switch (curSong.toLowerCase())
 			{
-				case "winter-horrorland":
-					var blackScreen:FlxSprite = new FlxSprite(0, 0).makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2), FlxColor.BLACK);
-					add(blackScreen);
-					blackScreen.scrollFactor.set();
-					camHUD.visible = false;
-
-					new FlxTimer().start(0.1, function(tmr:FlxTimer)
-					{
-						remove(blackScreen);
-						FlxG.sound.play(Paths.sound('Lights_Turn_On'));
-						camFollow.y = -2050;
-						camFollow.x += 200;
-						FlxG.camera.focusOn(camFollow.getPosition());
-						FlxG.camera.zoom = 1.5;
-
-						new FlxTimer().start(0.8, function(tmr:FlxTimer)
-						{
-							camHUD.visible = true;
-							remove(blackScreen);
-							FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 2.5, {
-								ease: FlxEase.quadInOut,
-								onComplete: function(twn:FlxTween)
-								{
-									startCountdown();
-								}
-							});
-						});
-					});
-				case 'senpai':
-					schoolIntro(doof);
-				case 'roses':
-					FlxG.sound.play(Paths.sound('ANGRY'));
-					schoolIntro(doof);
-				case 'thorns':
-					schoolIntro(doof);
 				case 'carefree' | 'careless' | 'terminate':
 					schoolIntro(doof);
 				case 'censory-overload':
@@ -1502,25 +1470,40 @@ class PlayState extends MusicBeatState
 
 		deathBySawBlade = false; // Some reason, it keeps it's value after death, so this forces itself to reset to false.
 
-		qtcantalknow1 = new FlxText(dad.x, dad.y + 100, 0, "", 20); // test
+		qtcantalknow1 = new FlxText(dad.x, dad.y - 100, 0, "", 20); // test
 		qtcantalknow1.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.PINK, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		qtcantalknow1.scrollFactor.set();
 		qtcantalknow1.updateHitbox();
 		qtcantalknow1.alpha = 0;
 		qtcantalknow1.visible = false;
 		// add(qtcantalknow1);
 		qtcantalknow2 = new FlxText(qtcantalknow1.x, qtcantalknow1.y, 0, "", 20);
 		qtcantalknow2.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.RED, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		qtcantalknow2.scrollFactor.set();
 		qtcantalknow2.alpha = 0;
 		qtcantalknow2.visible = qtcantalknow1.visible;
 		// add(qtcantalknow2);
 		qtcantalknow3 = new FlxText(qtcantalknow2.x, qtcantalknow2.y, 0, "", 20);
 		qtcantalknow3.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.CYAN, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		qtcantalknow3.scrollFactor.set();
 		qtcantalknow3.alpha = 0;
 		qtcantalknow3.visible = qtcantalknow1.visible;
 		// add(qtcantalknow3);
+
+		/*vignette1 = new FlxSprite().loadGraphic(Paths.image('vignette1', "shared"));
+			vignette1.updateHitbox();
+			vignette1.screenCenter();
+			vignette1.scrollFactor.set(0, 0);
+			vignette1.alpha = 0;
+			vignette1.antialiasing = true;
+			add(vignette1);
+			vignette1.cameras = [camHUD];
+
+			vignette2 = new FlxSprite().loadGraphic(Paths.image('vignette2', "shared"));
+			vignette2.updateHitbox();
+			vignette2.screenCenter();
+			vignette2.scrollFactor.set(0, 0);
+			vignette2.alpha = 0;
+			vignette2.antialiasing = true;
+			add(vignette1);
+			vignette2.cameras = [camHUD]; */
 
 		dacamera = defaultCamZoom; // ass
 
@@ -1709,11 +1692,17 @@ class PlayState extends MusicBeatState
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
-		if (curStage == "nightmare")
+		/*remove(vignette1);
+			add(vignette1);
+			vignette1.cameras = [camHUD];
+			remove(vignette2);
+			add(vignette2);
+			vignette2.cameras = [camHUD]; */
+
+		if (curSong.toLowerCase() == 'careless')
 		{
-			remove(vignette); // update layering?
-			add(vignette);
-			vignette.cameras = [camHUD];
+			vignette2.visible = true;
+			vignette2.alpha = 0.6;
 		}
 
 		#if cpp
@@ -3005,6 +2994,7 @@ class PlayState extends MusicBeatState
 					+ "% | "
 					+ generateRanking();
 				scoreTxt.screenCenter(X);
+				scoreTxt.x += 150;
 			}
 			else
 			{
@@ -3294,6 +3284,8 @@ class PlayState extends MusicBeatState
 					camFollow.x += camX;
 				}
 
+				camFollow.x += kbsawbladecamXdad;
+
 				if (dad.curCharacter == 'mom')
 					vocals.volume = 1;
 			}
@@ -3309,12 +3301,14 @@ class PlayState extends MusicBeatState
 					offsetY = getVar("followYOffset", "float");
 				}
 				#end
-				camFollow.setPosition(boyfriend.getMidpoint().x - 100 + offsetX, boyfriend.getMidpoint().y - 100 + offsetY);
+				camFollow.setPosition(boyfriend.getMidpoint().x - 100 + kbsawbladecamXbf + offsetX, boyfriend.getMidpoint().y - 100 + offsetY);
 
 				#if cpp
 				if (lua != null)
 					callLua('playerOneTurn', []);
 				#end
+
+				camFollow.x += kbsawbladecamXbf;
 			}
 		}
 
@@ -3772,6 +3766,10 @@ class PlayState extends MusicBeatState
 			// Play saw attack animation
 			kb_attack_saw.animation.play('fire');
 			kb_attack_saw.offset.set(1600, 0);
+			// FlxG.camera.zoom = defaultCamZoom;
+			FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.06);
+			kbsawbladecamXdad = 0;
+			kbsawbladecamXbf = 0;
 
 			/*kb_attack_saw.animation.finishCallback = function(pog:String){
 				if(state) //I don't get it.
@@ -3793,6 +3791,10 @@ class PlayState extends MusicBeatState
 		{
 			kb_attack_saw.animation.play('prepare');
 			kb_attack_saw.offset.set(-333, 0);
+			// FlxG.camera.zoom -= 0.02;
+			FlxTween.tween(FlxG.camera, {zoom: FlxG.camera.zoom - 0.03}, 0.06);
+			kbsawbladecamXdad = -100;
+			kbsawbladecamXbf = -160;
 		}
 	}
 
@@ -3805,6 +3807,10 @@ class PlayState extends MusicBeatState
 		trace("DANGER!");
 		kb_attack_alert.animation.play('alert');
 		FlxG.sound.play(Paths.sound('alert', 'qt'), 1);
+		// FlxG.camera.zoom -= 0.02;
+		FlxTween.tween(FlxG.camera, {zoom: FlxG.camera.zoom - 0.03}, 0.06);
+		kbsawbladecamXdad = -100;
+		kbsawbladecamXbf = -160;
 	}
 
 	// OLD ATTACK DOUBLE VARIATION
@@ -4077,7 +4083,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function terminateEndEarly():Void // Yep, terminate was originally called termination while termination was going to have a different name. Can't be bothered to update some names though like this so sorry for any confusion -Haz
+	function terminateEndEarly():Void
 	{
 		if (!qtCarelessFinCalled)
 		{
@@ -5405,6 +5411,7 @@ class PlayState extends MusicBeatState
 				{
 					FlxG.sound.play(Paths.sound('bruh'), 0.75);
 					add(cessationTroll);
+					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.06);
 				}
 				else if (curStep == 1520)
 					remove(cessationTroll);
@@ -5703,13 +5710,6 @@ class PlayState extends MusicBeatState
 		}
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
 
-		// HARDCODING FOR MILF ZOOMS!
-		if (curSong.toLowerCase() == 'milf' && curBeat >= 168 && curBeat < 200 && camZooming && FlxG.camera.zoom < 1.35)
-		{
-			FlxG.camera.zoom += 0.015;
-			camHUD.zoom += 0.03;
-		}
-
 		if (curSong.toLowerCase() == 'careless')
 		{
 			switch (curBeat)
@@ -5721,11 +5721,14 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		// Copy and pasted the milf code above for censory overload -Haz
 		if (curSong.toLowerCase() == 'censory-overload')
 		{
-			// Probably a better way of doing this lmao but I can't be bothered to clean this shit up -Haz
-			// Cam zooms and gas release effect!
+			if (curBeat == 64)
+			{
+				/*FlxTween.tween(vignette1, {alpha: 1}, 1.5, {
+					ease: FlxEase.quadInOut
+				});*/
+			}
 
 			if (curBeat == 241 || curBeat == 249 || curBeat == 257 || curBeat == 265 || curBeat == 273 || curBeat == 281 || curBeat == 289
 				|| curBeat == 293 || curBeat == 297 || curBeat == 301 || curBeat == 497 || curBeat == 505 || curBeat == 513 || curBeat == 521
