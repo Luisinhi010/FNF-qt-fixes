@@ -12,8 +12,9 @@ class DiscordClient
 	{
 		trace("Discord Client starting...");
 		DiscordRpc.start({
-			// clientID: "557069829501091850",
-			clientID: "937126891918327848",
+			// clientID: "557069829501091850",//ke id
+			// clientID: "937126891918327848",//qt fixes id
+			clientID: "939084989922959391", // original qt id
 			onReady: onReady,
 			onError: onError,
 			onDisconnected: onDisconnected

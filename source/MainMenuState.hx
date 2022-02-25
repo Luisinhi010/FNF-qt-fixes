@@ -77,7 +77,7 @@ class MainMenuState extends MusicBeatState
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject; // sorry shadow mario
-	var vignette1:FlxSprite;
+	var vignette1:BGSprite;
 
 	public var iconBG:FlxSprite;
 	public var icon:HealthIcon;
@@ -198,7 +198,8 @@ class MainMenuState extends MusicBeatState
 		qtVersion.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(qtVersion);
 
-		vignette1 = new FlxSprite().loadGraphic(Paths.image('vignette1'));
+		vignette1 = new BGSprite('vignettealt');
+		vignette1.setGraphicSize(FlxG.width, FlxG.height);
 		vignette1.alpha = 0;
 		vignette1.scrollFactor.set(0, 0);
 		vignette1.updateHitbox();
