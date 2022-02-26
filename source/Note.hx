@@ -29,9 +29,6 @@ class Note extends FlxSprite
 	public var sustainLength:Float = 0;
 	public var isSustainNote:Bool = false;
 
-	public var qtblue:Bool = false;
-	public var blue:String = '_Blue';
-
 	public var noteScore:Float = 1;
 
 	public static var swagWidth:Float = 160 * 0.7;
@@ -64,30 +61,47 @@ class Note extends FlxSprite
 
 		this.noteData = noteData;
 
-		qtblue = PlayState.instance.qtIsBlueScreened;
-
-		if (qtblue)
-			blue = '_Blue';
-		else
-			blue = '';
-
 		if (!isPlayer)
 		{
 			switch (PlayState.instance.dad.curCharacter)
 			{
 				case 'qt' | 'qt-kb' | 'qt_annoyed':
-					if (PlayState.instance.qtIsBlueScreened)
-						frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb' + blue);
-					else
-						frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Qt');
-				case 'robot' | 'robot_404' | 'robot_404-TERMINATION' | 'robot_classic' | 'robot_classic_404':
-					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb' + blue);
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Qt');
+				case 'robot' | 'robot_classic':
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb');
+				case 'robot_404' | 'robot_404-TERMINATION' | 'robot_classic_404':
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb_Blue');
+				case 'bf_404':
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Blue');
 				default:
-					frames = Paths.getSparrowAtlas('Notes/NOTE_assets' + blue);
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets');
 			}
 		}
 		else
-			frames = Paths.getSparrowAtlas('Notes/NOTE_assets' + blue);
+		{
+			switch (PlayState.instance.boyfriend.curCharacter)
+			{
+				case 'qt' | 'qt-kb' | 'qt_annoyed':
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb');
+				case 'robot' | 'robot_classic':
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb');
+				case 'robot_404' | 'robot_404-TERMINATION' | 'robot_classic_404':
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb_Blue');
+				case 'bf_404':
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Blue');
+				default:
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets');
+			}
+		}
+		// kill me
+
+		/*var fuckingSussy = Paths.getSparrowAtlas('Notes/NOTE_assets' + blue);
+
+			if (qtblue)
+				for (amogus in fuckingSussy.frames)
+				{
+					this.frames.pushFrame(amogus);
+		}*/
 
 		animation.addByPrefix('greenScroll', 'green0');
 		animation.addByPrefix('redScroll', 'red0');
@@ -172,7 +186,13 @@ class Note extends FlxSprite
 						prevNote.animation.play('redhold');
 				}
 
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.8 * FlxG.save.data.scrollSpeed;
+				// prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.8 * FlxG.save.data.scrollSpeed; ke code
+				// prevNote.scale.y += FlxG.save.data.scrollSpeed / prevNote.scale.y * 2;//bad - luis
+
+				if (FlxG.save.data.scrollSpeed != 1)
+					prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.8 * FlxG.save.data.scrollSpeed;
+				else
+					prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.8 * PlayState.SONG.speed;
 				prevNote.updateHitbox();
 				// prevNote.setGraphicSize();
 			}

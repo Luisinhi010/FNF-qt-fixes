@@ -112,8 +112,6 @@ class PlayState extends MusicBeatState
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
 
-	public var blue:String = '_Blue';
-
 	public var healthBarBG:FlxSprite;
 	public var healthBar:FlxBar;
 
@@ -532,12 +530,12 @@ class PlayState extends MusicBeatState
 		// To avoid having duplicate images in Discord assets
 		switch (iconRPC)
 		{
-			case 'senpai-angry':
-				iconRPC = 'senpai';
-			case 'monster-christmas':
-				iconRPC = 'monster';
-			case 'mom-car':
-				iconRPC = 'mom';
+			case 'robot' | 'robot_classic' | 'robot_404' | 'robot_404-TERMINATION' | 'robot_classic_404':
+				iconRPC = 'kb';
+			case 'qt' | 'qt_annoyed':
+				iconRPC = 'qt';
+			case 'qt-kb':
+				iconRPC = 'qt-kb';
 		}
 
 		// String that contains the mode defined here so it isn't necessary to call changePresence for each mode
@@ -1207,7 +1205,7 @@ class PlayState extends MusicBeatState
 
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
 		if (!FlxG.save.data.downscroll)
-			healthBarBG.y += 15;
+			healthBarBG.y += 10;
 		else
 			healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
@@ -1222,13 +1220,13 @@ class PlayState extends MusicBeatState
 		// healthBar
 		add(healthBar);
 
-		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 20);
+		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 26);
 		if (!FlxG.save.data.accuracyDisplay)
 			scoreTxt.x = healthBarBG.x + healthBarBG.width / 2;
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
 		if (!FlxG.save.data.downscroll)
-			scoreTxt.y -= 130;
+			scoreTxt.y -= 135;
 		if (offsetTesting)
 			scoreTxt.x += 300;
 		else
@@ -2500,31 +2498,38 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add(i);
 			var babyArrow:FlxSprite = new FlxSprite(-40, strumLine.y);
 
-			Note.instance.qtblue = qtIsBlueScreened;
-			if (qtIsBlueScreened)
-				blue = '_Blue';
-			else
-				blue = '';
-
 			if (player == 0)
 			{
 				switch (dad.curCharacter)
 				{
 					case 'qt' | 'qt-kb' | 'qt_annoyed':
-						if (qtIsBlueScreened)
-							babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb' + blue);
-						else
-							babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Qt');
-					case 'robot' | 'robot_404' | 'robot_404-TERMINATION' | 'robot_classic' | 'robot_classic_404':
-						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb' + blue);
+						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Qt');
+					case 'robot' | 'robot_classic':
+						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb');
+					case 'robot_404' | 'robot_404-TERMINATION' | 'robot_classic_404':
+						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb_Blue');
+					case 'bf_404':
+						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Blue');
 					default:
-						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets' + blue);
+						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets');
 				}
-				if (babyArrow == null)
-					babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets');
 			}
 			else
-				babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets' + blue);
+			{
+				switch (boyfriend.curCharacter)
+				{
+					case 'qt' | 'qt-kb' | 'qt_annoyed':
+						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb');
+					case 'robot' | 'robot_classic':
+						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb');
+					case 'robot_404' | 'robot_404-TERMINATION' | 'robot_classic_404':
+						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb_Blue');
+					case 'bf_404':
+						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Blue');
+					default:
+						babyArrow.frames = Paths.getSparrowAtlas('Notes/NOTE_assets');
+				}
+			}
 
 			babyArrow.animation.addByPrefix('green', 'arrowUP');
 			babyArrow.animation.addByPrefix('blue', 'arrowDOWN');
@@ -5291,11 +5296,23 @@ class PlayState extends MusicBeatState
 				popUpScore(note);
 				combo += 1;
 
-				if (boyfriend.curCharacter.startsWith('robot') && !note.isSustainNote)
+				if (boyfriend.curCharacter.startsWith('robot'))
 				{
 					// trace("KB shit");
 					playerStrums.members[note.noteData].y = hazardModChartDefaultStrumY[note.noteData + 4] + (FlxG.save.data.downscroll ? 22 : -22);
 					FlxTween.tween(playerStrums.members[note.noteData], {y: hazardModChartDefaultStrumY[note.noteData + 4]}, 0.126, {ease: FlxEase.cubeOut});
+				}
+
+				// this exist's because the new notes sheets don't have the scale animation
+				if ((boyfriend.curCharacter.startsWith('robot') || (boyfriend.curCharacter.startsWith('qt'))))
+				{
+					var scalex:Float = 0.694267515923567;
+					var scaley:Float = 0.694267515923567;
+
+					playerStrums.members[note.noteData].scale.x = scalex + 0.2;
+					playerStrums.members[note.noteData].scale.y = scaley + 0.2;
+					if (SONG.song.toLowerCase() != "terminate")
+						FlxTween.tween(playerStrums.members[note.noteData].scale, {y: scaley, x: scalex}, 0.125, {ease: FlxEase.cubeOut});
 				}
 			}
 			else
@@ -5361,6 +5378,8 @@ class PlayState extends MusicBeatState
 		{
 			resyncVocals();
 		}
+
+		instance = this;
 
 		#if cpp
 		if (executeModchart && lua != null)

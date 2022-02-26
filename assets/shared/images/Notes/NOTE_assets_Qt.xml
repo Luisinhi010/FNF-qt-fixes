@@ -24,8 +24,8 @@
 	<SubTexture name="left confirm0002" x="743" y="10" width="225" height="228" frameX="-2" frameY="-1" frameWidth="228" frameHeight="231"/>
 	<SubTexture name="left confirm0003" x="743" y="10" width="225" height="228" frameX="-2" frameY="-1" frameWidth="228" frameHeight="231"/>
 	<SubTexture name="pruiple kb0000" x="344" y="943" width="154" height="157" pivotX="0" pivotY="0"/>
-	<SubTexture name="pruple end hold0000" x="398" y="1110" width="50" height="44" pivotX="0" pivotY="0"/>
-	<SubTexture name="purple hold piece0000" x="412" y="742" width="50" height="64" pivotX="0" pivotY="0"/>
+	<SubTexture name="pruple end hold0000" x="412" y="742" width="50" height="64" pivotX="0" pivotY="0"/>
+	<SubTexture name="purple hold piece0000" x="398" y="1110" width="50" height="44" pivotX="0" pivotY="0"/>
 	<SubTexture name="purple00000" x="10" y="1073" width="154" height="157" pivotX="0" pivotY="0"/>
 	<SubTexture name="red hold end0000" x="412" y="816" width="50" height="64" pivotX="0" pivotY="0"/>
 	<SubTexture name="red hold piece0000" x="398" y="1164" width="50" height="44" pivotX="0" pivotY="0"/>
