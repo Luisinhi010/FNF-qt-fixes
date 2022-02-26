@@ -2572,7 +2572,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	private function reloadStatics(?needremove = true, tweem = false)
+	private function reloadStatics(needremove = true, tweem = false)
 	{
 		if (needremove)
 			removeStatics();
