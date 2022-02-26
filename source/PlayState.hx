@@ -122,6 +122,7 @@ class PlayState extends MusicBeatState
 
 	private var iconP1:HealthIcon;
 	private var iconP2:HealthIcon;
+	private var campause:FlxCamera;
 	private var camcustom:FlxCamera;
 	private var camHUD:FlxCamera;
 	private var camGame:FlxCamera;
@@ -157,9 +158,7 @@ class PlayState extends MusicBeatState
 	var dad404:Character;
 	var gf404:Character;
 	var boyfriend404:Boyfriend;
-
-	// Public Var for the visuals -Luis
-	public var qtIsBlueScreened:Bool = false;
+	var qtIsBlueScreened:Bool = false;
 
 	// Termination-playable
 	var bfDodging:Bool = false;
@@ -573,10 +572,19 @@ class PlayState extends MusicBeatState
 		camHUD.bgColor.alpha = 0;
 		camcustom = new FlxCamera();
 		camcustom.bgColor.alpha = 0;
+		campause = new FlxCamera();
+		campause.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
 		FlxG.cameras.add(camHUD);
 		FlxG.cameras.add(camcustom);
+		FlxG.cameras.add(campause);
+
+		if (FlxG.save.data.downscroll)
+			camcustom.flashSprite.scaleY *= -1;
+		else
+			camcustom.flashSprite.scaleY *= -1;
+
 		// FlxG.cameras.setDefaultDrawTarget(camGame, true); //i rlly hate haxe sometimes
 
 		FlxCamera.defaultCameras = [camGame];
@@ -791,9 +799,9 @@ class PlayState extends MusicBeatState
 
 						// These are set to 0 on first step. Not 0 here because otherwise they aren't cached in properly or something?
 						// I dunno
-						boyfriend404.alpha = 0.0125;
-						dad404.alpha = 0.0125;
-						gf404.alpha = 0.0125;
+						boyfriend404.alpha = 0.001;
+						dad404.alpha = 0.001;
+						gf404.alpha = 0.001;
 					}
 				}
 			case 'terminate':
@@ -910,64 +918,10 @@ class PlayState extends MusicBeatState
 
 						// These are set to 0 on first step. Not 0 here because otherwise they aren't cached in properly or something?
 						// I dunno
-						boyfriend404.alpha = 0.0125;
-						dad404.alpha = 0.0125;
-						gf404.alpha = 0.0125;
+						boyfriend404.alpha = 0.001;
+						dad404.alpha = 0.001;
+						gf404.alpha = 0.001;
 					}
-				}
-			// Okay, so erm... I was going to add secret song to the QT mod which would introduce you to "her"... but I scrapped it due to not making much sense (BF has no involvement with Brutality).
-			case 'redacted':
-				{
-					defaultCamZoom = 0.45;
-					curStage = 'nightmare';
-
-					var bg:FlxSprite = new FlxSprite(-750, -200).loadGraphic(Paths.image('weeb/pixelUI/ssshhh/redacted/nightmare_gradient'));
-					bg.antialiasing = true;
-					bg.screenCenter();
-					bg.scrollFactor.set(0, 0);
-					bg.active = false;
-					add(bg);
-					var floor:FlxSprite = new FlxSprite(-750, -200).loadGraphic(Paths.image('weeb/pixelUI/ssshhh/redacted/nightmare'));
-					floor.antialiasing = true;
-					floor.scrollFactor.set(0.9, 0.9);
-					floor.active = false;
-					add(floor);
-
-					boyfriend404 = new Boyfriend(770, 450, 'bf');
-					boyfriend404.alpha = 0.0125;
-					// So that the game doesn't crash lmao
-					dad404 = new Character(100, 100, 'monster');
-					gf404 = new Character(400, 130, 'gf_404');
-					gf404.scrollFactor.set(0.95, 0.95);
-					dad404.alpha = 0;
-					gf404.alpha = 0;
-
-					vignette = new FlxSprite().loadGraphic(Paths.image('weeb/pixelUI/ssshhh/redacted/vignette'));
-					vignette.updateHitbox();
-					vignette.screenCenter();
-					vignette.scrollFactor.set(0, 0);
-					// vignette.setGraphicSize(Std.int(vignette.width * 0.8));
-					vignette.antialiasing = true;
-					add(vignette);
-					vignette.cameras = [camHUD];
-
-					qt_tv01 = new FlxSprite();
-					qt_tv01.frames = Paths.getSparrowAtlas('weeb/pixelUI/ssshhh/redacted/TV_secret');
-					qt_tv01.animation.addByPrefix('idle', 'TVSINGLE-IDLE', 24, true);
-					qt_tv01.animation.addByPrefix('part1', 'TVSINGLE-01', 24, true);
-					qt_tv01.animation.addByPrefix('part2', 'TVSINGLE-02', 24, true);
-					qt_tv01.animation.addByPrefix('part3', 'TVSINGLE-03', 24, true);
-					qt_tv01.animation.addByPrefix('part4', 'TVSINGLE-04', 24, true);
-
-					// qt_tv01.animation.addByPrefix('alert', 'TV_Attention', 26, false);
-
-					qt_tv01.setPosition(-62, 540);
-					qt_tv01.setGraphicSize(Std.int(qt_tv01.width * 1.2));
-					qt_tv01.updateHitbox();
-					qt_tv01.antialiasing = true;
-					qt_tv01.scrollFactor.set(0.89, 0.89);
-					add(qt_tv01);
-					qt_tv01.animation.play('idle');
 				}
 			case 'tutorial': // Tutorial now has the attack functions from Termination so you can call them using modcharts so hopefully people who want to make their own song don't have to go to the source code to manually code in the attack stuff.
 				{
@@ -1207,7 +1161,7 @@ class PlayState extends MusicBeatState
 		if (!FlxG.save.data.downscroll)
 			healthBarBG.y += 10;
 		else
-			healthBarBG.y = 50;
+			healthBarBG.y = 60;
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
@@ -1227,6 +1181,8 @@ class PlayState extends MusicBeatState
 		scoreTxt.scrollFactor.set();
 		if (!FlxG.save.data.downscroll)
 			scoreTxt.y -= 135;
+		else
+			scoreTxt.y += 10;
 		if (offsetTesting)
 			scoreTxt.x += 300;
 		else
@@ -1451,6 +1407,13 @@ class PlayState extends MusicBeatState
 		super.create();
 	}
 
+	public function reloadHealthBarColors()
+	{
+		healthBar.createFilledBar(FlxColor.fromString('#' + dad.iconColor), FlxColor.fromString('#' + boyfriend.iconColor));
+
+		healthBar.updateBar();
+	}
+
 	function schoolIntro(?dialogueBox:DialogueBox):Void
 	{
 		var black:FlxSprite = new FlxSprite(-300, -100).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
@@ -1631,8 +1594,7 @@ class PlayState extends MusicBeatState
 	{
 		inCutscene = false;
 
-		generateStaticArrows(0, true);
-		generateStaticArrows(1, true);
+		reloadStatics(false, true);
 
 		#if cpp
 		if (executeModchart) // dude I hate lua (jkjkjkjk)
@@ -2610,6 +2572,14 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	private function reloadStatics(?needremove = true, tweem = false)
+	{
+		if (needremove)
+			removeStatics();
+		generateStaticArrows(0, tweem);
+		generateStaticArrows(1, tweem);
+	}
+
 	function tweenCamIn():Void
 	{
 		FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut});
@@ -3293,13 +3263,6 @@ class PlayState extends MusicBeatState
 		{
 			switch (curBeat)
 			{
-				case 2:
-					if (!Main.qtOptimisation)
-					{
-						boyfriend404.alpha = 0;
-						dad404.alpha = 0;
-						gf404.alpha = 0;
-					}
 				/*case 4:
 					//Experimental stuff
 					FlxG.log.notice('Anything different?');
@@ -3449,12 +3412,23 @@ class PlayState extends MusicBeatState
 						camZooming = true;
 					var altAnim:String = "";
 					// Makes KB's strums move back a bit to show his power... or something idfk it looks cool okay? -Haz
-					if (dad.curCharacter.startsWith('robot') && !daNote.isSustainNote)
+					if ((dad.curCharacter.startsWith('robot') || (dad.curCharacter.startsWith('qt'))) && !daNote.isSustainNote)
 					{
-						cpuStrums.members[daNote.noteData].y = hazardModChartDefaultStrumY[daNote.noteData] + (FlxG.save.data.downscroll ? 22 : -22);
+						var scalex:Float = 0.694267515923567;
+						var scaley:Float = 0.694267515923567;
+
+						cpuStrums.members[daNote.noteData].scale.x = scalex + 0.2;
+						cpuStrums.members[daNote.noteData].scale.y = scaley + 0.2;
 						if (SONG.song.toLowerCase() != "terminate")
-							FlxTween.tween(cpuStrums.members[daNote.noteData], {y: hazardModChartDefaultStrumY[daNote.noteData]}, 0.125,
-								{ease: FlxEase.cubeOut});
+							FlxTween.tween(cpuStrums.members[daNote.noteData].scale, {y: scaley, x: scalex}, 0.125, {ease: FlxEase.cubeOut});
+
+						if (dad.curCharacter.startsWith('robot'))
+						{
+							cpuStrums.members[daNote.noteData].y = hazardModChartDefaultStrumY[daNote.noteData] + (FlxG.save.data.downscroll ? 22 : -22);
+							if (SONG.song.toLowerCase() != "terminate")
+								FlxTween.tween(cpuStrums.members[daNote.noteData], {y: hazardModChartDefaultStrumY[daNote.noteData]}, 0.125,
+									{ease: FlxEase.cubeOut});
+						}
 					}
 
 					// this exist's because the new notes sheets don't have the scale animation
@@ -3527,25 +3501,17 @@ class PlayState extends MusicBeatState
 					switch (Math.abs(daNote.noteData))
 					{
 						case 2:
-							if (qtIsBlueScreened)
-								dad404.playAnim('singUP' + altAnim, true);
-							else
-								dad.playAnim('singUP' + altAnim, true);
+							dad404.playAnim('singUP' + altAnim, true);
+							dad.playAnim('singUP' + altAnim, true);
 						case 3:
-							if (qtIsBlueScreened)
-								dad404.playAnim('singRIGHT' + altAnim, true);
-							else
-								dad.playAnim('singRIGHT' + altAnim, true);
+							dad404.playAnim('singRIGHT' + altAnim, true);
+							dad.playAnim('singRIGHT' + altAnim, true);
 						case 1:
-							if (qtIsBlueScreened)
-								dad404.playAnim('singDOWN' + altAnim, true);
-							else
-								dad.playAnim('singDOWN' + altAnim, true);
+							dad404.playAnim('singDOWN' + altAnim, true);
+							dad.playAnim('singDOWN' + altAnim, true);
 						case 0:
-							if (qtIsBlueScreened)
-								dad404.playAnim('singLEFT' + altAnim, true);
-							else
-								dad.playAnim('singLEFT' + altAnim, true);
+							dad404.playAnim('singLEFT' + altAnim, true);
+							dad.playAnim('singLEFT' + altAnim, true);
 					}
 					if ((cameramove && dad.curCharacter.startsWith("robot")) || forcecameramove)
 					{
@@ -3678,9 +3644,9 @@ class PlayState extends MusicBeatState
 		if (qtIsBlueScreened)
 		{
 			// Hide original versions
-			boyfriend.alpha = 0;
-			gf.alpha = 0;
-			dad.alpha = 0;
+			boyfriend.alpha = 0.001;
+			gf.alpha = 0.001;
+			dad.alpha = 0.001;
 
 			// New versions un-hidden.
 			boyfriend404.alpha = 1;
@@ -5140,25 +5106,17 @@ class PlayState extends MusicBeatState
 			switch (direction)
 			{
 				case 0:
-					if (qtIsBlueScreened)
-						boyfriend404.playAnim('singLEFTmiss', true);
-					else
-						boyfriend.playAnim('singLEFTmiss', true);
+					boyfriend404.playAnim('singLEFTmiss', true);
+					boyfriend.playAnim('singLEFTmiss', true);
 				case 1:
-					if (qtIsBlueScreened)
-						boyfriend404.playAnim('singDOWNmiss', true);
-					else
-						boyfriend.playAnim('singDOWNmiss', true);
+					boyfriend404.playAnim('singDOWNmiss', true);
+					boyfriend.playAnim('singDOWNmiss', true);
 				case 2:
-					if (qtIsBlueScreened)
-						boyfriend404.playAnim('singUPmiss', true);
-					else
-						boyfriend.playAnim('singUPmiss', true);
+					boyfriend404.playAnim('singUPmiss', true);
+					boyfriend.playAnim('singUPmiss', true);
 				case 3:
-					if (qtIsBlueScreened)
-						boyfriend404.playAnim('singRIGHTmiss', true);
-					else
-						boyfriend.playAnim('singRIGHTmiss', true);
+					boyfriend404.playAnim('singRIGHTmiss', true);
+					boyfriend.playAnim('singRIGHTmiss', true);
 			}
 		}
 
@@ -5296,14 +5254,6 @@ class PlayState extends MusicBeatState
 				popUpScore(note);
 				combo += 1;
 
-				if (boyfriend.curCharacter.startsWith('robot'))
-				{
-					// trace("KB shit");
-					playerStrums.members[note.noteData].y = hazardModChartDefaultStrumY[note.noteData + 4] + (FlxG.save.data.downscroll ? 22 : -22);
-					FlxTween.tween(playerStrums.members[note.noteData], {y: hazardModChartDefaultStrumY[note.noteData + 4]}, 0.126, {ease: FlxEase.cubeOut});
-				}
-
-				// this exist's because the new notes sheets don't have the scale animation
 				if ((boyfriend.curCharacter.startsWith('robot') || (boyfriend.curCharacter.startsWith('qt'))))
 				{
 					var scalex:Float = 0.694267515923567;
@@ -5313,6 +5263,14 @@ class PlayState extends MusicBeatState
 					playerStrums.members[note.noteData].scale.y = scaley + 0.2;
 					if (SONG.song.toLowerCase() != "terminate")
 						FlxTween.tween(playerStrums.members[note.noteData].scale, {y: scaley, x: scalex}, 0.125, {ease: FlxEase.cubeOut});
+
+					if (boyfriend.curCharacter.startsWith('robot'))
+					{
+						// trace("KB shit");
+						playerStrums.members[note.noteData].y = hazardModChartDefaultStrumY[note.noteData + 4] + (FlxG.save.data.downscroll ? 22 : -22);
+						FlxTween.tween(playerStrums.members[note.noteData], {y: hazardModChartDefaultStrumY[note.noteData + 4]}, 0.126,
+							{ease: FlxEase.cubeOut});
+					}
 				}
 			}
 			else
@@ -5324,25 +5282,17 @@ class PlayState extends MusicBeatState
 				switch (note.noteData)
 				{
 					case 2:
-						if (qtIsBlueScreened)
-							boyfriend404.playAnim('singUP', true);
-						else
-							boyfriend.playAnim('singUP', true);
+						boyfriend404.playAnim('singUP', true);
+						boyfriend.playAnim('singUP', true);
 					case 3:
-						if (qtIsBlueScreened)
-							boyfriend404.playAnim('singRIGHT', true);
-						else
-							boyfriend.playAnim('singRIGHT', true);
+						boyfriend404.playAnim('singRIGHT', true);
+						boyfriend.playAnim('singRIGHT', true);
 					case 1:
-						if (qtIsBlueScreened)
-							boyfriend404.playAnim('singDOWN', true);
-						else
-							boyfriend.playAnim('singDOWN', true);
+						boyfriend404.playAnim('singDOWN', true);
+						boyfriend.playAnim('singDOWN', true);
 					case 0:
-						if (qtIsBlueScreened)
-							boyfriend404.playAnim('singLEFT', true);
-						else
-							boyfriend.playAnim('singLEFT', true);
+						boyfriend404.playAnim('singLEFT', true);
+						boyfriend.playAnim('singLEFT', true);
 				}
 			}
 
@@ -5481,12 +5431,6 @@ class PlayState extends MusicBeatState
 					FlxTween.tween(strumLineNotes.members[7], {y: strumLineNotes.members[7].y + 10, alpha: 1}, 1.2, {ease: FlxEase.cubeOut});
 					FlxG.camera.shake(0.002, 1);
 					camHUD.shake(0.002, 1);
-					if (!Main.qtOptimisation)
-					{
-						boyfriend404.alpha = 0;
-						dad404.alpha = 0;
-						gf404.alpha = 0;
-					}
 				case 32:
 					FlxTween.tween(strumLineNotes.members[1], {y: strumLineNotes.members[1].y + 10, alpha: 1}, 1.2, {ease: FlxEase.cubeOut});
 					FlxTween.tween(strumLineNotes.members[6], {y: strumLineNotes.members[6].y + 10, alpha: 1}, 1.2, {ease: FlxEase.cubeOut});
@@ -5948,27 +5892,14 @@ class PlayState extends MusicBeatState
 			}
 
 			// Termination KB animates every 2 curstep instead of 4 (aka, every half beat, not every beat!)
-			if (curStage != "nightmare")
-			{ // No idea why this line causes a crash on REDACTED so erm... fuck you.
-				if (!(SONG.song.toLowerCase() == "termination"))
+			// No idea why this line causes a crash on REDACTED so erm... fuck you.
+			if (!(SONG.song.toLowerCase() == "termination"))
+			{
+				if (SONG.notes[Math.floor(curStep / 16)].mustHitSection && !dad404.animation.curAnim.name.startsWith("sing"))
 				{
-					if (SONG.notes[Math.floor(curStep / 16)].mustHitSection && !dad404.animation.curAnim.name.startsWith("sing"))
-					{
-						dad404.dance();
-					}
+					dad404.dance();
 				}
 			}
-		}
-
-		if (curBeat % 8 == 7 && curSong == 'Bopeebo')
-		{
-			boyfriend.playAnim('hey', true);
-		}
-
-		if (curBeat % 16 == 15 && SONG.song == 'Tutorial' && dad.curCharacter == 'gf' && curBeat > 16 && curBeat < 48)
-		{
-			boyfriend.playAnim('hey', true);
-			dad.playAnim('cheer', true);
 		}
 	}
 
@@ -5976,6 +5907,47 @@ class PlayState extends MusicBeatState
 	{
 		qt_gas01.animation.play(Anim);
 		qt_gas02.animation.play(Anim);
+	}
+
+	function changeDadCharacter(thecharacter:String, changeicon:Bool = true, changenotes:Bool = true)
+	{
+		var olddadx = dad.x;
+		var olddady = dad.y;
+		remove(dad);
+		dad = new Character(olddadx, olddady, thecharacter);
+		add(dad);
+		if (changenotes)
+			reloadStatics();
+		if (changeicon)
+		{
+			iconP2.animation.play(thecharacter);
+			reloadHealthBarColors();
+		}
+	}
+
+	function changeBFCharacter(thecharacter:String, changeicon:Bool = true, changenotes:Bool = true)
+	{
+		var oldboyfriendx = boyfriend.x;
+		var oldboyfriendy = boyfriend.y;
+		remove(boyfriend);
+		boyfriend = new Boyfriend(oldboyfriendx, oldboyfriendy, thecharacter);
+		add(boyfriend);
+		if (changenotes)
+			reloadStatics();
+		if (changeicon)
+		{
+			iconP1.animation.play(thecharacter);
+			reloadHealthBarColors();
+		}
+	}
+
+	function changeGfCharacter(thecharacter:String)
+	{
+		var oldgfx = gf.x;
+		var oldgfy = gf.y;
+		remove(gf);
+		gf = new Character(oldgfx, oldgfy, thecharacter);
+		add(gf);
 	}
 
 	var curLight:Int = 0;

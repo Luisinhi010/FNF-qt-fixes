@@ -186,9 +186,6 @@ class Note extends FlxSprite
 						prevNote.animation.play('redhold');
 				}
 
-				// prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.8 * FlxG.save.data.scrollSpeed; ke code
-				// prevNote.scale.y += FlxG.save.data.scrollSpeed / prevNote.scale.y * 2;//bad - luis
-
 				if (FlxG.save.data.scrollSpeed != 1)
 					prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.8 * FlxG.save.data.scrollSpeed;
 				else
