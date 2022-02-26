@@ -70,56 +70,7 @@ function update(elapsed)
 	end
 end
 
-function beatHit(beat) -- For intro (notes fade in)
-
-	--TESTING
-	--[[
-	if curBeat == 26 then
-		kbPincerPrepare(1,false)
-		kbPincerPrepare(2,false)
-		kbPincerPrepare(3,false)
-		kbPincerPrepare(4,false)
-	elseif curBeat == 28 then
-		kbPincerGrab(1)
-		kbPincerGrab(2)
-		kbPincerGrab(3)
-		kbPincerGrab(4)
-		if downscroll==0 then	
-			tweenPos('pincer3', x6, y6-10, 0.25, done)
-			tweenPos('pincer2', x5, y5-10, 0.25, done)
-			tweenPos('pincer4', x7+16, y7+45, 0.25, done)
-			tweenPos('pincer1', x4-16, y4+45, 0.25, done)
-			
-			tweenPos(6, x6, y6-10, 0.25, done)
-			tweenPos(5, x5, y5-10, 0.25, done)
-			tweenPos(7, x7+16, y7+45, 0.25, done)
-			tweenPos(4, x4-16, y4+45, 0.25, done)
-			tweenAngle(7, 40, 0.25, done)
-			tweenAngle(4, -40, 0.25, done)
-		else
-			tweenPos('pincer3', x6, y6+10, 0.25, done)
-			tweenPos('pincer2', x5, y5+10, 0.25, done)
-			tweenPos('pincer4', x7+16, y7-45, 0.25, done)
-			tweenPos('pincer1', x4-16, y4-45, 0.25, done)
-		
-			tweenPos(6, x6, y6+10, 0.25, done)
-			tweenPos(5, x5, y5+10, 0.25, done)
-			tweenPos(7, x7+16, y7-45, 0.25, done)
-			tweenPos(4, x4-16, y4-45, 0.25, done)
-			tweenAngle(7, -40, 0.25, done)
-			tweenAngle(4, 40, 0.25, done)
-		end
-	elseif curBeat == 30 then
-		kbPincerPrepare(1,true)
-		kbPincerPrepare(2,true)
-		kbPincerPrepare(3,true)
-		kbPincerPrepare(4,true)
-	end
-	--]]
-
-	
-	--tweenPos(id,x,y,time,function)
-	
+function beatHit(beat) -- For intro (notes fade in)	
 	--Just after 1st drop.
 	--1st pincer move
 	if curBeat == 320 then
@@ -297,24 +248,4 @@ function stepHit(step) -- do nothing
 		kbPincerPrepare(3,true)
 		kbPincerPrepare(2,true)
 	end
-end
-
-function playerTwoTurn()
-
-end
-
-function playerOneTurn()
-
-end
-
-function playerOneMiss()
-
-end
-
-function playerOneSing()
-
-end
-
-function playerTwoSing()
-
 end

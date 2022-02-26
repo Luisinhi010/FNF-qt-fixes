@@ -3498,37 +3498,51 @@ class PlayState extends MusicBeatState
 					}
 					// Responsible for playing the animations for the Dad. -Haz
 					// Nice tutorial Hazard 24. -Luis
-					switch (Math.abs(daNote.noteData))
+
+					if (!qtIsBlueScreened)
 					{
-						case 2:
-							dad404.playAnim('singUP' + altAnim, true);
-							dad.playAnim('singUP' + altAnim, true);
-						case 3:
-							dad404.playAnim('singRIGHT' + altAnim, true);
-							dad.playAnim('singRIGHT' + altAnim, true);
-						case 1:
-							dad404.playAnim('singDOWN' + altAnim, true);
-							dad.playAnim('singDOWN' + altAnim, true);
-						case 0:
-							dad404.playAnim('singLEFT' + altAnim, true);
-							dad.playAnim('singLEFT' + altAnim, true);
+						switch (Math.abs(daNote.noteData))
+						{
+							case 0:
+								dad.playAnim('singLEFT' + altAnim, true);
+							case 1:
+								dad.playAnim('singDOWN' + altAnim, true);
+							case 2:
+								dad.playAnim('singUP' + altAnim, true);
+							case 3:
+								dad.playAnim('singRIGHT' + altAnim, true);
+						}
+					}
+					else
+					{
+						switch (Math.abs(daNote.noteData))
+						{
+							case 0:
+								dad404.playAnim('singLEFT' + altAnim, true);
+							case 1:
+								dad404.playAnim('singDOWN' + altAnim, true);
+							case 2:
+								dad404.playAnim('singUP' + altAnim, true);
+							case 3:
+								dad404.playAnim('singRIGHT' + altAnim, true);
+						}
 					}
 					if ((cameramove && dad.curCharacter.startsWith("robot")) || forcecameramove)
 					{
 						switch (Math.abs(daNote.noteData))
 						{
+							case 0:
+								camX = -80;
+								camY = 30;
+							case 1:
+								camY = 45;
+								camX = -10;
 							case 2:
 								camY = -60;
 								camX = -50;
 							case 3:
 								camX = 50;
 								camY = -20;
-							case 1:
-								camY = 50;
-								camX = -10;
-							case 0:
-								camX = -70;
-								camY = 30;
 						} // custom camera move :D
 					}
 					cpuStrums.forEach(function(spr:FlxSprite)
@@ -3673,9 +3687,7 @@ class PlayState extends MusicBeatState
 			if (FlxG.save.data.songPosition)
 				songPosBar.createFilledBar(FlxColor.fromString('#' + dad.songPosbarempty), FlxColor.fromString('#' + dad.songPosbar));
 		}
-		removeStatics();
-		generateStaticArrows(0, false);
-		generateStaticArrows(1, false);
+		reloadStatics();
 	}
 
 	function dodgeTimingOverride(newValue:Float = 0.22625):Void
@@ -3758,13 +3770,9 @@ class PlayState extends MusicBeatState
 	// OLD ATTACK DOUBLE VARIATION
 	function KBATTACK_ALERTDOUBLE(pointless:Bool = false):Void
 	{
-		if (!(SONG.song.toLowerCase() == "termination" || SONG.song.toLowerCase() == "tutorial"))
-		{
-			trace("Sawblade AlertDOUBLE Error, cannot use Termination functions outside Termination or Tutorial.");
-		}
 		trace("DANGER DOUBLE INCOMING!!");
 		kb_attack_alert.animation.play('alertDOUBLE');
-		FlxG.sound.play(Paths.sound('old/alertALT', 'qt'), 1);
+		FlxG.sound.play(Paths.sound('alertDouble'), 1);
 		forcecameratoplayer2 = true;
 		kbsawbladecamXdad = -100;
 		hazardOverlayShit.alpha = 0.55;
@@ -3773,258 +3781,244 @@ class PlayState extends MusicBeatState
 	// Pincer logic, used by the modchart but can be hardcoded like saws if you want.
 	function KBPINCER_PREPARE(laneID:Int, goAway:Bool):Void
 	{
-		if (!(SONG.song.toLowerCase() == "termination" || SONG.song.toLowerCase() == "tutorial"))
-		{
-			trace("Pincer Error, cannot use Termination functions outside Termination or Tutorial.");
-		}
-		else
-		{
-			// 1 = BF far left, 4 = BF far right. This only works for BF!
-			// Update! 5 now refers to the far left lane. Mainly used for the shaking section or whatever.
-			pincer1.cameras = [camHUD];
-			pincer2.cameras = [camHUD];
-			pincer3.cameras = [camHUD];
-			pincer4.cameras = [camHUD];
+		// 1 = BF far left, 4 = BF far right. This only works for BF!
+		// Update! 5 now refers to the far left lane. Mainly used for the shaking section or whatever.
+		pincer1.cameras = [camHUD];
+		pincer2.cameras = [camHUD];
+		pincer3.cameras = [camHUD];
+		pincer4.cameras = [camHUD];
 
-			// This is probably the most disgusting code I've ever written in my life.
-			// All because I can't be bothered to learn arrays and shit.
-			// Would've converted this to a switch case but I'm too scared to change it so deal with it.
-			if (laneID == 1)
+		// This is probably the most disgusting code I've ever written in my life.
+		// All because I can't be bothered to learn arrays and shit.
+		// Would've converted this to a switch case but I'm too scared to change it so deal with it.
+		if (laneID == 1)
+		{
+			pincer1.loadGraphic(Paths.image('bonus/pincer-open', 'qt'), false);
+			if (FlxG.save.data.downscroll)
 			{
-				pincer1.loadGraphic(Paths.image('bonus/pincer-open', 'qt'), false);
-				if (FlxG.save.data.downscroll)
+				if (!goAway)
 				{
-					if (!goAway)
-					{
-						pincer1.setPosition(strumLineNotes.members[4].x, strumLineNotes.members[4].y + 500);
-						add(pincer1);
-						FlxTween.tween(pincer1, {y: strumLineNotes.members[4].y}, 0.3, {ease: FlxEase.elasticOut});
-					}
-					else
-					{
-						FlxTween.tween(pincer1, {y: strumLineNotes.members[4].y + 500}, 0.4, {
-							ease: FlxEase.bounceIn,
-							onComplete: function(twn:FlxTween)
-							{
-								remove(pincer1);
-							}
-						});
-					}
+					pincer1.setPosition(strumLineNotes.members[4].x, strumLineNotes.members[4].y + 500);
+					add(pincer1);
+					FlxTween.tween(pincer1, {y: strumLineNotes.members[4].y}, 0.3, {ease: FlxEase.elasticOut});
 				}
 				else
 				{
-					if (!goAway)
-					{
-						pincer1.setPosition(strumLineNotes.members[4].x, strumLineNotes.members[4].y - 500);
-						add(pincer1);
-						FlxTween.tween(pincer1, {y: strumLineNotes.members[4].y}, 0.3, {ease: FlxEase.elasticOut});
-					}
-					else
-					{
-						FlxTween.tween(pincer1, {y: strumLineNotes.members[4].y - 500}, 0.4, {
-							ease: FlxEase.bounceIn,
-							onComplete: function(twn:FlxTween)
-							{
-								remove(pincer1);
-							}
-						});
-					}
-				}
-			}
-			else if (laneID == 5)
-			{ // Targets far left note for Dad (KB). Used for the screenshake thing
-				pincer1.loadGraphic(Paths.image('bonus/pincer-open', 'qt'), false);
-				if (FlxG.save.data.downscroll)
-				{
-					if (!goAway)
-					{
-						pincer1.setPosition(strumLineNotes.members[0].x, strumLineNotes.members[0].y + 500);
-						add(pincer1);
-						FlxTween.tween(pincer1, {y: strumLineNotes.members[0].y}, 0.3, {ease: FlxEase.elasticOut});
-					}
-					else
-					{
-						FlxTween.tween(pincer1, {y: strumLineNotes.members[0].y + 500}, 0.4, {
-							ease: FlxEase.bounceIn,
-							onComplete: function(twn:FlxTween)
-							{
-								remove(pincer1);
-							}
-						});
-					}
-				}
-				else
-				{
-					if (!goAway)
-					{
-						pincer1.setPosition(strumLineNotes.members[0].x, strumLineNotes.members[5].y - 500);
-						add(pincer1);
-						FlxTween.tween(pincer1, {y: strumLineNotes.members[0].y}, 0.3, {ease: FlxEase.elasticOut});
-					}
-					else
-					{
-						FlxTween.tween(pincer1, {y: strumLineNotes.members[0].y - 500}, 0.4, {
-							ease: FlxEase.bounceIn,
-							onComplete: function(twn:FlxTween)
-							{
-								remove(pincer1);
-							}
-						});
-					}
-				}
-			}
-			else if (laneID == 2)
-			{
-				pincer2.loadGraphic(Paths.image('bonus/pincer-open', 'qt'), false);
-				if (FlxG.save.data.downscroll)
-				{
-					if (!goAway)
-					{
-						pincer2.setPosition(strumLineNotes.members[5].x, strumLineNotes.members[5].y + 500);
-						add(pincer2);
-						FlxTween.tween(pincer2, {y: strumLineNotes.members[5].y}, 0.3, {ease: FlxEase.elasticOut});
-					}
-					else
-					{
-						FlxTween.tween(pincer2, {y: strumLineNotes.members[5].y + 500}, 0.4, {
-							ease: FlxEase.bounceIn,
-							onComplete: function(twn:FlxTween)
-							{
-								remove(pincer2);
-							}
-						});
-					}
-				}
-				else
-				{
-					if (!goAway)
-					{
-						pincer2.setPosition(strumLineNotes.members[5].x, strumLineNotes.members[5].y - 500);
-						add(pincer2);
-						FlxTween.tween(pincer2, {y: strumLineNotes.members[5].y}, 0.3, {ease: FlxEase.elasticOut});
-					}
-					else
-					{
-						FlxTween.tween(pincer2, {y: strumLineNotes.members[5].y - 500}, 0.4, {
-							ease: FlxEase.bounceIn,
-							onComplete: function(twn:FlxTween)
-							{
-								remove(pincer2);
-							}
-						});
-					}
-				}
-			}
-			else if (laneID == 3)
-			{
-				pincer3.loadGraphic(Paths.image('bonus/pincer-open', 'qt'), false);
-				if (FlxG.save.data.downscroll)
-				{
-					if (!goAway)
-					{
-						pincer3.setPosition(strumLineNotes.members[6].x, strumLineNotes.members[6].y + 500);
-						add(pincer3);
-						FlxTween.tween(pincer3, {y: strumLineNotes.members[6].y}, 0.3, {ease: FlxEase.elasticOut});
-					}
-					else
-					{
-						FlxTween.tween(pincer3, {y: strumLineNotes.members[6].y + 500}, 0.4, {
-							ease: FlxEase.bounceIn,
-							onComplete: function(twn:FlxTween)
-							{
-								remove(pincer3);
-							}
-						});
-					}
-				}
-				else
-				{
-					if (!goAway)
-					{
-						pincer3.setPosition(strumLineNotes.members[6].x, strumLineNotes.members[6].y - 500);
-						add(pincer3);
-						FlxTween.tween(pincer3, {y: strumLineNotes.members[6].y}, 0.3, {ease: FlxEase.elasticOut});
-					}
-					else
-					{
-						FlxTween.tween(pincer3, {y: strumLineNotes.members[6].y - 500}, 0.4, {
-							ease: FlxEase.bounceIn,
-							onComplete: function(twn:FlxTween)
-							{
-								remove(pincer3);
-							}
-						});
-					}
-				}
-			}
-			else if (laneID == 4)
-			{
-				pincer4.loadGraphic(Paths.image('bonus/pincer-open', 'qt'), false);
-				if (FlxG.save.data.downscroll)
-				{
-					if (!goAway)
-					{
-						pincer4.setPosition(strumLineNotes.members[7].x, strumLineNotes.members[7].y + 500);
-						add(pincer4);
-						FlxTween.tween(pincer4, {y: strumLineNotes.members[7].y}, 0.3, {ease: FlxEase.elasticOut});
-					}
-					else
-					{
-						FlxTween.tween(pincer4, {y: strumLineNotes.members[7].y + 500}, 0.4, {
-							ease: FlxEase.bounceIn,
-							onComplete: function(twn:FlxTween)
-							{
-								remove(pincer4);
-							}
-						});
-					}
-				}
-				else
-				{
-					if (!goAway)
-					{
-						pincer4.setPosition(strumLineNotes.members[7].x, strumLineNotes.members[7].y - 500);
-						add(pincer4);
-						FlxTween.tween(pincer4, {y: strumLineNotes.members[7].y}, 0.3, {ease: FlxEase.elasticOut});
-					}
-					else
-					{
-						FlxTween.tween(pincer4, {y: strumLineNotes.members[7].y - 500}, 0.4, {
-							ease: FlxEase.bounceIn,
-							onComplete: function(twn:FlxTween)
-							{
-								remove(pincer4);
-							}
-						});
-					}
+					FlxTween.tween(pincer1, {y: strumLineNotes.members[4].y + 500}, 0.4, {
+						ease: FlxEase.bounceIn,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(pincer1);
+						}
+					});
 				}
 			}
 			else
-				trace("Invalid LaneID for pincer");
+			{
+				if (!goAway)
+				{
+					pincer1.setPosition(strumLineNotes.members[4].x, strumLineNotes.members[4].y - 500);
+					add(pincer1);
+					FlxTween.tween(pincer1, {y: strumLineNotes.members[4].y}, 0.3, {ease: FlxEase.elasticOut});
+				}
+				else
+				{
+					FlxTween.tween(pincer1, {y: strumLineNotes.members[4].y - 500}, 0.4, {
+						ease: FlxEase.bounceIn,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(pincer1);
+						}
+					});
+				}
+			}
 		}
+		else if (laneID == 5)
+		{ // Targets far left note for Dad (KB). Used for the screenshake thing
+			pincer1.loadGraphic(Paths.image('bonus/pincer-open', 'qt'), false);
+			if (FlxG.save.data.downscroll)
+			{
+				if (!goAway)
+				{
+					pincer1.setPosition(strumLineNotes.members[0].x, strumLineNotes.members[0].y + 500);
+					add(pincer1);
+					FlxTween.tween(pincer1, {y: strumLineNotes.members[0].y}, 0.3, {ease: FlxEase.elasticOut});
+				}
+				else
+				{
+					FlxTween.tween(pincer1, {y: strumLineNotes.members[0].y + 500}, 0.4, {
+						ease: FlxEase.bounceIn,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(pincer1);
+						}
+					});
+				}
+			}
+			else
+			{
+				if (!goAway)
+				{
+					pincer1.setPosition(strumLineNotes.members[0].x, strumLineNotes.members[5].y - 500);
+					add(pincer1);
+					FlxTween.tween(pincer1, {y: strumLineNotes.members[0].y}, 0.3, {ease: FlxEase.elasticOut});
+				}
+				else
+				{
+					FlxTween.tween(pincer1, {y: strumLineNotes.members[0].y - 500}, 0.4, {
+						ease: FlxEase.bounceIn,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(pincer1);
+						}
+					});
+				}
+			}
+		}
+		else if (laneID == 2)
+		{
+			pincer2.loadGraphic(Paths.image('bonus/pincer-open', 'qt'), false);
+			if (FlxG.save.data.downscroll)
+			{
+				if (!goAway)
+				{
+					pincer2.setPosition(strumLineNotes.members[5].x, strumLineNotes.members[5].y + 500);
+					add(pincer2);
+					FlxTween.tween(pincer2, {y: strumLineNotes.members[5].y}, 0.3, {ease: FlxEase.elasticOut});
+				}
+				else
+				{
+					FlxTween.tween(pincer2, {y: strumLineNotes.members[5].y + 500}, 0.4, {
+						ease: FlxEase.bounceIn,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(pincer2);
+						}
+					});
+				}
+			}
+			else
+			{
+				if (!goAway)
+				{
+					pincer2.setPosition(strumLineNotes.members[5].x, strumLineNotes.members[5].y - 500);
+					add(pincer2);
+					FlxTween.tween(pincer2, {y: strumLineNotes.members[5].y}, 0.3, {ease: FlxEase.elasticOut});
+				}
+				else
+				{
+					FlxTween.tween(pincer2, {y: strumLineNotes.members[5].y - 500}, 0.4, {
+						ease: FlxEase.bounceIn,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(pincer2);
+						}
+					});
+				}
+			}
+		}
+		else if (laneID == 3)
+		{
+			pincer3.loadGraphic(Paths.image('bonus/pincer-open', 'qt'), false);
+			if (FlxG.save.data.downscroll)
+			{
+				if (!goAway)
+				{
+					pincer3.setPosition(strumLineNotes.members[6].x, strumLineNotes.members[6].y + 500);
+					add(pincer3);
+					FlxTween.tween(pincer3, {y: strumLineNotes.members[6].y}, 0.3, {ease: FlxEase.elasticOut});
+				}
+				else
+				{
+					FlxTween.tween(pincer3, {y: strumLineNotes.members[6].y + 500}, 0.4, {
+						ease: FlxEase.bounceIn,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(pincer3);
+						}
+					});
+				}
+			}
+			else
+			{
+				if (!goAway)
+				{
+					pincer3.setPosition(strumLineNotes.members[6].x, strumLineNotes.members[6].y - 500);
+					add(pincer3);
+					FlxTween.tween(pincer3, {y: strumLineNotes.members[6].y}, 0.3, {ease: FlxEase.elasticOut});
+				}
+				else
+				{
+					FlxTween.tween(pincer3, {y: strumLineNotes.members[6].y - 500}, 0.4, {
+						ease: FlxEase.bounceIn,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(pincer3);
+						}
+					});
+				}
+			}
+		}
+		else if (laneID == 4)
+		{
+			pincer4.loadGraphic(Paths.image('bonus/pincer-open', 'qt'), false);
+			if (FlxG.save.data.downscroll)
+			{
+				if (!goAway)
+				{
+					pincer4.setPosition(strumLineNotes.members[7].x, strumLineNotes.members[7].y + 500);
+					add(pincer4);
+					FlxTween.tween(pincer4, {y: strumLineNotes.members[7].y}, 0.3, {ease: FlxEase.elasticOut});
+				}
+				else
+				{
+					FlxTween.tween(pincer4, {y: strumLineNotes.members[7].y + 500}, 0.4, {
+						ease: FlxEase.bounceIn,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(pincer4);
+						}
+					});
+				}
+			}
+			else
+			{
+				if (!goAway)
+				{
+					pincer4.setPosition(strumLineNotes.members[7].x, strumLineNotes.members[7].y - 500);
+					add(pincer4);
+					FlxTween.tween(pincer4, {y: strumLineNotes.members[7].y}, 0.3, {ease: FlxEase.elasticOut});
+				}
+				else
+				{
+					FlxTween.tween(pincer4, {y: strumLineNotes.members[7].y - 500}, 0.4, {
+						ease: FlxEase.bounceIn,
+						onComplete: function(twn:FlxTween)
+						{
+							remove(pincer4);
+						}
+					});
+				}
+			}
+		}
+		else
+			trace("Invalid LaneID for pincer");
 	}
 
 	function KBPINCER_GRAB(laneID:Int):Void
 	{
-		if (!(SONG.song.toLowerCase() == "termination" || SONG.song.toLowerCase() == "tutorial"))
+		switch (laneID)
 		{
-			trace("PincerGRAB Error, cannot use Termination functions outside Termination or Tutorial.");
-		}
-		else
-		{
-			switch (laneID)
-			{
-				case 1 | 5:
-					pincer1.loadGraphic(Paths.image('bonus/pincer-close', 'qt'), false);
-				case 2:
-					pincer2.loadGraphic(Paths.image('bonus/pincer-close', 'qt'), false);
-				case 3:
-					pincer3.loadGraphic(Paths.image('bonus/pincer-close', 'qt'), false);
-				case 4:
-					pincer4.loadGraphic(Paths.image('bonus/pincer-close', 'qt'), false);
-				default:
-					trace("Invalid LaneID for pincerGRAB");
-			}
+			case 1 | 5:
+				pincer1.loadGraphic(Paths.image('bonus/pincer-close', 'qt'), false);
+			case 2:
+				pincer2.loadGraphic(Paths.image('bonus/pincer-close', 'qt'), false);
+			case 3:
+				pincer3.loadGraphic(Paths.image('bonus/pincer-close', 'qt'), false);
+			case 4:
+				pincer4.loadGraphic(Paths.image('bonus/pincer-close', 'qt'), false);
+			default:
+				trace("Invalid LaneID for pincerGRAB");
 		}
 	}
 
@@ -5103,20 +5097,33 @@ class PlayState extends MusicBeatState
 
 		if (!bfDodging)
 		{
-			switch (direction)
+			if (!qtIsBlueScreened)
 			{
-				case 0:
-					boyfriend404.playAnim('singLEFTmiss', true);
-					boyfriend.playAnim('singLEFTmiss', true);
-				case 1:
-					boyfriend404.playAnim('singDOWNmiss', true);
-					boyfriend.playAnim('singDOWNmiss', true);
-				case 2:
-					boyfriend404.playAnim('singUPmiss', true);
-					boyfriend.playAnim('singUPmiss', true);
-				case 3:
-					boyfriend404.playAnim('singRIGHTmiss', true);
-					boyfriend.playAnim('singRIGHTmiss', true);
+				switch (direction)
+				{
+					case 0:
+						boyfriend.playAnim('singLEFTmiss', true);
+					case 1:
+						boyfriend.playAnim('singDOWNmiss', true);
+					case 2:
+						boyfriend.playAnim('singUPmiss', true);
+					case 3:
+						boyfriend.playAnim('singRIGHTmiss', true);
+				}
+			}
+			else
+			{
+				switch (direction)
+				{
+					case 0:
+						boyfriend404.playAnim('singLEFTmiss', true);
+					case 1:
+						boyfriend404.playAnim('singDOWNmiss', true);
+					case 2:
+						boyfriend404.playAnim('singUPmiss', true);
+					case 3:
+						boyfriend404.playAnim('singRIGHTmiss', true);
+				}
 			}
 		}
 
@@ -5279,20 +5286,33 @@ class PlayState extends MusicBeatState
 			// Switch case for playing the animation for which note. -Haz
 			if (!bfDodging)
 			{
-				switch (note.noteData)
+				if (!qtIsBlueScreened)
 				{
-					case 2:
-						boyfriend404.playAnim('singUP', true);
-						boyfriend.playAnim('singUP', true);
-					case 3:
-						boyfriend404.playAnim('singRIGHT', true);
-						boyfriend.playAnim('singRIGHT', true);
-					case 1:
-						boyfriend404.playAnim('singDOWN', true);
-						boyfriend.playAnim('singDOWN', true);
-					case 0:
-						boyfriend404.playAnim('singLEFT', true);
-						boyfriend.playAnim('singLEFT', true);
+					switch (note.noteData)
+					{
+						case 0:
+							boyfriend.playAnim('singLEFT', true);
+						case 1:
+							boyfriend.playAnim('singDOWN', true);
+						case 2:
+							boyfriend.playAnim('singUP', true);
+						case 3:
+							boyfriend.playAnim('singRIGHT', true);
+					}
+				}
+				else
+				{
+					switch (note.noteData)
+					{
+						case 0:
+							boyfriend404.playAnim('singLEFT', true);
+						case 1:
+							boyfriend404.playAnim('singDOWN', true);
+						case 2:
+							boyfriend404.playAnim('singUP', true);
+						case 3:
+							boyfriend404.playAnim('singRIGH', true);
+					}
 				}
 			}
 

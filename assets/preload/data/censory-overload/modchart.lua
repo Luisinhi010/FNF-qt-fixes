@@ -34,31 +34,3 @@ function update(elapsed)
 		end
 	end
 end
-
-function beatHit(beat) -- do nothing
-
-end
-
-function stepHit(step) -- do nothing
-
-end
-
-function playerTwoTurn()
-
-end
-
-function playerOneTurn()
-
-end
-
-function playerOneMiss()
-
-end
-
-function playerOneSing()
-
-end
-
-function playerTwoSing()
-
-end

@@ -8,7 +8,8 @@ function update(elapsed)
 		for i=0,7 do
 			setActorX(_G['defaultStrum'..i..'X'] + 8 * math.sin((currentBeat + i*0.25) * math.pi), i)
 		end
-	else
+	end
+	if curBeat>=197 and curBeat<198 then
 		for i=0,7 do
 			setActorX(_G['defaultStrum'..i..'X'],i)
 		end
@@ -20,13 +21,5 @@ function beatHit(beat) -- do nothing
 end
 
 function stepHit(step) -- do nothing
-
-end
-
-function playerTwoTurn()
-
-end
-
-function playerOneTurn()
 
 end

@@ -46,11 +46,3 @@ function stepHit(step) -- do nothing
 		tweenFadeIn(7,1,0.4)
 	end
 end
-
-function playerTwoTurn()
-
-end
-
-function playerOneTurn()
-
-end
