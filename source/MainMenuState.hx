@@ -180,6 +180,7 @@ class MainMenuState extends MusicBeatState
 		icon = new HealthIcon('bf');
 		icon.antialiasing = true;
 		icon.x = 70;
+		icon.angle = -1;
 		icon.y = FlxG.height - 180;
 		icon.scrollFactor.set();
 		icon.updateHitbox();

@@ -583,7 +583,7 @@ class PlayState extends MusicBeatState
 		if (FlxG.save.data.downscroll)
 			camcustom.flashSprite.scaleY *= -1;
 		else
-			camcustom.flashSprite.scaleY *= -1;
+			camcustom.flashSprite.scaleY *= 1;
 
 		// FlxG.cameras.setDefaultDrawTarget(camGame, true); //i rlly hate haxe sometimes
 
@@ -3480,6 +3480,8 @@ class PlayState extends MusicBeatState
 					{
 						if (SONG.notes[Math.floor(curStep / 16)].altAnim)
 							altAnim = '-alt';
+						if (dad.curCharacter == 'qt-kb')
+							forcecameramove = false;
 					}
 					if (SONG.song.toLowerCase() == "cessation")
 					{
