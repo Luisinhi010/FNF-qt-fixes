@@ -5427,9 +5427,10 @@ class PlayState extends MusicBeatState
 					// KBATTACK(true, "old/attack_alt01");
 					KBATTACK(true);
 					qt_tv01.animation.play("idle");
-					for (boi in strumLineNotes.members)
+					for (spr in strumLineNotes.members)
 					{ // FAIL SAFE TO ENSURE THAT ALL THE NOTES ARE VISIBLE WHEN PLAYING!!!!!
-						boi.alpha = 1;
+						spr.alpha = 1;
+						spr.y = luisModChartDefaultStrumY;
 					}
 				// case 123:
 				// KBATTACK();
