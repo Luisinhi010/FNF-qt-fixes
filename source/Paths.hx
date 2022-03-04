@@ -55,7 +55,7 @@ class Paths
 		return getPath(file, type, library);
 	}
 
-	inline static public function lua(key:String,?library:String)
+	inline static public function lua(key:String, ?library:String)
 	{
 		return getPath('data/$key.lua', TEXT, library);
 	}
@@ -110,9 +110,24 @@ class Paths
 		return getPath('images/$key.png', IMAGE, library);
 	}
 
+	inline static public function imageRandom(key:String, min:Int, max:Int, ?library:String)
+	{
+		var thekey:String = key + FlxG.random.int(min, max);
+		return getPath('images/$thekey.png', IMAGE, library);
+	}
+
 	inline static public function font(key:String)
 	{
 		return 'assets/fonts/$key';
+	}
+
+	inline static public function fileExists(key:String, type:AssetType, ?library:String)
+	{
+		if (OpenFlAssets.exists(Paths.getPath(key, type, library)))
+		{
+			return true;
+		}
+		return false;
 	}
 
 	inline static public function getSparrowAtlas(key:String, ?library:String)

@@ -1,5 +1,7 @@
 package;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -9,8 +11,6 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
-
-
 #if windows
 import Discord.DiscordClient;
 #end
@@ -42,14 +42,14 @@ class FreeplayState extends MusicBeatState
 		for (i in 0...initSonglist.length)
 		{
 			var data:Array<String> = initSonglist[i].split(':');
-			if(!(data[0]=='Termination') && !(data[0]=='Cessation')){ //Add everything to the song list which isn't Termination and Cessation.
+			if (!(data[0] == 'Termination') && !(data[0] == 'Cessation'))
+			{ // Add everything to the song list which isn't Termination and Cessation.
 				songs.push(new SongMetadata(data[0], Std.parseInt(data[2]), data[1]));
 			}
-			else if(FlxG.save.data.terminationUnlocked && data[0]=='Termination') //If the list picks up Termination, check if its unlocked before adding.
+			else if (FlxG.save.data.terminationUnlocked && data[0] == 'Termination') // If the list picks up Termination, check if its unlocked before adding.
 				songs.push(new SongMetadata(data[0], Std.parseInt(data[2]), data[1]));
-			else if(FlxG.save.data.terminationBeaten && data[0]=='Cessation') //If the list picks up Cessation, check if its unlocked before adding.
+			else if (FlxG.save.data.terminationBeaten && data[0] == 'Cessation') // If the list picks up Cessation, check if its unlocked before adding.
 				songs.push(new SongMetadata(data[0], Std.parseInt(data[2]), data[1]));
-			
 		}
 
 		/* 
@@ -60,10 +60,10 @@ class FreeplayState extends MusicBeatState
 			}
 		 */
 
-		 #if windows
-		 // Updating Discord Rich Presence
-		 DiscordClient.changePresence("In the Freeplay Menu", null);
-		 #end
+		#if windows
+		// Updating Discord Rich Presence
+		DiscordClient.changePresence("In the Freeplay Menu", null);
+		#end
 
 		var isDebug:Bool = false;
 
@@ -197,11 +197,12 @@ class FreeplayState extends MusicBeatState
 			changeSelection(1);
 		}
 
-		if(!(songs[curSelected].songName.toLowerCase()=="termination")){	//Only allow the difficulty to be changed if the song isn't termination.
-		if (controls.LEFT_P)
-			changeDiff(-1);
-		if (controls.RIGHT_P)
-			changeDiff(1);
+		if (!(songs[curSelected].songName.toLowerCase() == "termination"))
+		{ // Only allow the difficulty to be changed if the song isn't termination.
+			if (controls.LEFT_P)
+				changeDiff(-1);
+			if (controls.RIGHT_P)
+				changeDiff(1);
 		}
 
 		if (controls.BACK)
@@ -211,10 +212,12 @@ class FreeplayState extends MusicBeatState
 
 		if (accepted)
 		{
-			if((songs[curSelected].songName.toLowerCase()=='termination') && !(FlxG.save.data.terminationUnlocked)){
+			if ((songs[curSelected].songName.toLowerCase() == 'termination') && !(FlxG.save.data.terminationUnlocked))
+			{
 				trace("lmao, access denied idiot!");
 			}
-			else if((songs[curSelected].songName.toLowerCase()=='cessation') && !(FlxG.save.data.terminationBeaten)){
+			else if ((songs[curSelected].songName.toLowerCase() == 'cessation') && !(FlxG.save.data.terminationBeaten))
+			{
 				trace("lmao, access denied idiot! Prove yourself first mortal.");
 			}
 			else
@@ -235,22 +238,23 @@ class FreeplayState extends MusicBeatState
 
 	function changeDiff(change:Int = 0)
 	{
-		if(songs[curSelected].songName.toLowerCase()=="termination")
+		if (songs[curSelected].songName.toLowerCase() == "termination")
 		{
-			curDifficulty = 2; //Force it to hard difficulty.
-			if(FlxG.save.data.terminationUnlocked)
+			curDifficulty = 2; // Force it to hard difficulty.
+			FlxTween.color(diffText, 0.3, diffText.color, FlxColor.RED, {ease: FlxEase.quadInOut});
+			if (FlxG.save.data.terminationUnlocked)
 				diffText.text = "VERY HARD";
 			else
 				diffText.text = "LOCKED";
 			#if !switch
 			intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 			#end
-			
 		}
-		else if(songs[curSelected].songName.toLowerCase()=="cessation")
+		else if (songs[curSelected].songName.toLowerCase() == "cessation")
 		{
-			curDifficulty = 1; //Force it to normal difficulty.
-			if(FlxG.save.data.terminationBeaten)
+			curDifficulty = 1; // Force it to normal difficulty.
+			FlxTween.color(diffText, 0.3, diffText.color, FlxColor.CYAN, {ease: FlxEase.quadInOut});
+			if (FlxG.save.data.terminationBeaten)
 				diffText.text = "FUTURE";
 			else
 				diffText.text = "LOCKED";
@@ -270,17 +274,20 @@ class FreeplayState extends MusicBeatState
 			switch (curDifficulty)
 			{
 				case 0:
-					diffText.text = "EASY";
+					diffText.text = "< EASY >";
+					FlxTween.color(diffText, 0.3, diffText.color, FlxColor.LIME, {ease: FlxEase.quadInOut});
 				case 1:
-					diffText.text = 'NORMAL';
+					FlxTween.color(diffText, 0.3, diffText.color, FlxColor.YELLOW, {ease: FlxEase.quadInOut});
+					diffText.text = '< NORMAL >';
 				case 2:
-					diffText.text = "HARD";
+					diffText.text = "< HARD >";
+					FlxTween.color(diffText, 0.3, diffText.color, FlxColor.RED, {ease: FlxEase.quadInOut});
 			}
 		}
 
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
-		#end		
+		#end
 	}
 
 	function changeSelection(change:Int = 0)
@@ -299,15 +306,14 @@ class FreeplayState extends MusicBeatState
 		if (curSelected >= songs.length)
 			curSelected = 0;
 
-
 		/*
-		if(songs[curSelected].songName.toLowerCase()=="termination"){ //For forcing the difficulty text to update, and forcing it to hard when selecting Termination -Haz
-			changeDiff(0);
-		}else{                                                      //Used for reseting the difficulty text back.
-			changeDiff(0) ;
+			if(songs[curSelected].songName.toLowerCase()=="termination"){ //For forcing the difficulty text to update, and forcing it to hard when selecting Termination -Haz
+				changeDiff(0);
+			}else{                                                      //Used for reseting the difficulty text back.
+				changeDiff(0) ;
 		}*/
 
-		//In hindsight, the above code was fucking retarded since it just leads to the same outcome. -Haz
+		// In hindsight, the above code was fucking retarded since it just leads to the same outcome. -Haz
 		changeDiff(0);
 
 		// selector.y = (70 * curSelected) + 30;

@@ -85,10 +85,8 @@ class MainMenuState extends MusicBeatState
 	var date = Date.now();
 	var noname:Bool = false;
 	var shit:FlxText;
-	#if !mac
+	#if windows
 	var name:String = Sys.environment()["USERNAME"];
-	#else
-	var name:String = Sys.environment()["USER"];
 	#end
 
 	override function create()

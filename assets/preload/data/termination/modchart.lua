@@ -7,16 +7,17 @@ function start(song) -- do nothing
 	x5 = getActorX(5)
 	x6 = getActorX(6)
 	x7 = getActorX(7)
-	
+
 	y7 = getActorY(7)
 	y6 = getActorY(6)
 	y5 = getActorY(5)
-	y4 = getActorY(4)	
+	y4 = getActorY(4)
+	bfCanDodgeinthesong(true)-- soft coded sawblades in all songs LETS GO
 end
 
 function update(elapsed)
 	local currentBeat = (songPos / 1000)*(bpm/60)
-	
+
 	if curBeat>=704 and curBeat<768 then
 			for i=0,7 do
 				setActorX(_G['defaultStrum'..i..'X'] + 10 * math.sin((currentBeat + i*0.25) * math.pi), i)
@@ -27,14 +28,12 @@ function update(elapsed)
 			end
 	elseif curBeat>=512 and curBeat<640 then
 		camHudAngle = 4 * math.sin(currentBeat * math.pi)
-		showOnlyStrums = true
 		for i=1,6 do
 			setActorX(_G['defaultStrum'..i..'X'] + 10 * math.sin((currentBeat + i*0.25) * math.pi), i)
 			setActorY(_G['defaultStrum'..i..'Y'] + 10 * math.cos((currentBeat + i*0.25) * math.pi), i)
 		end
 	elseif curBeat>=640 and curBeat<704 then
 		camHudAngle = originalCamHudAngle
-		showOnlyStrums = false
 		for i=0,7 do
 			setActorX(_G['defaultStrum'..i..'X'],i)
 			setActorY(_G['defaultStrum'..i..'Y'],i)
@@ -70,7 +69,7 @@ function update(elapsed)
 	end
 end
 
-function beatHit(beat) -- For intro (notes fade in)	
+function beatHit(beat) -- For intro (notes fade in)
 	--Just after 1st drop.
 	--1st pincer move
 	if curBeat == 320 then
@@ -86,7 +85,7 @@ function beatHit(beat) -- For intro (notes fade in)
 		end
 	elseif curBeat == 324 then
 		kbPincerPrepare(3,true)
-		
+
 	--2nd pincer move
 	elseif curBeat == 336 then
 		kbPincerPrepare(1,false)
@@ -106,7 +105,7 @@ function beatHit(beat) -- For intro (notes fade in)
 	elseif curBeat == 340 then
 		kbPincerPrepare(1,true)
 		kbPincerPrepare(3,true)
-		
+
 	--3rd pincer move
 	elseif curBeat == 352 then
 		kbPincerPrepare(1,false)
@@ -133,7 +132,7 @@ function beatHit(beat) -- For intro (notes fade in)
 		kbPincerPrepare(1,true)
 		kbPincerPrepare(4,true)
 		kbPincerPrepare(2,true)
-		
+
 	--4th pincer move
 	elseif curBeat == 368 then
 		kbPincerPrepare(1,false)
@@ -173,7 +172,7 @@ function beatHit(beat) -- For intro (notes fade in)
 		kbPincerPrepare(2,true)
 		kbPincerPrepare(3,true)
 		kbPincerPrepare(4,true)
-		
+
 	elseif curBeat == 383 then
 		kbPincerPrepare(1,false)
 		kbPincerPrepare(4,false)
@@ -199,7 +198,7 @@ function beatHit(beat) -- For intro (notes fade in)
 		tweenPos(7, getActorX(7), y7, 0.75, done)
 		tweenPos('pincer1', getActorX(4), y4, 0.75, done)
 		tweenPos('pincer4', getActorX(7), y7, 0.75, done)
-		
+
 	--5 and 6 swap
 	elseif curBeat == 400 then --Y offset
 		kbPincerGrab(3)
@@ -218,14 +217,14 @@ function beatHit(beat) -- For intro (notes fade in)
 		tweenPos(5, getActorX(5), y5, 0.75, done)
 		tweenPos('pincer3', getActorX(6), y6, 0.75, done)
 		tweenPos('pincer2', getActorX(5), y5, 0.75, done)
-		
+
 	--Reset swaps
-	elseif curBeat == 448 then 
+	elseif curBeat == 448 then
 		tweenPos(7, x7, y7, 0.6, done)
 		tweenPos(6, x6, y6, 0.6, done)
 		tweenPos(5, x5, y5, 0.6, done)
 		tweenPos(4, x4, y4, 0.6, done)
-	
+
 	elseif curBeat == 510 then
 		kbPincerPrepare(4,false)
 		kbPincerPrepare(5,false)
@@ -235,7 +234,7 @@ function beatHit(beat) -- For intro (notes fade in)
 	elseif curBeat == 640 then
 		kbPincerPrepare(4,true)
 		kbPincerPrepare(5,true)
-	end	
+	end
 end
 
 function stepHit(step) -- do nothing

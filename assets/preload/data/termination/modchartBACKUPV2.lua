@@ -283,23 +283,3 @@ function stepHit(step) -- do nothing
 		kbPincerPrepare(2,true)
 	end
 end
-
-function playerTwoTurn()
-
-end
-
-function playerOneTurn()
-
-end
-
-function playerOneMiss()
-
-end
-
-function playerOneSing()
-
-end
-
-function playerTwoSing()
-
-end

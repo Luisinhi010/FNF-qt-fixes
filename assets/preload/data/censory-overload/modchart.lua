@@ -1,4 +1,7 @@
 function start(song) -- do nothing
+	--dodgeTimingOverride(0.3)
+	--dodgeCooldownOverride(0.175)
+	--bfCanDodgeinthesong(true)-- soft coded sawblades in all songs LETS GO
 
 end
 

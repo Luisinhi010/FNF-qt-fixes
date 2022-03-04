@@ -65,7 +65,7 @@ class Note extends FlxSprite
 		{
 			switch (PlayState.instance.dad.curCharacter)
 			{
-				case 'qt' | 'qt-kb' | 'qt_annoyed':
+				case 'qt' | 'qt-meme' | 'qt-kb' | 'qt_annoyed':
 					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Qt');
 				case 'robot' | 'robot_classic':
 					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb');
@@ -81,8 +81,8 @@ class Note extends FlxSprite
 		{
 			switch (PlayState.instance.boyfriend.curCharacter)
 			{
-				case 'qt' | 'qt-kb' | 'qt_annoyed':
-					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb');
+				case 'qt' | 'qt-meme' | 'qt-kb' | 'qt_annoyed':
+					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Qt');
 				case 'robot' | 'robot_classic':
 					frames = Paths.getSparrowAtlas('Notes/NOTE_assets_Kb');
 				case 'robot_404' | 'robot_404-TERMINATION' | 'robot_classic_404':

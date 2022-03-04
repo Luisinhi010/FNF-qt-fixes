@@ -65,7 +65,7 @@ elseif curBeat == 322 then
 	end
 elseif curBeat == 324 then
 	kbPincerPrepare(3,true)							--pincer3 is then animated to move offscreen and is removed from the game scene until it is brought back again.
-	
+
 You can look at the modchart code for Termination for a better look at how to use the pincers.
 The example below should be good enough to show how you these functions are used, along side with how the double sawblade is done.
 --]]
@@ -78,17 +78,17 @@ function start(song)
 	-- Initialization
 	dodgeTimingOverride(0.3)
 	dodgeCooldownOverride(0.175)
-		
-		
+	bfCanDodgeinthesong(true)-- soft coded sawblades in all songs LETS GO
+
 	x4 = getActorX(4)
 	x5 = getActorX(5)
 	x6 = getActorX(6)
 	x7 = getActorX(7)
-	
+
 	y7 = getActorY(7)
 	y6 = getActorY(6)
 	y5 = getActorY(5)
-	y4 = getActorY(4)	
+	y4 = getActorY(4)
 end
 
 function update(elapsed)
@@ -103,14 +103,20 @@ function update(elapsed)
 end
 
 function beatHit(beat) -- do nothing
-	
+
+end
+
+function gasReleasewithsawblade(gasanim, kbAttackTOGGLE) --testing some shit
+	gasRelease(gasanim)
+	kbAttackTOGGLE(kbAttackTOGGLE)
 end
 
 function stepHit(step) -- do nothing
 	--Example code for sawblades and pincers
-	
 	if curStep == 64 then
+		gasRelease('burst')
 		kbAttackTOGGLE(true)
+		--gasReleasewithsawblade('burst', true)
 		kbAlertTOGGLE(true)
 		kbAttackAlert(false) --First alert
 		kbAttack(false) 	--Prepares the sawblade
@@ -118,40 +124,46 @@ function stepHit(step) -- do nothing
 		kbAttackAlert(false)
 	elseif curStep == 72 then
 		kbAttack(true)		--Dodge check!
-		
+
+			--Example double sawblade!
 	elseif curStep == 80 then
 		kbAttackAlert(false) --First alert
 		kbAttack(false) 	--Prepares the sawblade
 	elseif curStep == 84 then
-		kbAttackAlert(false)
+		kbAttackAlertDouble(false)
 	elseif curStep == 88 then
-		kbAttack(true)		--Dodge check!
-		
-	--Example double sawblade!
+		kbAttack(true, "attack")		--Dodge check!
+	elseif curStep == 91 then
+		kbAttack(false) 	--Prepares the sawblade again
+	elseif curStep == 92 then
+		kbAttack(true, "attackDouble")		--Dodge check!
+
 	elseif curStep == 128 then
+		gasRelease('burst')
 		kbAttackAlert(false) --First alert
 		kbAttack(false) 	--Prepares the sawblade
 	elseif curStep == 132 then
 		kbAttackAlertDouble(false)
 	elseif curStep == 136 then
-		kbAttack(true, "old/attack_alt01")		--Dodge check!
+		kbAttack(true, "attack")		--Dodge check!
 	elseif curStep == 139 then
 		kbAttack(false) 	--Prepares the sawblade again
 	elseif curStep == 140 then
-		kbAttack(true, "old/attack_alt02")		--Dodge check!
-	
+		kbAttack(true, "attackDouble")		--Dodge check!
+
 	elseif curStep == 144 then
+		gasRelease('burst')
 		kbAttackAlert(false) --First alert
 		kbAttack(false) 	--Prepares the sawblade
 	elseif curStep == 148 then
 		kbAttackAlertDouble(false)
 	elseif curStep == 152 then
-		kbAttack(true, "old/attack_alt01")		--Dodge check!
+		kbAttack(true, "attack")		--Dodge check!
 	elseif curStep == 155 then
 		kbAttack(false) 	--Prepares the sawblade again
 	elseif curStep == 156 then
-		kbAttack(true, "old/attack_alt02")		--Dodge check!
-	
+		kbAttack(true, "attackDouble")		--Dodge check!
+
 	elseif curStep == 192 then
 		kbPincerPrepare(2,false) 	--plays the enter animation for the pincer and adds it to the game scene
 	elseif curStep == 196 then
@@ -166,10 +178,10 @@ function stepHit(step) -- do nothing
 		end
 	elseif curStep == 204 then
 		kbPincerPrepare(2,true)		--Plays the leaving animation for the pincer and removes it from the scene once the animation is finished
-		
+
 	elseif curStep == 256 then
 		tweenPos(5, x5, y5, 0.275, done) --Resets the moved note back to normal position
-		
+
 	elseif curStep == 288 then
 		kbAttackAlert(false) --First alert
 		kbAttack(false) 	--Prepares the sawblade
@@ -177,19 +189,19 @@ function stepHit(step) -- do nothing
 		kbAttackAlert(false)
 	elseif curStep == 296 then
 		kbAttack(true)		--Dodge check!
-		
+
 	elseif curStep == 304 then
 		kbAttackAlert(false) --First alert
 		kbAttack(false) 	--Prepares the sawblade
 	elseif curStep == 308 then
 		kbAttackAlertDouble(false)
 	elseif curStep == 312 then
-		kbAttack(true, "old/attack_alt01")		--Dodge check!
+		kbAttack(true, "attack")		--Dodge check!
 	elseif curStep == 315 then
 		kbAttack(false) 	--Prepares the sawblade again
 	elseif curStep == 316 then
-		kbAttack(true, "old/attack_alt02")		--Dodge check!
-		
+		kbAttack(true, "attackDouble")		--Dodge check!
+
 	elseif curStep == 320 then
 		kbPincerPrepare(4,false)
 	elseif curStep == 324 then
@@ -207,21 +219,8 @@ function stepHit(step) -- do nothing
 		kbAttackAlert(false)
 	elseif curStep == 384 then
 		kbAttack(true)		--Dodge check!
-		
+
 	elseif curStep == 400 then
 		tweenPos(7, x7, y7, 1, done)
 	end
-	
-	
-	
-	
-end
-
---Just commenting out the custom camera stuff so the sawblade is easier to see.
-function playerTwoTurn()
-    --tweenCameraZoom(1.3,(crochet * 4) / 1000)
-end
-
-function playerOneTurn()
-    --tweenCameraZoom(1,(crochet * 4) / 1000)
 end

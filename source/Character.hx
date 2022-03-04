@@ -106,7 +106,7 @@ class Character extends FlxSprite
 				iconColor = "FFFB96B7";
 				songPosbar = "FFFB96B7";
 				// QT = Cutie
-				tex = Paths.getSparrowAtlas('qt');
+				tex = Paths.getSparrowAtlas('qt', 'qt');
 				frames = tex;
 				animation.addByPrefix('idle', 'Final_Idle', 18, false); // How long until I get called out for using a weird framerate for the animation?
 				animation.addByPrefix('singUP', 'Final_Up', 14, false);
@@ -129,7 +129,7 @@ class Character extends FlxSprite
 				songPosbar = "FFFF6464";
 				songPosbarempty = "FF646464";
 				// For second song
-				tex = Paths.getSparrowAtlas('qt_annoyed');
+				tex = Paths.getSparrowAtlas('qt_annoyed', 'qt');
 				frames = tex;
 				animation.addByPrefix('idle', 'Final_Idle', 18, false);
 				animation.addByPrefix('singUP', 'Final_Up', 14, false);
@@ -163,7 +163,7 @@ class Character extends FlxSprite
 				songPosbar = "FF808080";
 				songPosbarempty = "FF000000";
 				// robot = kb = killerbyte
-				tex = Paths.getSparrowAtlas('robot');
+				tex = Paths.getSparrowAtlas('robot', 'qt');
 				frames = tex;
 
 				animation.addByPrefix('danceRight', "KB_DanceRight", 26, false);
@@ -186,7 +186,7 @@ class Character extends FlxSprite
 			case 'gf_404':
 				// GIRLFRIEND CODE
 				iconColor = "FFA5004D";
-				tex = Paths.getSparrowAtlas('GF_assets_404');
+				tex = Paths.getSparrowAtlas('GF_assets_404', 'qt');
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
 				animation.addByPrefix('singLEFT', 'GF left note', 24, false);
@@ -217,7 +217,7 @@ class Character extends FlxSprite
 				playAnim('danceRight');
 			case 'bf_404':
 				iconColor = "FF31B0D1";
-				var tex = Paths.getSparrowAtlas('BOYFRIEND_404');
+				var tex = Paths.getSparrowAtlas('BOYFRIEND_404', 'qt');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
 				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
@@ -261,7 +261,7 @@ class Character extends FlxSprite
 				iconColor = "FF808080";
 				songPosbar = "FF808080";
 				songPosbarempty = "FF000000";
-				tex = Paths.getSparrowAtlas('robot_404');
+				tex = Paths.getSparrowAtlas('robot_404', 'qt');
 				frames = tex;
 
 				animation.addByPrefix('danceRight', "KB404_DanceRight", 25, false);
@@ -282,7 +282,7 @@ class Character extends FlxSprite
 				iconColor = "FF808080";
 				songPosbar = "FF808080";
 				songPosbarempty = "FF000000";
-				tex = Paths.getSparrowAtlas('robot_404-angry');
+				tex = Paths.getSparrowAtlas('robot_404-angry', 'qt');
 				frames = tex;
 
 				animation.addByPrefix('idle', "KB404ALT_idleBabyRage", 27, false);
@@ -302,7 +302,7 @@ class Character extends FlxSprite
 				songPosbar = "FF00A0FF";
 				songPosbarempty = "FFFB96B7";
 
-				tex = Paths.getSparrowAtlas('bonus/qt-kbV2');
+				tex = Paths.getSparrowAtlas('bonus/qt-kbV2', 'qt');
 				frames = tex;
 
 				animation.addByPrefix('danceRight', "danceRightNormal", 26, false);
@@ -352,7 +352,7 @@ class Character extends FlxSprite
 			case 'qt-meme':
 				iconColor = "FFFB96B7";
 				// QT = Cutie
-				tex = Paths.getSparrowAtlas('qt_meme');
+				tex = Paths.getSparrowAtlas('qt_meme', 'qt');
 				frames = tex;
 				animation.addByPrefix('idle', 'godIdle', 24, false);
 				animation.addByPrefix('singUP', 'godUp', 24, false);
@@ -394,7 +394,7 @@ class Character extends FlxSprite
 			case 'robot_classic_404':
 				iconColor = "FF808080";
 
-				tex = Paths.getSparrowAtlas('classic/robot_classic_404');
+				tex = Paths.getSparrowAtlas('classic/robot_classic_404', 'qt');
 				frames = tex;
 
 				animation.addByPrefix('danceRight', "KB404_DanceRight", 25, false);
@@ -413,7 +413,7 @@ class Character extends FlxSprite
 
 			case 'qt_classic':
 				iconColor = "FFFB96B7";
-				tex = Paths.getSparrowAtlas('classic/qt_classic');
+				tex = Paths.getSparrowAtlas('classic/qt_classic', 'qt');
 				frames = tex;
 				animation.addByPrefix('idle', 'QT_sprite_test-idle', 48, false);
 				animation.addByPrefix('singUP', 'QT_sprite_test-up', 48, false);
