@@ -803,8 +803,6 @@ class PlayState extends MusicBeatState
 						gf404 = new Character(400, 130, 'gf_404');
 						gf404.scrollFactor.set(0.95, 0.95);
 
-						// These are set to 0 on first step. Not 0 here because otherwise they aren't cached in properly or something?
-						// I dunno
 						boyfriend404.alpha = 0.001;
 						dad404.alpha = 0.001;
 						gf404.alpha = 0.001;
@@ -922,8 +920,6 @@ class PlayState extends MusicBeatState
 						gf404 = new Character(400, 130, 'gf_404');
 						gf404.scrollFactor.set(0.95, 0.95);
 
-						// These are set to 0 on first step. Not 0 here because otherwise they aren't cached in properly or something?
-						// I dunno
 						boyfriend404.alpha = 0.001;
 						dad404.alpha = 0.001;
 						gf404.alpha = 0.001;
@@ -931,7 +927,7 @@ class PlayState extends MusicBeatState
 				}
 			case 'tutorial': // Tutorial now has the attack functions from Termination so you can call them using modcharts so hopefully people who want to make their own song don't have to go to the source code to manually code in the attack stuff.
 				{
-					defaultCamZoom = 0.9;
+					defaultCamZoom = 0.8;
 					curStage = 'stage';
 					var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
 					bg.antialiasing = true;
@@ -1052,10 +1048,10 @@ class PlayState extends MusicBeatState
 					dad.y += 66;
 					if (!Main.qtOptimisation)
 					{
-						boyfriend404.x += 40;
-						boyfriend404.y += 65;
-						dad404.x -= 70;
-						dad404.y += 66;
+						boyfriend404.x = boyfriend.x;
+						boyfriend404.y = boyfriend.y;
+						dad404.x = dad.x;
+						dad404.y = dad.y;
 					}
 				}
 				else if (SONG.song.toLowerCase() == 'terminate' || SONG.song.toLowerCase() == 'cessation')
@@ -1068,13 +1064,6 @@ class PlayState extends MusicBeatState
 		add(gf);
 		add(dad);
 		add(boyfriend);
-
-		if (curStage == "nightmare")
-		{
-			dad.alpha = 0;
-			gf.alpha = 0;
-			add(boyfriend404);
-		}
 
 		if (SONG.song.toLowerCase() == 'censory-overload' || SONG.song.toLowerCase() == 'termination')
 		{
@@ -2154,7 +2143,7 @@ class PlayState extends MusicBeatState
 			{
 				dad404.dance();
 				gf404.dance();
-				boyfriend404.playAnim('idle');
+				boyfriend404.dance();
 			}
 			dad.dance();
 			camX = 0;
@@ -4593,10 +4582,9 @@ class PlayState extends MusicBeatState
 				bfDodging = true;
 				bfCanDodge = false;
 
+				boyfriend.playAnim('dodge');
 				if (qtIsBlueScreened)
 					boyfriend404.playAnim('dodge');
-				else
-					boyfriend.playAnim('dodge');
 
 				FlxG.sound.play(Paths.sound('dodge01'));
 
@@ -4883,15 +4871,12 @@ class PlayState extends MusicBeatState
 			if (boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss') && !bfDodging)
 			{
 				boyfriend.dance();
-				// boyfriend.playAnim('idle');
 			}
 			if (qtIsBlueScreened)
 			{
-				if (boyfriend404.animation.curAnim.name.startsWith('sing')
-					&& !boyfriend404.animation.curAnim.name.endsWith('miss')
-					&& !bfDodging)
+				if (boyfriend404.animation.curAnim.name.startsWith('sing') && !bfDodging)
 				{
-					boyfriend404.playAnim('idle');
+					boyfriend404.dance();
 				}
 			}
 		}
@@ -5933,10 +5918,9 @@ class PlayState extends MusicBeatState
 		// Same as above, but for 404 variants.
 		if (qtIsBlueScreened)
 		{
-			if ((!boyfriend.animation.curAnim.name.startsWith("sing") || boyfriend.animation.curAnim.name.startsWith("sing"))
-				&& !bfDodging) // now bf404 will play the idle
+			if (!boyfriend404.animation.curAnim.name.startsWith("sing") && !bfDodging)
 			{
-				boyfriend404.playAnim('idle');
+				boyfriend404.dance();
 			}
 
 			// Termination KB animates every 2 curstep instead of 4 (aka, every half beat, not every beat!)
