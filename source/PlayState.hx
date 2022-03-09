@@ -239,11 +239,11 @@ class PlayState extends MusicBeatState
 	public var qtcantalknow2:FlxText;
 	public var qtcantalknow3:FlxText;
 	public var qtcantalknow4:FlxText;
+	public static var luaSprites:Map<String, FlxSprite> = [];
+	public static var lua:State = null;
 
 	// LUA SHIT
 	#if cpp
-	public static var lua:State = null;
-
 	function callLua(func_name:String, args:Array<Dynamic>, ?type:String):Dynamic
 	{
 		var result:Any = null;
@@ -427,8 +427,6 @@ class PlayState extends MusicBeatState
 			return strumLineNotes.members[Std.parseInt(id)];
 		return luaSprites.get(id);
 	}
-
-	public static var luaSprites:Map<String, FlxSprite> = [];
 
 	function makeLuaSprite(spritePath:String, toBeCalled:String, drawBehind:Bool)
 	{

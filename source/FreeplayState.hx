@@ -247,7 +247,6 @@ class FreeplayState extends MusicBeatState
 			else
 			{
 				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
-
 				trace(poop);
 
 				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
@@ -281,9 +280,17 @@ class FreeplayState extends MusicBeatState
 				vocals.volume = 0.7;
 				instPlaying = curSelected;
 				#end
+				}
 			}
 		}
 			vocals = null;
+			
+			//I'm sorry I just had to fix it, it looked so ugly before
+			scoreText.text = "PERSONAL BEST:" + lerpScore;
+			scoreText.x = FlxG.width - scoreText.width - 5;
+			scoreBG.width = scoreText.width;
+			scoreBG.x = scoreText.x;
+			diffText.x = scoreBG.x + (scoreBG.width / 2) - (diffText.width / 2);
 	}
 
 	public static function destroyFreeplayVocals()
@@ -293,14 +300,6 @@ class FreeplayState extends MusicBeatState
 			vocals.stop();
 			vocals.destroy();
 		}
-	}
-
-		//I'm sorry I just had to fix it, it looked so ugly before
-		scoreText.text = "PERSONAL BEST:" + lerpScore;
-		scoreText.x = FlxG.width - scoreText.width - 5;
-		scoreBG.width = scoreText.width;
-		scoreBG.x = scoreText.x;
-		diffText.x = scoreBG.x + (scoreBG.width / 2) - (diffText.width / 2);
 	}
 
 	function changeDiff(change:Int = 0)
