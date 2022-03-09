@@ -44,7 +44,7 @@ import flixel.input.mouse.FlxMouseButton.FlxMouseButtonID;
 import flixel.system.FlxAssets;
 import flixel.system.replay.MouseRecord;
 import flixel.util.FlxDestroyUtil;
-#if windows
+#if desktop
 import Discord.DiscordClient;
 #end
 
@@ -85,13 +85,13 @@ class MainMenuState extends MusicBeatState
 	var date = Date.now();
 	var noname:Bool = false;
 	var shit:FlxText;
-	#if windows
+	#if desktop
 	var name:String = Sys.environment()["USERNAME"];
 	#end
 
 	override function create()
 	{
-		#if windows
+		#if desktop
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end

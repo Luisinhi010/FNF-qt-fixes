@@ -29,8 +29,9 @@ import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
+import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
-#if windows
+#if desktop
 import Discord.DiscordClient;
 #end
 #if cpp
@@ -66,7 +67,7 @@ class PlayState extends MusicBeatState
 
 	var songLength:Float = 0;
 
-	#if windows
+	#if desktop
 	// Discord RPC variables
 	var storyDifficultyText:String = "";
 	var iconRPC:String = "";
@@ -127,6 +128,8 @@ class PlayState extends MusicBeatState
 	private var camHUD:FlxCamera;
 	private var camGame:FlxCamera;
 
+	var updateTime:Bool = false;
+
 	public static var offsetTesting:Bool = false;
 
 	var notesHitArray:Array<Date> = [];
@@ -135,6 +138,7 @@ class PlayState extends MusicBeatState
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 
 	public var songName:FlxText;
+	public var songTimeTxt:FlxText;
 
 	// QT Week
 	var hazardRandom:Int = 1; // This integer is randomised upon song start between 1-5.
@@ -475,7 +479,6 @@ class PlayState extends MusicBeatState
 
 	// LUA SHIT
 	public var luisModChartDefaultStrumY:Float = 0;
-
 	public var hazardOverlayShit:BGSprite;
 	public var hazardAlarmLeft:BGSprite;
 	public var hazardAlarmRight:BGSprite;
@@ -506,12 +509,12 @@ class PlayState extends MusicBeatState
 		executeModchart = FileSystem.exists(Paths.lua(PlayState.SONG.song.toLowerCase() + "/modchart"));
 		#end
 		#if !cpp
-		executeModchart = false; // FORCE disable for non cpp targets //Hey, wtf is 'cpp targets'? -Haz //cpp targets is where lua will works, like, if windows will have lua, if not, will dont -Luis
+		executeModchart = false; // FORCE disable for non cpp targets //Hey, wtf is 'cpp targets'? -Haz //cpp targets is where lua will works, like, if desktop, will use lua, if not, will dont -Luis
 		#end
 
 		trace('Mod chart: ' + executeModchart + " - " + Paths.lua(PlayState.SONG.song.toLowerCase() + "/modchart"));
 
-		#if windows
+		#if desktop
 		// Making difficulty text for Discord Rich Presence.
 		if (SONG.song.toLowerCase() == "termination")
 			storyDifficultyText = "Very Hard";
@@ -582,18 +585,18 @@ class PlayState extends MusicBeatState
 		campause.bgColor.alpha = 0;
 
 		FlxG.cameras.reset(camGame);
+		FlxG.cameras.setDefaultDrawTarget(camGame, true);
 		FlxG.cameras.add(camHUD);
+		FlxG.cameras.setDefaultDrawTarget(camHUD, false);
 		FlxG.cameras.add(camcustom);
+		FlxG.cameras.setDefaultDrawTarget(camcustom, false);
 		FlxG.cameras.add(campause);
+		FlxG.cameras.setDefaultDrawTarget(campause, false);
 
 		if (FlxG.save.data.downscroll)
 			camcustom.flashSprite.scaleY *= -1;
 		else
 			camcustom.flashSprite.scaleY *= 1;
-
-		// FlxG.cameras.setDefaultDrawTarget(camGame, true); //i rlly hate haxe sometimes
-
-		FlxCamera.defaultCameras = [camGame];
 
 		persistentUpdate = true;
 		persistentDraw = true;
@@ -1121,39 +1124,6 @@ class PlayState extends MusicBeatState
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
 		FlxG.fixedTimestep = false;
-
-		if (FlxG.save.data.songPosition) // I dont wanna talk about this code :(
-		{
-			songPosBG = new FlxSprite(0, 10).loadGraphic(Paths.image('healthBar'));
-			if (FlxG.save.data.downscroll)
-				songPosBG.y = FlxG.height * 0.9 + 45;
-			songPosBG.screenCenter(X);
-			songPosBG.scrollFactor.set();
-			add(songPosBG);
-
-			songPosBar = new FlxBar(songPosBG.x + 4, songPosBG.y + 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 8), Std.int(songPosBG.height - 8), this,
-				'songPositionBar', 0, 90000);
-			songPosBar.scrollFactor.set();
-			// songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
-			songPosBar.createFilledBar(FlxColor.fromString('#' + dad.songPosbarempty), FlxColor.fromString('#' + dad.songPosbar));
-			add(songPosBar);
-			reloadSongPosBarColors(false);
-
-			var songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - 20, songPosBG.y, 0, SONG.song, 16);
-			if (FlxG.save.data.downscroll)
-				songName.y -= 3;
-			songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			songName.scrollFactor.set();
-			add(songName);
-			songName.cameras = [camHUD];
-
-			if (curSong.toLowerCase() == 'terminate')
-			{
-				songPosBG.visible = false;
-				songPosBar.visible = false;
-				songName.visible = false;
-			}
-		}
 
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
 		if (!FlxG.save.data.downscroll)
@@ -2270,49 +2240,10 @@ class PlayState extends MusicBeatState
 
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
+ 		songLengthTxt = FlxStringUtil.formatTime(Math.floor((songLength) / 1000), false);		
 
-		if (FlxG.save.data.songPosition)
-		{
-			remove(songPosBG);
-			remove(songPosBar);
-			remove(songName);
-
-			songPosBG = new FlxSprite(0, 10).loadGraphic(Paths.image('healthBar'));
-			if (FlxG.save.data.downscroll)
-				songPosBG.y = FlxG.height * 0.9 + 45;
-			songPosBG.screenCenter(X);
-			songPosBG.scrollFactor.set();
-			add(songPosBG);
-
-			songPosBar = new FlxBar(songPosBG.x
-				+ 4, songPosBG.y
-				+ 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 8), Std.int(songPosBG.height - 8), this,
-				'songPositionBar', 0, songLength
-				- 1000);
-			songPosBar.numDivisions = 1000;
-			songPosBar.scrollFactor.set();
-			// songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
-			songPosBar.createFilledBar(FlxColor.fromString('#' + dad.songPosbarempty), FlxColor.fromString('#' + dad.songPosbar));
-			add(songPosBar);
-			reloadSongPosBarColors(false);
-
-			var songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - 20, songPosBG.y, 0, SONG.song, 16);
-			if (FlxG.save.data.downscroll)
-				songName.y -= 3;
-			songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			songName.scrollFactor.set();
-			add(songName);
-
-			songPosBG.cameras = [camHUD];
-			songPosBar.cameras = [camHUD];
-			songName.cameras = [camHUD];
-
-			if (curSong.toLowerCase() == 'terminate')
-			{
-				songPosBG.visible = false;
-				songPosBar.visible = false;
-				songName.visible = false;
-			}
+		if (FlxG.save.data.songPosition){
+			addSongBar();
 		}
 
 		// Song check real quick
@@ -2323,6 +2254,7 @@ class PlayState extends MusicBeatState
 			default:
 				allowedToHeadbang = false;
 		}
+		updateTime = FlxG.save.data.songPosition;
 
 		// starting GF speed for censory-overload.
 		if (SONG.song.toLowerCase() == 'censory-overload')
@@ -2332,7 +2264,7 @@ class PlayState extends MusicBeatState
 			trace(cutsceneSkip);
 		}
 
-		#if windows
+		#if desktop
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText
 			+ " "
@@ -2348,6 +2280,56 @@ class PlayState extends MusicBeatState
 			+ " | Misses: "
 			+ misses, iconRPC);
 		#end
+	}
+
+	function addSongBar(?minimal:Bool = false){
+		/*
+			this is from Super Engine
+			I'd recommend checking it out!
+			https://github.com/superpowers04/Super-Engine
+		*/
+			if(songPosBG != null) remove(songPosBG);
+			if(songPosBar != null) remove(songPosBar);
+			if(songName != null) remove(songName);
+			if(songTimeTxt != null) remove(songTimeTxt);
+			songPosBG = new FlxSprite(0, 10 + FlxG.save.data.guiGap).loadGraphic(Paths.image('healthBar'));
+			if (FlxG.save.data.downscroll)
+				songPosBG.y = FlxG.height * 0.9 + 45 + FlxG.save.data.guiGap; 
+			songPosBG.screenCenter(X);
+			songPosBG.scrollFactor.set();
+
+			songPosBar = new FlxBar(songPosBG.x + 4, songPosBG.y + 4 + FlxG.save.data.guiGap, LEFT_TO_RIGHT, Std.int(songPosBG.width - 8), Std.int(songPosBG.height - 8), this,
+				'songPositionBar', 0, songLength - 1000);
+			songPosBar.numDivisions = 1000;
+			songPosBar.scrollFactor.set();
+			songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
+
+			songName = new FlxText(songPosBG.x + (songPosBG.width * 0.2) - 20,songPosBG.y + 1,0,SONG.song, 16);
+			songName.x -= songName.text.length;
+			songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+			songName.scrollFactor.set();
+			songTimeTxt = new FlxText(songPosBG.x + (songPosBG.width * 0.7) - 20,songPosBG.y + 1,0,"00:00 | 0:00", 16);
+			if (FlxG.save.data.downscroll)
+				songName.y -= 3;
+			songTimeTxt.text = "00:00 | " + songLengthTxt;
+			songTimeTxt.x -= songTimeTxt.text.length;
+			songTimeTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+			songTimeTxt.scrollFactor.set();
+
+			songPosBG.cameras = [camHUD];
+			songPosBar.cameras = [camHUD];
+			songName.cameras = [camHUD];
+			songTimeTxt.cameras = [camHUD];
+			add(songPosBG);
+			add(songPosBar);
+			add(songName);
+			add(songTimeTxt);
+
+			if(curSong.toLowerCase() == 'terminate') {
+				songPosBG.visible = false;
+				songPosBar.visible = false;
+				songName.visible = false;
+			}
 	}
 
 	var debugNum:Int = 0;
@@ -2645,7 +2627,7 @@ class PlayState extends MusicBeatState
 				vocals.pause();
 			}
 
-			#if windows
+			#if desktop
 			DiscordClient.changePresence("PAUSED on "
 				+ SONG.song
 				+ " ("
@@ -2679,7 +2661,7 @@ class PlayState extends MusicBeatState
 				startTimer.active = true;
 			paused = false;
 
-			#if windows
+			#if desktop
 			if (startTimer.finished)
 			{
 				DiscordClient.changePresence(detailsText
@@ -2717,7 +2699,7 @@ class PlayState extends MusicBeatState
 		vocals.time = Conductor.songPosition;
 		vocals.play();
 
-		#if windows
+		#if desktop
 		DiscordClient.changePresence(detailsText
 			+ " "
 			+ SONG.song
@@ -2737,6 +2719,7 @@ class PlayState extends MusicBeatState
 	private var paused:Bool = false;
 	var startedCountdown:Bool = false;
 	var canPause:Bool = true;
+	var songLengthTxt = "N/A";
 
 	function truncateFloat(number:Float, precision:Int):Float
 	{
@@ -2984,6 +2967,8 @@ class PlayState extends MusicBeatState
 					iconP1.animation.play('bf-old');
 		}*/
 
+		if (updateTime) songTimeTxt.text = FlxStringUtil.formatTime(Math.floor(Conductor.songPosition / 1000), false) + "/" + songLengthTxt;
+
 		super.update(elapsed);
 
 		// For Lua
@@ -3039,7 +3024,7 @@ class PlayState extends MusicBeatState
 
 		if (FlxG.keys.justPressed.SEVEN)
 		{
-			#if windows
+			#if desktop
 			DiscordClient.changePresence("Chart Editor", null, null, true);
 			#end
 			FlxG.switchState(new ChartingState());
@@ -3306,7 +3291,7 @@ class PlayState extends MusicBeatState
 			if (curStage == "nightmare")
 				System.exit(0);
 			openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
-			#if windows
+			#if desktop
 			// Game Over doesn't get his own variable because it's only used here
 			DiscordClient.changePresence("GAME OVER -- "
 				+ SONG.song
@@ -4112,6 +4097,7 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
+		updateTime = false;
 		if (!loadRep)
 			rep.SaveReplay();
 
@@ -5538,9 +5524,13 @@ class PlayState extends MusicBeatState
 		// yes this updates every step.
 		// yes this is bad
 		// but i'm doing it to update misses and accuracy
-		#if windows
+		#if desktop
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
+		songLengthTxt = FlxStringUtil.formatTime(Math.floor((songLength) / 1000), false);
+		if (FlxG.save.data.songPosition){
+			addSongBar();
+		}
 
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText

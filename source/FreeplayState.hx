@@ -10,8 +10,11 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
+import flixel.system.FlxSound;
 import lime.utils.Assets;
-#if windows
+#if desktop
 import Discord.DiscordClient;
 #end
 
@@ -27,6 +30,7 @@ class FreeplayState extends MusicBeatState
 
 	var scoreText:FlxText;
 	var diffText:FlxText;
+	var scoreBG:FlxSprite;
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
 
@@ -101,16 +105,16 @@ class FreeplayState extends MusicBeatState
 		}
 
 		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
-		// scoreText.autoSize = false;
 		scoreText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, RIGHT);
-		// scoreText.alignment = RIGHT;
+		scoreBG = new FlxSprite(scoreText.x - scoreText.width, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
 
-		var scoreBG:FlxSprite = new FlxSprite(scoreText.x - 6, 0).makeGraphic(Std.int(FlxG.width * 0.35), 66, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		add(scoreBG);
 
 		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
+		diffText.alignment = CENTER;
 		diffText.font = scoreText.font;
+		diffText.x = scoreBG.getGraphicMidpoint().x;
 		add(diffText);
 
 		add(scoreText);
@@ -145,6 +149,25 @@ class FreeplayState extends MusicBeatState
 			trace(md);
 		 */
 
+		 var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
+		textBG.alpha = 0.6;
+		add(textBG);
+
+		#if PRELOAD_ALL
+		var leText:String = "Press SPACE to listen to the Song";
+		var size:Int = 16;
+		#else
+		var leText:String = "";
+		var size:Int = 18;
+		#end
+		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
+		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, CENTER);
+		text.scrollFactor.set();
+		add(text);
+
+		FlxTween.tween(text,{y: FlxG.height - 18},2,{ease: FlxEase.elasticInOut});
+		FlxTween.tween(textBG,{y: FlxG.height - 18},2, {ease: FlxEase.elasticInOut});
+
 		super.create();
 	}
 
@@ -168,6 +191,8 @@ class FreeplayState extends MusicBeatState
 		}
 	}
 
+	var instPlaying:Int = -1;
+	private static var vocals:FlxSound = null;
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -182,11 +207,10 @@ class FreeplayState extends MusicBeatState
 		if (Math.abs(lerpScore - intendedScore) <= 10)
 			lerpScore = intendedScore;
 
-		scoreText.text = "PERSONAL BEST:" + lerpScore;
-
 		var upP = controls.UP_P;
 		var downP = controls.DOWN_P;
 		var accepted = controls.ACCEPT;
+		var space = FlxG.keys.justPressed.SPACE;
 
 		if (upP)
 		{
@@ -232,8 +256,51 @@ class FreeplayState extends MusicBeatState
 				PlayState.storyWeek = songs[curSelected].week;
 				trace('CUR WEEK' + PlayState.storyWeek);
 				LoadingState.loadAndSwitchState(new PlayState());
+
+				destroyFreeplayVocals();
+		}
+		if(space)
+		{
+			if(instPlaying != curSelected)
+			{
+				#if PRELOAD_ALL
+				destroyFreeplayVocals();
+				FlxG.sound.music.volume = 0;
+				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
+				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
+				if (PlayState.SONG.needsVoices)
+					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+				else
+					vocals = new FlxSound();
+
+				FlxG.sound.list.add(vocals);
+				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
+				vocals.play();
+				vocals.persist = true;
+				vocals.looped = true;
+				vocals.volume = 0.7;
+				instPlaying = curSelected;
+				#end
 			}
 		}
+			vocals = null;
+	}
+
+	public static function destroyFreeplayVocals()
+	{
+		if(vocals != null)
+		{
+			vocals.stop();
+			vocals.destroy();
+		}
+	}
+
+		//I'm sorry I just had to fix it, it looked so ugly before
+		scoreText.text = "PERSONAL BEST:" + lerpScore;
+		scoreText.x = FlxG.width - scoreText.width - 5;
+		scoreBG.width = scoreText.width;
+		scoreBG.x = scoreText.x;
+		diffText.x = scoreBG.x + (scoreBG.width / 2) - (diffText.width / 2);
 	}
 
 	function changeDiff(change:Int = 0)
@@ -321,10 +388,6 @@ class FreeplayState extends MusicBeatState
 		#if !switch
 		intendedScore = Highscore.getScore(songs[curSelected].songName, curDifficulty);
 		// lerpScore = 0;
-		#end
-
-		#if PRELOAD_ALL
-		FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
 		#end
 
 		var bullShit:Int = 0;

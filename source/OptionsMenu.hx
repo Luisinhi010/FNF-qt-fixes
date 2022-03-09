@@ -20,9 +20,9 @@ class OptionsMenu extends MusicBeatState
 	var curSelected:Int = 0;
 
 	var options:Array<OptionCatagory> = [
-		new OptionCatagory("Qt", [
-			new QTOptimiseOption("Disables some visual elements to help performance in 3rd and 4th song."),
-			new MiddlescrollOption("Sets the strumline to the middle of the screen and hides the opponent's.")
+		new OptionCatagory("QT", [
+			new QTOptimiseOption("Disables visual elements to help with performance."),
+			new MiddlescrollOption("Whether to put your lane at the Center of the Screen.")
 		]),
 		new OptionCatagory("Gameplay", [
 			new DFJKOption(controls),
@@ -42,8 +42,10 @@ class OptionsMenu extends MusicBeatState
 			new AccuracyOption("Display accuracy information."),
 			new NPSDisplayOption("Shows your current Notes Per Second.")
 		]),
-		new OptionCatagory("Misc", [
-			#if desktop new FPSOption("Toggle the FPS Counter"), new ReplayOption("View replays"),
+		new OptionCatagory("Miscellaneous", [
+			#if desktop
+			new FPSOption("Toggle the FPS Counter"),
+			new ReplayOption("View replays"),
 			#end
 			new WatermarkOption("Turn off all watermarks from the engine.")
 		])
