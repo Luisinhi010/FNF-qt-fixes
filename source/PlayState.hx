@@ -2329,6 +2329,7 @@ class PlayState extends MusicBeatState
 				songPosBG.visible = false;
 				songPosBar.visible = false;
 				songName.visible = false;
+				songTimeTxt.visible = false;
 			}
 	}
 
