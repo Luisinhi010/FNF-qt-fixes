@@ -3280,7 +3280,7 @@ class PlayState extends MusicBeatState
 				case 432: // 2nd drop end
 					qt_tv01.animation.play("idle");
 					gfSpeed = 2;
-				case 558: // rawr xd
+				case 558: // rawr xd //cringe
 					FlxG.camera.shake(0.00425, 0.6725);
 					qt_tv01.animation.play("eye");
 				case 560: // 3rd drop
@@ -5684,7 +5684,7 @@ class PlayState extends MusicBeatState
 					FlxTween.tween(luisOverlayShit, {alpha: 0.2}, 0.9, {
 						ease: FlxEase.quadInOut
 					});
-					defaultCamZoom -= 1;
+					defaultCamZoom = dacamera;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.9);
 				case 144:
 					FlxTween.tween(luisOverlayShit, {alpha: 0.5}, 0.5, {
@@ -5693,7 +5693,7 @@ class PlayState extends MusicBeatState
 					defaultCamZoom -= 0.1;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.5);
 				case 208:
-					defaultCamZoom += 0.1;
+					defaultCamZoom = dacamera;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.2);
 				case 304:
 					FlxTween.tween(luisOverlayShit, {alpha: 0}, 0.5, {
@@ -5703,7 +5703,7 @@ class PlayState extends MusicBeatState
 					defaultCamZoom += 0.5;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 4.8);
 				case 432:
-					defaultCamZoom -= 0.5;
+					defaultCamZoom = dacamera;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.2);
 				case 496:
 					FlxTween.tween(luisOverlayShit, {alpha: 0.5}, 1, {
@@ -5724,7 +5724,7 @@ class PlayState extends MusicBeatState
 					FlxTween.tween(luisOverlayShit, {alpha: 0.7}, 0.4, {
 						ease: FlxEase.quadInOut
 					});
-					defaultCamZoom += 0.1;
+					defaultCamZoom = dacamera;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.4);
 				case 832:
 					FlxTween.tween(luisOverlayShit, {alpha: 0.1}, 0.4, {

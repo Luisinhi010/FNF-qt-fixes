@@ -531,6 +531,8 @@ class FreeplayState extends MusicBeatState
 					Gas_Release('burst');
 				else if (curBeat >= 304 && curBeat <= 432 && curBeat % 8 == 0)
 					Gas_Release('burstALT');
+				else if (curBeat == 558)
+					FlxG.camera.shake(0.00425, 0.6725);
 				else if (curBeat >= 560 && curBeat <= 688 && curBeat % 4 == 0)
 					Gas_Release('burstFAST');
 				else if (curBeat == 702)
