@@ -239,11 +239,12 @@ class PlayState extends MusicBeatState
 	public var qtcantalknow2:FlxText;
 	public var qtcantalknow3:FlxText;
 	public var qtcantalknow4:FlxText;
-	public static var luaSprites:Map<String, FlxSprite> = [];
-	public static var lua:State = null;
 
 	// LUA SHIT
 	#if cpp
+	public static var luaSprites:Map<String, FlxSprite> = [];
+	public static var lua:State = null;
+
 	function callLua(func_name:String, args:Array<Dynamic>, ?type:String):Dynamic
 	{
 		var result:Any = null;
@@ -475,12 +476,14 @@ class PlayState extends MusicBeatState
 	}
 	#end
 
-	// LUA SHIT
+	// LUA SHIT END
+	// overlay shit
 	public var luisModChartDefaultStrumY:Float = 0;
 	public var hazardOverlayShit:BGSprite;
 	public var hazardAlarmLeft:BGSprite;
 	public var hazardAlarmRight:BGSprite;
 	public var luisOverlayShit:BGSprite;
+	public var luisOverlayWarning:BGSprite;
 	public var luisOverlayalt:BGSprite;
 
 	override public function create()
@@ -1122,6 +1125,29 @@ class PlayState extends MusicBeatState
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 
 		FlxG.fixedTimestep = false;
+		if (FlxG.save.data.songPosition) // I dont wanna talk about this code :(
+		{
+			songPosBG = new FlxSprite(0, 10).loadGraphic(Paths.image('healthBar'));
+			if (FlxG.save.data.downscroll)
+				songPosBG.y = FlxG.height * 0.9 + 45;
+			songPosBG.screenCenter(X);
+			songPosBG.scrollFactor.set();
+			// add(songPosBG);
+
+			songPosBar = new FlxBar(songPosBG.x + 4, songPosBG.y + 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 8), Std.int(songPosBG.height - 8), this,
+				'songPositionBar', 0, 90000);
+			songPosBar.scrollFactor.set();
+			songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
+			// add(songPosBar);
+
+			songName = new FlxText(songPosBG.x + (songPosBG.width / 2) - 20, songPosBG.y, 0, SONG.song, 16);
+			if (FlxG.save.data.downscroll)
+				songName.y -= 3;
+			songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			songName.scrollFactor.set();
+			// add(songName);
+			songName.cameras = [camHUD];
+		}
 
 		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
 		if (!FlxG.save.data.downscroll)
@@ -1182,11 +1208,6 @@ class PlayState extends MusicBeatState
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
-		if (FlxG.save.data.songPosition)
-		{
-			songPosBG.cameras = [camHUD];
-			songPosBar.cameras = [camHUD];
-		}
 		if (loadRep)
 			replayTxt.cameras = [camHUD];
 
@@ -1327,6 +1348,16 @@ class PlayState extends MusicBeatState
 		luisOverlayShit.alpha = 0.001;
 		luisOverlayShit.cameras = [camcustom];
 		add(luisOverlayShit);
+
+		luisOverlayWarning = new BGSprite('vignette');
+		luisOverlayWarning.setGraphicSize(FlxG.width, FlxG.height);
+		luisOverlayWarning.screenCenter();
+		luisOverlayWarning.x += (FlxG.width / 2) - 60;
+		luisOverlayWarning.y += (FlxG.height / 2) - 20;
+		luisOverlayWarning.updateHitbox();
+		luisOverlayWarning.alpha = 0.001;
+		luisOverlayWarning.cameras = [camcustom];
+		add(luisOverlayWarning);
 
 		luisOverlayalt = new BGSprite('vignettealt');
 		luisOverlayalt.setGraphicSize(FlxG.width, FlxG.height);
@@ -1681,23 +1712,23 @@ class PlayState extends MusicBeatState
 			// psych port to kade n' stuff -Luis
 			trace(Lua_helper.add_callback(lua, "bfCanDodgeinthesong", function(hecan:Bool = true)
 			{
-				return bfCanDodgeinthesong = hecan;
+				bfCanDodgeinthesong = hecan;
 			}));
 			trace(Lua_helper.add_callback(lua, "alarmGradient", function(value1:String = 'left', value2:String = '0.09')
 			{
-				return alarm_Gradient(value1, value2);
+				alarm_Gradient(value1, value2);
 			}));
 
 			trace(Lua_helper.add_callback(lua, "gasRelease", function(anim:String = 'burst')
 			{
-				return // Gas_Release(anim);
-					if (!Main.qtOptimisation) // for some reason this dont work with the Gas_Release() function
-					{
-						if (qt_gas01 != null)
-							this.qt_gas01.animation.play(anim);
-						if (qt_gas02 != null)
-							this.qt_gas02.animation.play(anim);
-					}
+				// Gas_Release(anim);
+				if (!Main.qtOptimisation) // for some reason this dont work with the Gas_Release() function
+				{
+					if (qt_gas01 != null)
+						this.qt_gas01.animation.play(anim);
+					if (qt_gas02 != null)
+						this.qt_gas02.animation.play(anim);
+				}
 			}));
 
 			trace(Lua_helper.add_callback(lua, "changeBFCharacter", function(thecharacter:String = 'bf', changeicon:Bool = true, changenotes:Bool = true)
@@ -2238,10 +2269,10 @@ class PlayState extends MusicBeatState
 
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
- 		songLengthTxt = FlxStringUtil.formatTime(Math.floor((songLength) / 1000), false);		
-
-		if (FlxG.save.data.songPosition){
-			addSongBar();
+		songLengthTxt = FlxStringUtil.formatTime(Math.floor((songLength) / 1000), false);
+		if (FlxG.save.data.songPosition)
+		{
+			addSongBar(true);
 		}
 
 		// Song check real quick
@@ -2280,55 +2311,82 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	function addSongBar(?minimal:Bool = false){
+	function addSongBar(tween:Bool = false)
+	{
 		/*
 			this is from Super Engine
 			I'd recommend checking it out!
 			https://github.com/superpowers04/Super-Engine
-		*/
-			if(songPosBG != null) remove(songPosBG);
-			if(songPosBar != null) remove(songPosBar);
-			if(songName != null) remove(songName);
-			if(songTimeTxt != null) remove(songTimeTxt);
-			songPosBG = new FlxSprite(0, 10 + FlxG.save.data.guiGap).loadGraphic(Paths.image('healthBar'));
-			if (FlxG.save.data.downscroll)
-				songPosBG.y = FlxG.height * 0.9 + 45 + FlxG.save.data.guiGap; 
-			songPosBG.screenCenter(X);
-			songPosBG.scrollFactor.set();
+		 */
+		if (songPosBG != null)
+			remove(songPosBG);
+		if (songPosBar != null)
+			remove(songPosBar);
+		if (songName != null)
+			remove(songName);
+		if (songTimeTxt != null)
+			remove(songTimeTxt);
 
-			songPosBar = new FlxBar(songPosBG.x + 4, songPosBG.y + 4 + FlxG.save.data.guiGap, LEFT_TO_RIGHT, Std.int(songPosBG.width - 8), Std.int(songPosBG.height - 8), this,
-				'songPositionBar', 0, songLength - 1000);
-			songPosBar.numDivisions = 1000;
-			songPosBar.scrollFactor.set();
-			songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
+		songPosBG = new FlxSprite(0, 10).loadGraphic(Paths.image('healthBar'));
+		if (FlxG.save.data.downscroll)
+			songPosBG.y = FlxG.height * 0.9 + 45;
+		songPosBG.screenCenter(X);
+		songPosBG.scrollFactor.set();
+		if (tween)
+			songPosBG.alpha = 0;
 
-			songName = new FlxText(songPosBG.x + (songPosBG.width * 0.2) - 20,songPosBG.y + 1,0,SONG.song, 16);
-			songName.x -= songName.text.length;
-			songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
-			songName.scrollFactor.set();
-			songTimeTxt = new FlxText(songPosBG.x + (songPosBG.width * 0.7) - 20,songPosBG.y + 1,0,"00:00 | 0:00", 16);
-			if (FlxG.save.data.downscroll)
-				songName.y -= 3;
-			songTimeTxt.text = "00:00 | " + songLengthTxt;
-			songTimeTxt.x -= songTimeTxt.text.length;
-			songTimeTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
-			songTimeTxt.scrollFactor.set();
+		songPosBar = new FlxBar(songPosBG.x
+			+ 4, songPosBG.y
+			+ 4, LEFT_TO_RIGHT, Std.int(songPosBG.width - 8), Std.int(songPosBG.height - 8), this,
+			'songPositionBar', 0, songLength
+			- 1000);
+		songPosBar.numDivisions = 1000;
+		songPosBar.scrollFactor.set();
+		songPosBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME);
+		if (tween)
+			songPosBar.alpha = 0;
+		reloadSongPosBarColors(false);
 
-			songPosBG.cameras = [camHUD];
-			songPosBar.cameras = [camHUD];
-			songName.cameras = [camHUD];
-			songTimeTxt.cameras = [camHUD];
-			add(songPosBG);
-			add(songPosBar);
-			add(songName);
-			add(songTimeTxt);
+		songName = new FlxText(songPosBG.x + (songPosBG.width * 0.2) - 20, songPosBG.y + 1, 0, SONG.song, 16);
+		songName.x -= songName.text.length;
+		songName.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		songName.scrollFactor.set();
+		songTimeTxt = new FlxText(songPosBG.x + (songPosBG.width * 0.7) - 20, songPosBG.y + 1, 0, "00:00 | 0:00", 16);
+		if (FlxG.save.data.downscroll)
+			songName.y -= 3;
+		if (tween)
+			songName.alpha = 0;
+		songTimeTxt.text = "00:00 | " + songLengthTxt;
+		songTimeTxt.x -= songTimeTxt.text.length;
+		songTimeTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		songTimeTxt.scrollFactor.set();
+		if (tween)
+			songTimeTxt.alpha = 0;
 
-			if(curSong.toLowerCase() == 'terminate') {
-				songPosBG.visible = false;
-				songPosBar.visible = false;
-				songName.visible = false;
-				songTimeTxt.visible = false;
-			}
+		songPosBG.cameras = [camHUD];
+		songPosBar.cameras = [camHUD];
+		songName.cameras = [camHUD];
+		songTimeTxt.cameras = [camHUD];
+		add(songPosBG);
+		add(songPosBar);
+		add(songName);
+		add(songTimeTxt);
+
+		if (tween)
+		{
+			FlxTween.tween(songPosBG, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
+			FlxTween.tween(songPosBar, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
+			FlxTween.tween(songName, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
+			FlxTween.tween(songTimeTxt, {alpha: 1}, 0.5, {ease: FlxEase.circOut});
+		}
+
+		if (curSong.toLowerCase() == 'terminate')
+		{
+			songPosBG.visible = false;
+			songPosBar.visible = false;
+			songName.visible = false;
+			songTimeTxt.visible = false;
+		}
 	}
 
 	var debugNum:Int = 0;
@@ -2890,6 +2948,9 @@ class PlayState extends MusicBeatState
 		if (hazardOverlayShit.alpha > 0) // Seperate if check because I'm paranoid of a crash -Haz
 			hazardOverlayShit.alpha -= 1.2 * elapsed;
 
+		if (luisOverlayWarning.alpha > 0) // Seperate if check because I'm paranoid of a crash -Haz
+			luisOverlayWarning.alpha -= 1.2 * elapsed;
+
 		#if cpp
 		if (executeModchart && lua != null && songStarted)
 		{
@@ -2958,15 +3019,8 @@ class PlayState extends MusicBeatState
 		else
 			currentFrames++;
 
-		/*if (FlxG.keys.justPressed.NINE)
-			{
-				if (iconP1.animation.curAnim.name == 'bf-old')
-					iconP1.animation.play(SONG.player1);
-				else
-					iconP1.animation.play('bf-old');
-		}*/
-
-		if (updateTime) songTimeTxt.text = FlxStringUtil.formatTime(Math.floor(Conductor.songPosition / 1000), false) + "/" + songLengthTxt;
+		if (updateTime)
+			songTimeTxt.text = FlxStringUtil.formatTime(Math.floor(Conductor.songPosition / 1000), false) + "/" + songLengthTxt;
 
 		super.update(elapsed);
 
@@ -3657,6 +3711,8 @@ class PlayState extends MusicBeatState
 			FlxG.camera.shake(0.00165, 0.6);
 			camHUD.shake(0.00165, 0.2);
 			// Slight delay for animation. Yeah I know I should be doing this using curStep and curBeat and what not, but I'm lazy -Haz
+
+			luisOverlayWarning.alpha = 0.5;
 			new FlxTimer().start(0.09, function(tmr:FlxTimer)
 			{
 				if (!bfDodging)
@@ -5526,10 +5582,6 @@ class PlayState extends MusicBeatState
 		#if desktop
 		// Song duration in a float, useful for the time left feature
 		songLength = FlxG.sound.music.length;
-		songLengthTxt = FlxStringUtil.formatTime(Math.floor((songLength) / 1000), false);
-		if (FlxG.save.data.songPosition){
-			addSongBar();
-		}
 
 		// Updating Discord Rich Presence (with Time Left)
 		DiscordClient.changePresence(detailsText
@@ -5718,7 +5770,7 @@ class PlayState extends MusicBeatState
 				FlxG.camera.zoom += 0.0075;
 				camHUD.zoom += 0.015;
 				// Gas Release effect
-				if (curBeat % 16 == 0 && !Main.qtOptimisation)
+				if (curBeat % 16 == 0)
 				{
 					Gas_Release('burst');
 				}
@@ -5734,7 +5786,7 @@ class PlayState extends MusicBeatState
 					qt_tv01.animation.play("alert");
 
 				// Gas Release effect
-				if (curBeat % 8 == 0 && !Main.qtOptimisation)
+				if (curBeat % 8 == 0)
 				{
 					Gas_Release('burstALT');
 				}
@@ -5747,7 +5799,7 @@ class PlayState extends MusicBeatState
 					camHUD.zoom += 0.015;
 				}
 				// Gas Release effect
-				if (curBeat % 4 == 0 && !Main.qtOptimisation)
+				if (curBeat % 4 == 0)
 				{
 					Gas_Release('burstFAST');
 				}
@@ -5762,7 +5814,7 @@ class PlayState extends MusicBeatState
 				if (!(curBeat == 960)) // To prevent alert flashing when I don't want it too.
 					qt_tv01.animation.play("alert");
 				// Gas Release effect
-				if (curBeat % 4 == 2 && !Main.qtOptimisation)
+				if (curBeat % 4 == 2)
 				{
 					Gas_Release('burstFAST');
 				}
@@ -5772,7 +5824,7 @@ class PlayState extends MusicBeatState
 				FlxG.camera.zoom += 0.031;
 				camHUD.zoom += 0.062;
 			}
-			else if (curBeat == 702 && !Main.qtOptimisation)
+			else if (curBeat == 702)
 			{
 				Gas_Release('burst');
 			}
