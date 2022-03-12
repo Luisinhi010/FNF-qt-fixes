@@ -111,7 +111,6 @@ class PlayState extends MusicBeatState
 	private var totalNotesHit:Float = 0;
 	private var totalNotesHitDefault:Float = 0;
 	private var totalPlayed:Int = 0;
-	private var ss:Bool = false;
 
 	public var healthBarBG:FlxSprite;
 	public var healthBar:FlxBar;
@@ -192,6 +191,7 @@ class PlayState extends MusicBeatState
 	var songScore:Int = 0;
 	var songScoreDef:Int = 0;
 	var scoreTxt:FlxText;
+	var scoreTxtTween:FlxTween;
 	var replayTxt:FlxText;
 
 	var camX:Int = 0;
@@ -1169,8 +1169,9 @@ class PlayState extends MusicBeatState
 		scoreTxt = new FlxText(FlxG.width / 2 - 235, healthBarBG.y + 50, 0, "", 26);
 		if (!FlxG.save.data.accuracyDisplay)
 			scoreTxt.x = healthBarBG.x + healthBarBG.width / 2;
-		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		scoreTxt.scrollFactor.set();
+		scoreTxt.borderSize = 1.25;
 		if (!FlxG.save.data.downscroll)
 			scoreTxt.y -= 135;
 		else
@@ -3654,9 +3655,15 @@ class PlayState extends MusicBeatState
 		{
 			noGameOver = !noGameOver;
 			if (noGameOver)
+			{
 				FlxG.sound.play(Paths.sound('glitch-error02'), 0.65);
+				scoreTxt.color = FlxColor.CYAN;
+			}
 			else
+			{
 				FlxG.sound.play(Paths.sound('glitch-error03'), 0.65);
+				scoreTxt.color = FlxColor.WHITE;
+			}
 		}
 		#end
 	}
@@ -4384,7 +4391,6 @@ class PlayState extends MusicBeatState
 				combo = 0;
 				misses++;
 				health -= 0.1;
-				ss = false;
 				shits++;
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 0.25;
@@ -4392,14 +4398,12 @@ class PlayState extends MusicBeatState
 				daRating = 'bad';
 				score = 0;
 				health -= 0.06;
-				ss = false;
 				bads++;
 				if (FlxG.save.data.accuracyMod == 0)
 					totalNotesHit += 0.50;
 			case 'good':
 				daRating = 'good';
 				score = 200;
-				ss = false;
 				goods++;
 				if (health < 2)
 					health += 0.03;
@@ -4616,6 +4620,19 @@ class PlayState extends MusicBeatState
 					rating.destroy();
 				},
 				startDelay: Conductor.crochet * 0.001
+			});
+
+			if (scoreTxtTween != null)
+			{
+				scoreTxtTween.cancel();
+			}
+			scoreTxt.scale.x = 1.075;
+			scoreTxt.scale.y = 1.075;
+			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2, {
+				onComplete: function(twn:FlxTween)
+				{
+					scoreTxtTween = null;
+				}
 			});
 
 			curSection += 1;
