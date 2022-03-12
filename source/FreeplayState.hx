@@ -178,11 +178,11 @@ class FreeplayState extends MusicBeatState
 			qt_gas.setPosition(450, 0);
 			add(qt_gas);
 		}
+		#end
 
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = 0.6;
 		add(textBG);
-		#end
 		text = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, CENTER);
 		text.scrollFactor.set();
@@ -272,6 +272,11 @@ class FreeplayState extends MusicBeatState
 			else if ((songs[curSelected].songName.toLowerCase() == 'cessation') && !(FlxG.save.data.terminationBeaten))
 			{
 				trace("lmao, access denied idiot! Prove yourself first mortal.");
+				text.text = "Prove yourself first mortal.";
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					text.text = leText;
+				});
 			}
 			else
 			{
@@ -299,7 +304,17 @@ class FreeplayState extends MusicBeatState
 				var poop:String = Highscore.formatSong(songs[curSelected].songName.toLowerCase(), curDifficulty);
 				PlayState.SONG = Song.loadFromJson(poop, songs[curSelected].songName.toLowerCase());
 				if (PlayState.SONG.needsVoices)
-					vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+				{
+					if (FlxG.save.data.qtOldVocals)
+					{
+						if (songs[curSelected].songName.toLowerCase() == "inkingmistake")
+							vocals = new FlxSound().loadEmbedded(Paths.voicesOLD(PlayState.SONG.song));
+						else
+							vocals = new FlxSound().loadEmbedded(Paths.voicesCLASSIC(PlayState.SONG.song));
+					}
+					else
+						vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+				}
 				else
 					vocals = new FlxSound();
 				Conductor.songPosition = FlxG.sound.music.time;
@@ -307,14 +322,20 @@ class FreeplayState extends MusicBeatState
 				Conductor.changeBPM(PlayState.SONG.bpm);
 
 				FlxG.sound.list.add(vocals);
-				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
+
+				if (FlxG.save.data.qtOldInst
+					&& songs[curSelected].songName.toLowerCase() != "inkingmistake"
+					&& songs[curSelected].songName.toLowerCase() != "tutorial")
+					FlxG.sound.playMusic(Paths.instOLD(PlayState.SONG.song), 0.7);
+				else
+					FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 0.7);
 				vocals.play();
 				vocals.persist = true;
 				vocals.looped = true;
 				vocals.volume = 0.7;
 				instPlaying = curSelected;
 				trace('playing ' + poop);
-				text.text = 'Playing ' + songs[curSelected].songName;
+				text.text = 'Playing ' + songs[curSelected].songName + '!';
 				new FlxTimer().start(1, function(tmr:FlxTimer)
 				{
 					text.text = leText;
@@ -322,8 +343,8 @@ class FreeplayState extends MusicBeatState
 				}
 				else
 				{
-					trace('you cant play that song');
-					text.text = 'You already playing this song';
+					trace("you can't play that song");
+					text.text = 'This song is already playing!';
 					new FlxTimer().start(0.6, function(tmr:FlxTimer)
 					{
 						text.text = leText;

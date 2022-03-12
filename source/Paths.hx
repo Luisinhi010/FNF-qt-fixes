@@ -100,9 +100,24 @@ class Paths
 		return 'songs:assets/songs/${song.toLowerCase()}/Voices.$SOUND_EXT';
 	}
 
+	inline static public function voicesCLASSIC(song:String):Any
+	{
+		return 'songs:assets/songs/${song.toLowerCase()}/Voices-classic.$SOUND_EXT';
+	}
+
+	inline static public function voicesOLD(song:String):Any
+	{
+		return 'songs:assets/songs/${song.toLowerCase()}/Voices-old.$SOUND_EXT';
+	}
+
 	inline static public function inst(song:String)
 	{
 		return 'songs:assets/songs/${song.toLowerCase()}/Inst.$SOUND_EXT';
+	}
+
+	inline static public function instOLD(song:String)
+	{
+		return 'songs:assets/songs/${song.toLowerCase()}/Inst-old.$SOUND_EXT';
 	}
 
 	inline static public function image(key:String, ?library:String)

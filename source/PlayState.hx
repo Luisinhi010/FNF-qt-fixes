@@ -2264,7 +2264,10 @@ class PlayState extends MusicBeatState
 
 		if (!paused)
 		{
-			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
+			if (FlxG.save.data.qtOldInst && curSong.toLowerCase() != 'inkingmistake' && curSong.toLowerCase() != 'tutorial')
+				FlxG.sound.playMusic(Paths.instOLD(PlayState.SONG.song), 1, false);
+			else
+				FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
 		}
 
 		FlxG.sound.music.onComplete = endSong;
@@ -2412,7 +2415,17 @@ class PlayState extends MusicBeatState
 		curSong = songData.song;
 
 		if (SONG.needsVoices)
-			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+		{
+			if (FlxG.save.data.qtOldVocals)
+			{
+				if (curSong.toLowerCase() == 'inkingmistake')
+					vocals = new FlxSound().loadEmbedded(Paths.voicesOLD(PlayState.SONG.song));
+				else
+					vocals = new FlxSound().loadEmbedded(Paths.voicesCLASSIC(PlayState.SONG.song));
+			}
+			else
+				vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+		}
 		else
 			vocals = new FlxSound();
 

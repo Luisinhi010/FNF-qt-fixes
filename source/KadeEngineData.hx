@@ -63,6 +63,12 @@ class KadeEngineData
 		if (FlxG.save.data.midscroll == null)
 			FlxG.save.data.midscroll = false;
 
+		if (FlxG.save.data.qtOldVocals == null)
+			FlxG.save.data.qtOldVocals = false;
+
+		if (FlxG.save.data.qtOldInst == null)
+			FlxG.save.data.qtOldInst = false;
+
 		Conductor.recalculateTimings();
 
 		Main.watermarks = FlxG.save.data.watermark;

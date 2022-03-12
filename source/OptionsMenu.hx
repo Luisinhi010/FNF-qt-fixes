@@ -22,7 +22,9 @@ class OptionsMenu extends MusicBeatState
 	var options:Array<OptionCatagory> = [
 		new OptionCatagory("QT", [
 			new QTOptimiseOption("Disables visual elements to help with performance."),
-			new MiddlescrollOption("Whether to put your lane at the Center of the Screen.")
+			new MiddlescrollOption("Whether to put your lane at the Center of the Screen."),
+			new Oldvoices("Use the old voices of vs qt"),
+			new Oldinst("Use the old instrumentals of vs qt")
 		]),
 		new OptionCatagory("Gameplay", [
 			new DFJKOption(controls),
@@ -43,9 +45,7 @@ class OptionsMenu extends MusicBeatState
 			new NPSDisplayOption("Shows your current Notes Per Second.")
 		]),
 		new OptionCatagory("Miscellaneous", [
-			#if desktop
-			new FPSOption("Toggle the FPS Counter"),
-			new ReplayOption("View replays"),
+			#if desktop new FPSOption("Toggle the FPS Counter"), new ReplayOption("View replays"),
 			#end
 			new WatermarkOption("Turn off all watermarks from the engine.")
 		])
