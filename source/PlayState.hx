@@ -812,7 +812,7 @@ class PlayState extends MusicBeatState
 						gf404.alpha = 0.001;
 					}
 				}
-			case 'terminate':
+			case 'terminate' | 'inkingmistake':
 				{
 					defaultCamZoom = 0.8125;
 					curStage = 'street';
@@ -1303,98 +1303,98 @@ class PlayState extends MusicBeatState
 			pincer4.offset.set(218, 240);
 		}
 
-		// Left gas
-		qt_gas01 = new FlxSprite();
-		qt_gas01.frames = Paths.getSparrowAtlas('stage/Gas_Release');
-		qt_gas01.animation.addByPrefix('burst', 'Gas_Release', 38, false);
-		qt_gas01.animation.addByPrefix('burstALT', 'Gas_Release', 49, false);
-		qt_gas01.animation.addByPrefix('burstFAST', 'Gas_Release', 76, false);
-		qt_gas01.animation.addByIndices('burstLoop', 'Gas_Release', [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], "", 38, true);
-		qt_gas01.setGraphicSize(Std.int(qt_gas01.width * 2.5));
-		qt_gas01.antialiasing = true;
-		qt_gas01.scrollFactor.set();
-		qt_gas01.alpha = 0.72;
-		qt_gas01.setPosition(-510, -70);
-		qt_gas01.angle = -31;
-
-		// Right gas
-		qt_gas02 = new FlxSprite();
-		qt_gas02.frames = Paths.getSparrowAtlas('stage/Gas_Release');
-		qt_gas02.animation.addByPrefix('burst', 'Gas_Release', 38, false);
-		qt_gas02.animation.addByPrefix('burstALT', 'Gas_Release', 49, false);
-		qt_gas02.animation.addByPrefix('burstFAST', 'Gas_Release', 76, false);
-		qt_gas02.animation.addByIndices('burstLoop', 'Gas_Release', [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], "", 38, true);
-		qt_gas02.setGraphicSize(Std.int(qt_gas02.width * 2.5));
-		qt_gas02.antialiasing = true;
-		qt_gas02.scrollFactor.set();
-		qt_gas02.alpha = 0.72;
-		qt_gas02.setPosition(520, -70);
-		qt_gas02.angle = 31;
-
 		if (!Main.qtOptimisation)
 		{
+			// Left gas
+			qt_gas01 = new FlxSprite();
+			qt_gas01.frames = Paths.getSparrowAtlas('stage/Gas_Release');
+			qt_gas01.animation.addByPrefix('burst', 'Gas_Release', 38, false);
+			qt_gas01.animation.addByPrefix('burstALT', 'Gas_Release', 49, false);
+			qt_gas01.animation.addByPrefix('burstFAST', 'Gas_Release', 76, false);
+			qt_gas01.animation.addByIndices('burstLoop', 'Gas_Release', [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], "", 38, true);
+			qt_gas01.setGraphicSize(Std.int(qt_gas01.width * 2.5));
+			qt_gas01.antialiasing = true;
+			qt_gas01.scrollFactor.set();
+			qt_gas01.alpha = 0.72;
+			qt_gas01.setPosition(-510, -70);
+			qt_gas01.angle = -31;
+
+			// Right gas
+			qt_gas02 = new FlxSprite();
+			qt_gas02.frames = Paths.getSparrowAtlas('stage/Gas_Release');
+			qt_gas02.animation.addByPrefix('burst', 'Gas_Release', 38, false);
+			qt_gas02.animation.addByPrefix('burstALT', 'Gas_Release', 49, false);
+			qt_gas02.animation.addByPrefix('burstFAST', 'Gas_Release', 76, false);
+			qt_gas02.animation.addByIndices('burstLoop', 'Gas_Release', [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], "", 38, true);
+			qt_gas02.setGraphicSize(Std.int(qt_gas02.width * 2.5));
+			qt_gas02.antialiasing = true;
+			qt_gas02.scrollFactor.set();
+			qt_gas02.alpha = 0.72;
+			qt_gas02.setPosition(520, -70);
+			qt_gas02.angle = 31;
+
 			add(qt_gas01);
 			qt_gas01.cameras = [camcustom];
 			add(qt_gas02);
 			qt_gas02.cameras = [camcustom];
+
+			luisOverlayShit = new BGSprite('vignette');
+			luisOverlayShit.setGraphicSize(FlxG.width, FlxG.height);
+			luisOverlayShit.screenCenter();
+			luisOverlayShit.x += (FlxG.width / 2) - 60;
+			luisOverlayShit.y += (FlxG.height / 2) - 20;
+			luisOverlayShit.updateHitbox();
+			luisOverlayShit.alpha = 0.001;
+			luisOverlayShit.cameras = [camcustom];
+			add(luisOverlayShit);
+
+			luisOverlayWarning = new BGSprite('vignette');
+			luisOverlayWarning.setGraphicSize(FlxG.width, FlxG.height);
+			luisOverlayWarning.screenCenter();
+			luisOverlayWarning.x += (FlxG.width / 2) - 60;
+			luisOverlayWarning.y += (FlxG.height / 2) - 20;
+			luisOverlayWarning.updateHitbox();
+			luisOverlayWarning.alpha = 0.001;
+			luisOverlayWarning.cameras = [camcustom];
+			add(luisOverlayWarning);
+
+			luisOverlayalt = new BGSprite('vignettealt');
+			luisOverlayalt.setGraphicSize(FlxG.width, FlxG.height);
+			luisOverlayalt.screenCenter();
+			luisOverlayalt.updateHitbox();
+			luisOverlayalt.alpha = 0.001;
+			luisOverlayalt.cameras = [camcustom];
+			add(luisOverlayalt);
+
+			hazardOverlayShit = new BGSprite('alert-vignette');
+			hazardOverlayShit.setGraphicSize(FlxG.width, FlxG.height);
+			hazardOverlayShit.screenCenter();
+			hazardOverlayShit.x += (FlxG.width / 2) - 60;
+			hazardOverlayShit.y += (FlxG.height / 2) - 20;
+			hazardOverlayShit.updateHitbox();
+			hazardOverlayShit.alpha = 0.001;
+			hazardOverlayShit.cameras = [camcustom];
+			add(hazardOverlayShit);
+
+			hazardAlarmLeft = new BGSprite('back-Gradient', -600, -480, 0.5, 0.5);
+			hazardAlarmLeft.setGraphicSize(Std.int(hazardAlarmLeft.width * 1.1));
+			hazardAlarmLeft.updateHitbox();
+			hazardAlarmLeft.alpha = 0;
+			hazardAlarmLeft.color = FlxColor.RED;
+			hazardAlarmLeft.cameras = [camcustom];
+			hazardAlarmLeft.x -= 85;
+			add(hazardAlarmLeft);
+
+			hazardAlarmRight = new BGSprite('back-Gradient', -600, -480, 0.5, 0.5);
+			hazardAlarmRight.setGraphicSize(Std.int(hazardAlarmRight.width * 1.1));
+			hazardAlarmRight.updateHitbox();
+			hazardAlarmRight.flipX = true;
+			hazardAlarmRight.alpha = 0;
+			hazardAlarmRight.color = FlxColor.RED;
+			hazardAlarmRight.cameras = [camcustom];
+			hazardAlarmRight.x -= 85;
+			add(hazardAlarmRight);
 		}
-
-		luisOverlayShit = new BGSprite('vignette');
-		luisOverlayShit.setGraphicSize(FlxG.width, FlxG.height);
-		luisOverlayShit.screenCenter();
-		luisOverlayShit.x += (FlxG.width / 2) - 60;
-		luisOverlayShit.y += (FlxG.height / 2) - 20;
-		luisOverlayShit.updateHitbox();
-		luisOverlayShit.alpha = 0.001;
-		luisOverlayShit.cameras = [camcustom];
-		add(luisOverlayShit);
-
-		luisOverlayWarning = new BGSprite('vignette');
-		luisOverlayWarning.setGraphicSize(FlxG.width, FlxG.height);
-		luisOverlayWarning.screenCenter();
-		luisOverlayWarning.x += (FlxG.width / 2) - 60;
-		luisOverlayWarning.y += (FlxG.height / 2) - 20;
-		luisOverlayWarning.updateHitbox();
-		luisOverlayWarning.alpha = 0.001;
-		luisOverlayWarning.cameras = [camcustom];
-		add(luisOverlayWarning);
-
-		luisOverlayalt = new BGSprite('vignettealt');
-		luisOverlayalt.setGraphicSize(FlxG.width, FlxG.height);
-		luisOverlayalt.screenCenter();
-		luisOverlayalt.updateHitbox();
-		luisOverlayalt.alpha = 0.001;
-		luisOverlayalt.cameras = [camcustom];
-		add(luisOverlayalt);
-
-		hazardOverlayShit = new BGSprite('alert-vignette');
-		hazardOverlayShit.setGraphicSize(FlxG.width, FlxG.height);
-		hazardOverlayShit.screenCenter();
-		hazardOverlayShit.x += (FlxG.width / 2) - 60;
-		hazardOverlayShit.y += (FlxG.height / 2) - 20;
-		hazardOverlayShit.updateHitbox();
-		hazardOverlayShit.alpha = 0.001;
-		hazardOverlayShit.cameras = [camcustom];
-		add(hazardOverlayShit);
-
-		hazardAlarmLeft = new BGSprite('back-Gradient', -600, -480, 0.5, 0.5);
-		hazardAlarmLeft.setGraphicSize(Std.int(hazardAlarmLeft.width * 1.1));
-		hazardAlarmLeft.updateHitbox();
-		hazardAlarmLeft.alpha = 0;
-		hazardAlarmLeft.color = FlxColor.RED;
-		hazardAlarmLeft.cameras = [camcustom];
-		hazardAlarmLeft.x -= 85;
-		add(hazardAlarmLeft);
-
-		hazardAlarmRight = new BGSprite('back-Gradient', -600, -480, 0.5, 0.5);
-		hazardAlarmRight.setGraphicSize(Std.int(hazardAlarmRight.width * 1.1));
-		hazardAlarmRight.updateHitbox();
-		hazardAlarmRight.flipX = true;
-		hazardAlarmRight.alpha = 0;
-		hazardAlarmRight.color = FlxColor.RED;
-		hazardAlarmRight.cameras = [camcustom];
-		hazardAlarmRight.x -= 85;
-		add(hazardAlarmRight);
 
 		deathBySawBlade = false; // Some reason, it keeps it's value after death, so this forces itself to reset to false.
 
@@ -1402,8 +1402,9 @@ class PlayState extends MusicBeatState
 
 		if (isStoryMode)
 		{
-			if (curSong.toLowerCase() == 'careless')
-				luisOverlayalt.alpha = 0.5;
+			if (!Main.qtOptimisation)
+				if (curSong.toLowerCase() == 'careless')
+					luisOverlayalt.alpha = 0.5;
 		}
 
 		super.create();
@@ -1748,9 +1749,10 @@ class PlayState extends MusicBeatState
 
 			trace(Lua_helper.add_callback(lua, "setvignettealpha", function(alpha:Int = 0, time:Float = 0.5)
 			{
-				FlxTween.tween(luisOverlayShit, {alpha: alpha}, time, {
-					ease: FlxEase.quadInOut
-				});
+				if (!Main.qtOptimisation)
+					FlxTween.tween(luisOverlayShit, {alpha: alpha}, time, {
+						ease: FlxEase.quadInOut
+					});
 			}));
 
 			// hud/camera
@@ -2253,10 +2255,11 @@ class PlayState extends MusicBeatState
 
 		if (!isStoryMode)
 		{
-			if (curSong.toLowerCase() == 'careless')
-				FlxTween.tween(luisOverlayalt, {alpha: 0.5}, 0.5, {
-					ease: FlxEase.quadInOut
-				});
+			if (!Main.qtOptimisation)
+				if (curSong.toLowerCase() == 'careless')
+					FlxTween.tween(luisOverlayalt, {alpha: 0.5}, 0.5, {
+						ease: FlxEase.quadInOut
+					});
 		}
 
 		if (!paused)
@@ -2362,6 +2365,14 @@ class PlayState extends MusicBeatState
 		songTimeTxt.scrollFactor.set();
 		if (tween)
 			songTimeTxt.alpha = 0;
+
+		switch (SONG.song.toLowerCase())
+		{
+			case 'censory-overload':
+				songName.text = 'Censory Overload';
+			case 'inkingmistake':
+				songName.text = 'Inking Mistake';
+		}
 
 		songPosBG.cameras = [camHUD];
 		songPosBar.cameras = [camHUD];
@@ -2798,24 +2809,26 @@ class PlayState extends MusicBeatState
 		if (value1.toLowerCase() == "left")
 		{
 			// hazardBGashley is gradient flipped
-			FlxTween.tween(hazardAlarmLeft, {alpha: targetAlpha}, 0.25, {
-				ease: FlxEase.quartOut,
-				onComplete: function(twn:FlxTween)
-				{
-					FlxTween.tween(hazardAlarmLeft, {alpha: 0}, 0.36, {ease: FlxEase.cubeOut});
-				}
-			});
+			if (!Main.qtOptimisation)
+				FlxTween.tween(hazardAlarmLeft, {alpha: targetAlpha}, 0.25, {
+					ease: FlxEase.quartOut,
+					onComplete: function(twn:FlxTween)
+					{
+						FlxTween.tween(hazardAlarmLeft, {alpha: 0}, 0.36, {ease: FlxEase.cubeOut});
+					}
+				});
 		}
 		else if (value1.toLowerCase() == "right")
 		{
 			// hazardBGblank is gradient
-			FlxTween.tween(hazardAlarmRight, {alpha: targetAlpha}, 0.25, {
-				ease: FlxEase.quartOut,
-				onComplete: function(twn:FlxTween)
-				{
-					FlxTween.tween(hazardAlarmRight, {alpha: 0}, 0.36, {ease: FlxEase.cubeOut});
-				}
-			});
+			if (!Main.qtOptimisation)
+				FlxTween.tween(hazardAlarmRight, {alpha: targetAlpha}, 0.25, {
+					ease: FlxEase.quartOut,
+					onComplete: function(twn:FlxTween)
+					{
+						FlxTween.tween(hazardAlarmRight, {alpha: 0}, 0.36, {ease: FlxEase.cubeOut});
+					}
+				});
 		}
 		else
 		{
@@ -2945,11 +2958,14 @@ class PlayState extends MusicBeatState
 		perfectMode = false;
 		#end
 
-		if (hazardOverlayShit.alpha > 0) // Seperate if check because I'm paranoid of a crash -Haz
-			hazardOverlayShit.alpha -= 1.2 * elapsed;
+		if (!Main.qtOptimisation)
+		{
+			if (hazardOverlayShit.alpha > 0) // Seperate if check because I'm paranoid of a crash -Haz
+				hazardOverlayShit.alpha -= 1.2 * elapsed;
 
-		if (luisOverlayWarning.alpha > 0) // Seperate if check because I'm paranoid of a crash -Haz
-			luisOverlayWarning.alpha -= 1.2 * elapsed;
+			if (luisOverlayWarning.alpha > 0) // dont ask -Luis
+				luisOverlayWarning.alpha -= 1.2 * elapsed;
+		}
 
 		#if cpp
 		if (executeModchart && lua != null && songStarted)
@@ -3712,7 +3728,8 @@ class PlayState extends MusicBeatState
 			camHUD.shake(0.00165, 0.2);
 			// Slight delay for animation. Yeah I know I should be doing this using curStep and curBeat and what not, but I'm lazy -Haz
 
-			luisOverlayWarning.alpha = 0.5;
+			if (!Main.qtOptimisation)
+				luisOverlayWarning.alpha = 0.5;
 			new FlxTimer().start(0.09, function(tmr:FlxTimer)
 			{
 				if (!bfDodging)
@@ -3745,7 +3762,8 @@ class PlayState extends MusicBeatState
 		if (dad.curCharacter != 'gf')
 			forcecameratoplayer2 = true;
 		kbsawbladecamXdad = -100;
-		hazardOverlayShit.alpha = 0.5;
+		if (!Main.qtOptimisation)
+			hazardOverlayShit.alpha = 0.5;
 	}
 
 	// OLD ATTACK DOUBLE VARIATION
@@ -3757,7 +3775,8 @@ class PlayState extends MusicBeatState
 		if (dad.curCharacter != 'gf')
 			forcecameratoplayer2 = true;
 		kbsawbladecamXdad = -100;
-		hazardOverlayShit.alpha = 0.55;
+		if (!Main.qtOptimisation)
+			hazardOverlayShit.alpha = 0.55;
 	}
 
 	// Pincer logic, used by the modchart but can be hardcoded like saws if you want.
@@ -5675,30 +5694,34 @@ class PlayState extends MusicBeatState
 			switch (curBeat)
 			{
 				case 64:
-					FlxTween.tween(luisOverlayShit, {alpha: 1}, 1.5, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 1}, 1.5, {
+							ease: FlxEase.quadInOut
+						});
 					defaultCamZoom += 1;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 1.5);
 				case 77:
-					FlxTween.tween(luisOverlayShit, {alpha: 0.2}, 0.9, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 0.2}, 0.9, {
+							ease: FlxEase.quadInOut
+						});
 					defaultCamZoom = dacamera;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.9);
 				case 144:
-					FlxTween.tween(luisOverlayShit, {alpha: 0.5}, 0.5, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 0.5}, 0.5, {
+							ease: FlxEase.quadInOut
+						});
 					defaultCamZoom -= 0.1;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.5);
 				case 208:
 					defaultCamZoom = dacamera;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.2);
 				case 304:
-					FlxTween.tween(luisOverlayShit, {alpha: 0}, 0.5, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 0}, 0.5, {
+							ease: FlxEase.quadInOut
+						});
 				case 414:
 					defaultCamZoom += 0.5;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 4.8);
@@ -5706,38 +5729,45 @@ class PlayState extends MusicBeatState
 					defaultCamZoom = dacamera;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.2);
 				case 496:
-					FlxTween.tween(luisOverlayShit, {alpha: 0.5}, 1, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 0.5}, 1, {
+							ease: FlxEase.quadInOut
+						});
 				case 558:
-					FlxTween.tween(luisOverlayShit, {alpha: 1}, 0.2, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 1}, 0.2, {
+							ease: FlxEase.quadInOut
+						});
 				case 560:
-					FlxTween.tween(luisOverlayShit, {alpha: 0.1}, 0.4, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 0.1}, 0.4, {
+							ease: FlxEase.quadInOut
+						});
 				case 688:
 					defaultCamZoom -= 0.1;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.2);
 				case 704:
-					FlxTween.tween(luisOverlayShit, {alpha: 0.7}, 0.4, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 0.7}, 0.4, {
+							ease: FlxEase.quadInOut
+						});
 					defaultCamZoom = dacamera;
 					FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, 0.4);
 				case 832:
-					FlxTween.tween(luisOverlayShit, {alpha: 0.1}, 0.4, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 0.1}, 0.4, {
+							ease: FlxEase.quadInOut
+						});
 				case 896:
-					FlxTween.tween(luisOverlayShit, {alpha: 0.5}, 0.3, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 0.5}, 0.3, {
+							ease: FlxEase.quadInOut
+						});
 				case 959:
-					FlxTween.tween(luisOverlayShit, {alpha: 0.2}, 0.3, {
-						ease: FlxEase.quadInOut
-					});
+					if (!Main.qtOptimisation)
+						FlxTween.tween(luisOverlayShit, {alpha: 0.2}, 0.3, {
+							ease: FlxEase.quadInOut
+						});
 				case 1020:
 					FlxTween.tween(strumLineNotes.members[0], {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});
 					FlxTween.tween(strumLineNotes.members[4], {alpha: 0}, 0.2, {ease: FlxEase.sineInOut});

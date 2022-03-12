@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flash.text.TextField;
@@ -40,6 +41,16 @@ class FreeplayState extends MusicBeatState
 	private var iconArray:Array<HealthIcon> = [];
 
 	public var qt_gas:FlxSprite;
+
+	var text:FlxText;
+
+	#if PRELOAD_ALL
+	var leText:String = "Press SPACE to listen to the Song";
+	var size:Int = 16;
+	#else
+	var leText:String = "";
+	var size:Int = 18;
+	#end
 
 	override function create()
 	{
@@ -167,20 +178,12 @@ class FreeplayState extends MusicBeatState
 			qt_gas.setPosition(450, 0);
 			add(qt_gas);
 		}
-		#end
 
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = 0.6;
 		add(textBG);
-
-		#if PRELOAD_ALL
-		var leText:String = "Press SPACE to listen to the Song";
-		var size:Int = 16;
-		#else
-		var leText:String = "";
-		var size:Int = 18;
 		#end
-		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
+		text = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
 		text.setFormat(Paths.font("vcr.ttf"), size, FlxColor.WHITE, CENTER);
 		text.scrollFactor.set();
 		add(text);
@@ -287,6 +290,7 @@ class FreeplayState extends MusicBeatState
 		}
 		if (space)
 		{
+			text.text = leText; // man idk why text have text/jkjk -Luis
 			if (instPlaying != curSelected)
 			{
 				#if PRELOAD_ALL
@@ -310,9 +314,21 @@ class FreeplayState extends MusicBeatState
 				vocals.volume = 0.7;
 				instPlaying = curSelected;
 				trace('playing ' + poop);
+				text.text = 'Playing ' + songs[curSelected].songName;
+				new FlxTimer().start(1, function(tmr:FlxTimer)
+				{
+					text.text = leText;
+				});
 				}
 				else
+				{
 					trace('you cant play that song');
+					text.text = 'You already playing this song';
+					new FlxTimer().start(0.6, function(tmr:FlxTimer)
+					{
+						text.text = leText;
+					});
+				}
 				#end
 			}
 
@@ -377,8 +393,8 @@ class FreeplayState extends MusicBeatState
 						diffText.text = "< EASY >";
 						FlxTween.color(diffText, 0.3, diffText.color, FlxColor.LIME, {ease: FlxEase.quadInOut});
 					case 1:
-						FlxTween.color(diffText, 0.3, diffText.color, FlxColor.YELLOW, {ease: FlxEase.quadInOut});
 						diffText.text = '< NORMAL >';
+						FlxTween.color(diffText, 0.3, diffText.color, FlxColor.YELLOW, {ease: FlxEase.quadInOut});
 					case 2:
 						diffText.text = "< HARD >";
 						FlxTween.color(diffText, 0.3, diffText.color, FlxColor.RED, {ease: FlxEase.quadInOut});
@@ -546,9 +562,8 @@ class FreeplayState extends MusicBeatState
 					Gas_Release('burstFAST');
 			}
 		}
-		#end
 
-		public function Gas_Release(anim:String = 'burst')
+		function Gas_Release(anim:String = 'burst')
 		{
 			if (!Main.qtOptimisation)
 				if (qt_gas != null)
@@ -566,6 +581,7 @@ class FreeplayState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('alert', 'qt'), 1);
 		}
+		#end
 	}
 
 	class SongMetadata
