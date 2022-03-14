@@ -20,11 +20,12 @@ class OptionsMenu extends MusicBeatState
 	var curSelected:Int = 0;
 
 	var options:Array<OptionCatagory> = [
-		new OptionCatagory("QT", [
+		new OptionCatagory("QT FIXES", [
 			new QTOptimiseOption("Disables visual elements to help with performance."),
 			new MiddlescrollOption("Whether to put your lane at the Center of the Screen."),
 			new Oldvoices("Use the old voices of vs qt"),
-			new Oldinst("Use the old instrumentals of vs qt")
+			new Oldinst("Use the old instrumentals of vs qt"),
+			new BotPlay("A bot plays for you!")
 		]),
 		new OptionCatagory("Gameplay", [
 			new DFJKOption(controls),

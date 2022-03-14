@@ -888,7 +888,7 @@ class ChartingState extends MusicBeatState
 
 	function changeSection(sec:Int = 0, ?updateMusic:Bool = true):Void
 	{
-		trace('changing section' + sec);
+		trace('changing section ' + sec);
 
 		if (_song.notes[sec] != null)
 		{

@@ -51,40 +51,26 @@ class Option
 	private var acceptValues:Bool = false;
 
 	public final function getDisplay():String
-	{
 		return display;
-	}
 
 	public final function getAccept():Bool
-	{
 		return acceptValues;
-	}
 
 	public final function getDescription():String
-	{
 		return description;
-	}
 
 	// Returns whether the label is to be updated.
 	public function press():Bool
-	{
 		return throw "stub!";
-	}
 
 	private function updateDisplay():String
-	{
 		return throw "stub!";
-	}
 
 	public function left():Bool
-	{
 		return throw "stub!";
-	}
 
 	public function right():Bool
-	{
 		return throw "stub!";
-	}
 }
 
 class MiddlescrollOption extends Option
@@ -103,9 +89,7 @@ class MiddlescrollOption extends Option
 	}
 
 	private override function updateDisplay():String
-	{
 		return 'Middle Scroll ' + (FlxG.save.data.midscroll ? "on" : "off");
-	}
 }
 
 class Oldvoices extends Option
@@ -124,9 +108,26 @@ class Oldvoices extends Option
 	}
 
 	private override function updateDisplay():String
-	{
 		return 'Old Voices ' + (FlxG.save.data.qtOldVocals ? "on" : "off");
+}
+
+class BotPlay extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
 	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.botplay = !FlxG.save.data.botplay;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+		return "BotPlay: < " + (FlxG.save.data.botplay ? "on" : "off") + " >";
 }
 
 class Oldinst extends Option // just fow these that want the old instrumentals
@@ -145,9 +146,7 @@ class Oldinst extends Option // just fow these that want the old instrumentals
 	}
 
 	private override function updateDisplay():String
-	{
 		return 'Old Inst ' + (FlxG.save.data.qtOldInst ? "on" : "off");
-	}
 }
 
 class DFJKOption extends Option
@@ -174,9 +173,7 @@ class DFJKOption extends Option
 	}
 
 	private override function updateDisplay():String
-	{
 		return FlxG.save.data.dfjk ? "DFJK" : "WASD";
-	}
 }
 
 class DownscrollOption extends Option
@@ -195,9 +192,7 @@ class DownscrollOption extends Option
 	}
 
 	private override function updateDisplay():String
-	{
 		return FlxG.save.data.downscroll ? "Downscroll" : "Upscroll";
-	}
 }
 
 class AccuracyOption extends Option

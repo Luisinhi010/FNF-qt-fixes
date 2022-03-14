@@ -69,6 +69,9 @@ class KadeEngineData
 		if (FlxG.save.data.qtOldInst == null)
 			FlxG.save.data.qtOldInst = false;
 
+		if (FlxG.save.data.botplay == null)
+			FlxG.save.data.botplay = false;
+
 		Conductor.recalculateTimings();
 
 		Main.watermarks = FlxG.save.data.watermark;
