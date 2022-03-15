@@ -5,6 +5,9 @@ class KadeEngineData
 {
 	public static function initSave()
 	{
+		if (FlxG.save.data.firsttime == null)
+			FlxG.save.data.firsttime = true;
+
 		if (FlxG.save.data.newInput == null)
 			FlxG.save.data.newInput = true;
 
@@ -71,6 +74,9 @@ class KadeEngineData
 
 		if (FlxG.save.data.botplay == null)
 			FlxG.save.data.botplay = false;
+
+		if (FlxG.save.data.cpuStrums == null)
+			FlxG.save.data.cpuStrums = true;
 
 		Conductor.recalculateTimings();
 

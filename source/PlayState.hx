@@ -93,9 +93,9 @@ class PlayState extends MusicBeatState
 
 	private static var prevCamFollow:FlxObject;
 
-	public var strumLineNotes:FlxTypedGroup<FlxSprite>;
-	public var playerStrums:FlxTypedGroup<FlxSprite>;
-	public var cpuStrums:FlxTypedGroup<FlxSprite>;
+	public static var strumLineNotes:FlxTypedGroup<FlxSprite> = null;
+	public static var playerStrums:FlxTypedGroup<FlxSprite> = null;
+	public static var cpuStrums:FlxTypedGroup<FlxSprite> = null;
 
 	private var camZooming:Bool = false;
 	private var curSong:String = "";
@@ -2927,6 +2927,9 @@ class PlayState extends MusicBeatState
 				luisOverlayWarning.alpha -= 1.2 * elapsed;
 		}
 
+		if (botPlay && FlxG.keys.justPressed.ONE)
+			camHUD.visible = !camHUD.visible;
+
 		#if cpp
 		if (executeModchart && lua != null && songStarted)
 		{
@@ -3156,8 +3159,6 @@ class PlayState extends MusicBeatState
 
 		if (generatedMusic && PlayState.SONG.notes[Std.int(curStep / 16)] != null)
 		{
-			// Make sure Girlfriend cheers only for certain songs
-
 			if ((camFollow.x != dad.getMidpoint().x + 150 && !PlayState.SONG.notes[Std.int(curStep / 16)].mustHitSection)
 				|| (forcecameratoplayer2))
 			{
@@ -3380,10 +3381,14 @@ class PlayState extends MusicBeatState
 						var scalex:Float = 0.694267515923567;
 						var scaley:Float = 0.694267515923567;
 
-						cpuStrums.members[daNote.noteData].scale.x = scalex + 0.2;
-						cpuStrums.members[daNote.noteData].scale.y = scaley + 0.2;
-						if (SONG.song.toLowerCase() != "terminate")
-							FlxTween.tween(cpuStrums.members[daNote.noteData].scale, {y: scaley, x: scalex}, 0.125, {ease: FlxEase.cubeOut});
+						if (FlxG.save.data.cpuStrums)
+						{
+							cpuStrums.members[daNote.noteData].scale.x = scalex + 0.2;
+							cpuStrums.members[daNote.noteData].scale.y = scaley + 0.2;
+
+							if (SONG.song.toLowerCase() != "terminate")
+								FlxTween.tween(cpuStrums.members[daNote.noteData].scale, {y: scaley, x: scalex}, 0.125, {ease: FlxEase.cubeOut});
+						}
 
 						if (dad.curCharacter.startsWith('robot'))
 						{
@@ -3391,18 +3396,6 @@ class PlayState extends MusicBeatState
 							if (SONG.song.toLowerCase() != "terminate")
 								FlxTween.tween(cpuStrums.members[daNote.noteData], {y: luisModChartDefaultStrumY}, 0.125, {ease: FlxEase.cubeOut});
 						}
-					}
-
-					// this exist's because the new notes sheets don't have the scale animation
-					if ((dad.curCharacter.startsWith('robot') || (dad.curCharacter.startsWith('qt'))) && !daNote.isSustainNote)
-					{
-						var scalex:Float = 0.694267515923567;
-						var scaley:Float = 0.694267515923567;
-
-						cpuStrums.members[daNote.noteData].scale.x = scalex + 0.2;
-						cpuStrums.members[daNote.noteData].scale.y = scaley + 0.2;
-						if (SONG.song.toLowerCase() != "terminate")
-							FlxTween.tween(cpuStrums.members[daNote.noteData].scale, {y: scaley, x: scalex}, 0.125, {ease: FlxEase.cubeOut});
 					}
 
 					if (dad.curCharacter == "qt_annoyed" && FlxG.random.int(1, 17) == 2)
@@ -3507,21 +3500,24 @@ class PlayState extends MusicBeatState
 								camY = -20;
 						} // custom camera movement :D
 					}
-					cpuStrums.forEach(function(spr:FlxSprite)
+					if (FlxG.save.data.cpuStrums)
 					{
-						if (Math.abs(daNote.noteData) == spr.ID)
+						cpuStrums.forEach(function(spr:FlxSprite)
 						{
-							spr.animation.play('confirm', true);
-						}
-						if (spr.animation.curAnim.name == 'confirm')
-						{
-							spr.centerOffsets();
-							spr.offset.x -= 13;
-							spr.offset.y -= 13;
-						}
-						else
-							spr.centerOffsets();
-					});
+							if (Math.abs(daNote.noteData) == spr.ID)
+							{
+								spr.animation.play('confirm', true);
+							}
+							if (spr.animation.curAnim.name == 'confirm')
+							{
+								spr.centerOffsets();
+								spr.offset.x -= 13;
+								spr.offset.y -= 13;
+							}
+							else
+								spr.centerOffsets();
+						});
+					}
 					#if cpp
 					if (lua != null)
 						callLua('playerTwoSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
@@ -3610,7 +3606,7 @@ class PlayState extends MusicBeatState
 				}
 			});
 		}
-		if (SONG.song.toLowerCase() != "terminate")
+		if (SONG.song.toLowerCase() != "terminate" && FlxG.save.data.cpuStrums)
 		{
 			cpuStrums.forEach(function(spr:FlxSprite)
 			{
@@ -3624,10 +3620,13 @@ class PlayState extends MusicBeatState
 			{
 				playerStrums.forEach(function(spr:FlxSprite)
 				{
-					if (spr.animation.finished)
+					if (spr != null)
 					{
-						spr.animation.play('static');
-						// spr.centerOffsets();
+						if (spr.animation.finished && spr != null && spr.animation.curAnim.name != 'static') // made it better
+						{
+							spr.animation.play('static');
+							spr.centerOffsets();
+						}
 					}
 				});
 			}
@@ -4983,59 +4982,62 @@ class PlayState extends MusicBeatState
 			}
 		}
 
-		playerStrums.forEach(function(spr:FlxSprite)
+		if (!botPlay)
 		{
-			switch (spr.ID)
+			playerStrums.forEach(function(spr:FlxSprite)
 			{
-				case 2:
-					if (upP && spr.animation.curAnim.name != 'confirm' && !loadRep)
-					{
-						spr.animation.play('pressed');
-						// trace('play');
-					}
-					if (upR)
-					{
-						spr.animation.play('static');
-						repReleases++;
-					}
+				switch (spr.ID)
+				{
+					case 2:
+						if (upP && spr.animation.curAnim.name != 'confirm' && !loadRep)
+						{
+							spr.animation.play('pressed');
+							// trace('play');
+						}
+						if (upR)
+						{
+							spr.animation.play('static');
+							repReleases++;
+						}
 
-				case 3:
-					if (rightP && spr.animation.curAnim.name != 'confirm' && !loadRep)
-						spr.animation.play('pressed');
-					if (rightR)
-					{
-						spr.animation.play('static');
-						repReleases++;
-					}
+					case 3:
+						if (rightP && spr.animation.curAnim.name != 'confirm' && !loadRep)
+							spr.animation.play('pressed');
+						if (rightR)
+						{
+							spr.animation.play('static');
+							repReleases++;
+						}
 
-				case 1:
-					if (downP && spr.animation.curAnim.name != 'confirm' && !loadRep)
-						spr.animation.play('pressed');
-					if (downR)
-					{
-						spr.animation.play('static');
-						repReleases++;
-					}
+					case 1:
+						if (downP && spr.animation.curAnim.name != 'confirm' && !loadRep)
+							spr.animation.play('pressed');
+						if (downR)
+						{
+							spr.animation.play('static');
+							repReleases++;
+						}
 
-				case 0:
-					if (leftP && spr.animation.curAnim.name != 'confirm' && !loadRep)
-						spr.animation.play('pressed');
-					if (leftR)
-					{
-						spr.animation.play('static');
-						repReleases++;
-					}
-			}
+					case 0:
+						if (leftP && spr.animation.curAnim.name != 'confirm' && !loadRep)
+							spr.animation.play('pressed');
+						if (leftR)
+						{
+							spr.animation.play('static');
+							repReleases++;
+						}
+				}
 
-			if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
-			{
-				spr.centerOffsets();
-				spr.offset.x -= 13;
-				spr.offset.y -= 13;
-			}
-			else
-				spr.centerOffsets();
-		});
+				if (spr.animation.curAnim.name == 'confirm' && !curStage.startsWith('school'))
+				{
+					spr.centerOffsets();
+					spr.offset.x -= 13;
+					spr.offset.y -= 13;
+				}
+				else
+					spr.centerOffsets();
+			});
+		}
 	}
 
 	function noteMiss(direction:Int = 1, daNote:Note):Void
@@ -5247,10 +5249,14 @@ class PlayState extends MusicBeatState
 					var scalex:Float = 0.694267515923567;
 					var scaley:Float = 0.694267515923567;
 
-					playerStrums.members[note.noteData].scale.x = scalex + 0.2;
-					playerStrums.members[note.noteData].scale.y = scaley + 0.2;
-					if (SONG.song.toLowerCase() != "terminate")
-						FlxTween.tween(playerStrums.members[note.noteData].scale, {y: scaley, x: scalex}, 0.125, {ease: FlxEase.cubeOut});
+					if (FlxG.save.data.cpuStrums)
+					{
+						playerStrums.members[note.noteData].scale.x = scalex + 0.2;
+						playerStrums.members[note.noteData].scale.y = scaley + 0.2;
+
+						if (SONG.song.toLowerCase() != "terminate")
+							FlxTween.tween(playerStrums.members[note.noteData].scale, {y: scaley, x: scalex}, 0.125, {ease: FlxEase.cubeOut});
+					}
 
 					if (boyfriend.curCharacter.startsWith('robot'))
 					{
@@ -5298,30 +5304,36 @@ class PlayState extends MusicBeatState
 				callLua('playerOneSing', [note.noteData, Conductor.songPosition]);
 			#end
 
-			if (botPlay)
-				playerStrums.forEach(function(spr:FlxSprite)
+			if (botPlay || !loadRep)
+				if (FlxG.save.data.cpuStrums)
 				{
-					if (Math.abs(note.noteData) == spr.ID)
+					playerStrums.forEach(function(spr:FlxSprite)
 					{
-						spr.animation.play('confirm', true);
-					}
-					if (spr.animation.curAnim.name == 'confirm')
+						if (spr != null)
+						{
+							if (Math.abs(note.noteData) == spr.ID)
+							{
+								spr.animation.play('confirm', true);
+							}
+							if (spr.animation.curAnim.name == 'confirm')
+							{
+								spr.centerOffsets();
+								spr.offset.x -= 13;
+								spr.offset.y -= 13;
+							}
+							else
+								spr.centerOffsets();
+						}
+					});
+				}
+				else
+					playerStrums.forEach(function(spr:FlxSprite)
 					{
-						spr.centerOffsets();
-						spr.offset.x -= 13;
-						spr.offset.y -= 13;
-					}
-					else
-						spr.centerOffsets();
-				});
-			else if (!loadRep)
-				playerStrums.forEach(function(spr:FlxSprite)
-				{
-					if (Math.abs(note.noteData) == spr.ID)
-					{
-						spr.animation.play('confirm', true);
-					}
-				});
+						if (Math.abs(note.noteData) == spr.ID)
+						{
+							spr.animation.play('confirm', true);
+						}
+					});
 
 			note.wasGoodHit = true;
 			vocals.volume = 1;

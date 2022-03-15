@@ -25,7 +25,8 @@ class OptionsMenu extends MusicBeatState
 			new MiddlescrollOption("Whether to put your lane at the Center of the Screen."),
 			new Oldvoices("Use the old voices of vs qt"),
 			new Oldinst("Use the old instrumentals of vs qt"),
-			new BotPlay("A bot plays for you!")
+			new CpuStrums("Toggle the CPU's strumline lighting up when it hits a note."),
+			new BotPlay("Showcase your charts and mods with autoplay.")
 		]),
 		new OptionCatagory("Gameplay", [
 			new DFJKOption(controls),
