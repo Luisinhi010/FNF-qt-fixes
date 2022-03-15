@@ -89,7 +89,9 @@ class MiddlescrollOption extends Option
 	}
 
 	private override function updateDisplay():String
-		return 'Middle Scroll ' + (FlxG.save.data.midscroll ? "on" : "off");
+		return 'Centered NoteField ' + (FlxG.save.data.midscroll ? "on" : "off");
+
+	// we do a little trolling
 }
 
 class Oldvoices extends Option

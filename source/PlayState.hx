@@ -646,13 +646,13 @@ class PlayState extends MusicBeatState
 					curStage = 'streetCute';
 					// Postitive = Right, Down
 					// Negative = Left, Up
-					var bg:FlxSprite = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBackCute'));
+					var bg:FlxSprite = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBackCute', 'qt'));
 					bg.antialiasing = true;
 					bg.scrollFactor.set(0.9, 0.9);
 					bg.active = false;
 					add(bg);
 
-					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFrontCute'));
+					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFrontCute', 'qt'));
 					streetFront.setGraphicSize(Std.int(streetFront.width * 1.15));
 					streetFront.updateHitbox();
 					streetFront.antialiasing = true;
@@ -660,7 +660,7 @@ class PlayState extends MusicBeatState
 					streetFront.active = false;
 					add(streetFront);
 
-					qt_tv01 = new FlxSprite(-62, 540).loadGraphic(Paths.image('stage/TV_V2_off'));
+					qt_tv01 = new FlxSprite(-62, 540).loadGraphic(Paths.image('stage/TV_V2_off', 'qt'));
 					qt_tv01.setGraphicSize(Std.int(qt_tv01.width * 1.2));
 					qt_tv01.updateHitbox();
 					qt_tv01.antialiasing = true;
@@ -672,13 +672,13 @@ class PlayState extends MusicBeatState
 				{
 					defaultCamZoom = 0.8125;
 					curStage = 'streetCute';
-					var bg:FlxSprite = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBackCute'));
+					var bg:FlxSprite = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBackCute', 'qt'));
 					bg.antialiasing = true;
 					bg.scrollFactor.set(0.9, 0.9);
 					bg.active = false;
 					add(bg);
 
-					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFrontCute'));
+					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFrontCute', 'qt'));
 					streetFront.setGraphicSize(Std.int(streetFront.width * 1.15));
 					streetFront.updateHitbox();
 					streetFront.antialiasing = true;
@@ -687,7 +687,7 @@ class PlayState extends MusicBeatState
 					add(streetFront);
 
 					qt_tv01 = new FlxSprite();
-					qt_tv01.frames = Paths.getSparrowAtlas('stage/TV_V4');
+					qt_tv01.frames = Paths.getSparrowAtlas('stage/TV_V4', 'qt');
 					qt_tv01.animation.addByPrefix('idle', 'TV_Idle', 24, true);
 					qt_tv01.animation.addByPrefix('alert', 'TV_Attention', 28, false);
 					qt_tv01.animation.addByPrefix('sus', 'TV_sus', 24, true);
@@ -700,7 +700,7 @@ class PlayState extends MusicBeatState
 					add(qt_tv01);
 					qt_tv01.animation.play('heart');
 
-					cessationTroll = new FlxSprite(-62, 540).loadGraphic(Paths.image('bonus/justkidding'));
+					cessationTroll = new FlxSprite(-62, 540).loadGraphic(Paths.image('bonus/justkidding', 'qt'));
 					cessationTroll.setGraphicSize(Std.int(cessationTroll.width * 0.9));
 					cessationTroll.cameras = [camHUD];
 					cessationTroll.x = FlxG.width - 950;
@@ -710,13 +710,13 @@ class PlayState extends MusicBeatState
 				{
 					defaultCamZoom = 0.925;
 					curStage = 'street';
-					var bg:FlxSprite = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBack'));
+					var bg:FlxSprite = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBack', 'qt'));
 					bg.antialiasing = true;
 					bg.scrollFactor.set(0.9, 0.9);
 					bg.active = false;
 					add(bg);
 
-					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFront'));
+					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFront', 'qt'));
 					streetFront.setGraphicSize(Std.int(streetFront.width * 1.15));
 					streetFront.updateHitbox();
 					streetFront.antialiasing = true;
@@ -725,7 +725,7 @@ class PlayState extends MusicBeatState
 					add(streetFront);
 
 					qt_tv01 = new FlxSprite();
-					qt_tv01.frames = Paths.getSparrowAtlas('stage/TV_V5');
+					qt_tv01.frames = Paths.getSparrowAtlas('stage/TV_V5', 'qt');
 					qt_tv01.animation.addByPrefix('idle', 'TV_Idle', 24, true);
 					qt_tv01.animation.addByPrefix('alert', 'TV_Attention', 26, false);
 					// qt_tv01.animation.addByPrefix('eye', 'TV_eyes', 24, true);
@@ -750,27 +750,27 @@ class PlayState extends MusicBeatState
 					if (!Main.qtOptimisation)
 					{
 						// Far Back Layer - Error (blue screen)
-						var errorBG:FlxSprite = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetError'));
+						var errorBG:FlxSprite = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetError', 'qt'));
 						errorBG.antialiasing = true;
 						errorBG.scrollFactor.set(0.9, 0.9);
 						errorBG.active = false;
 						add(errorBG);
 
 						// Back Layer - Error (glitched version of normal Back)
-						streetBGerror = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBackError'));
+						streetBGerror = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBackError', 'qt'));
 						streetBGerror.antialiasing = true;
 						streetBGerror.scrollFactor.set(0.9, 0.9);
 						add(streetBGerror);
 					}
 
 					// Back Layer - Normal
-					streetBG = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBack'));
+					streetBG = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBack', 'qt'));
 					streetBG.antialiasing = true;
 					streetBG.scrollFactor.set(0.9, 0.9);
 					add(streetBG);
 
 					// Front Layer - Normal
-					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFront'));
+					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFront', 'qt'));
 					streetFront.setGraphicSize(Std.int(streetFront.width * 1.15));
 					streetFront.updateHitbox();
 					streetFront.antialiasing = true;
@@ -781,7 +781,7 @@ class PlayState extends MusicBeatState
 					if (!Main.qtOptimisation)
 					{
 						// Front Layer - Error (changes to have a glow)
-						streetFrontError = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFrontError'));
+						streetFrontError = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFrontError', 'qt'));
 						streetFrontError.setGraphicSize(Std.int(streetFrontError.width * 1.15));
 						streetFrontError.updateHitbox();
 						streetFrontError.antialiasing = true;
@@ -792,7 +792,7 @@ class PlayState extends MusicBeatState
 					}
 
 					qt_tv01 = new FlxSprite();
-					qt_tv01.frames = Paths.getSparrowAtlas('stage/TV_V5');
+					qt_tv01.frames = Paths.getSparrowAtlas('stage/TV_V5', 'qt');
 					qt_tv01.animation.addByPrefix('idle', 'TV_Idle', 24, true);
 					qt_tv01.animation.addByPrefix('eye', 'TV_brutality', 24, true); // Replaced the hex eye with the brutality symbols for more accurate lore.
 					qt_tv01.animation.addByPrefix('error', 'TV_Error', 24, true);
@@ -827,13 +827,13 @@ class PlayState extends MusicBeatState
 				{
 					defaultCamZoom = 0.8125;
 					curStage = 'street';
-					var bg:FlxSprite = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBack'));
+					var bg:FlxSprite = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBack', 'qt'));
 					bg.antialiasing = true;
 					bg.scrollFactor.set(0.9, 0.9);
 					bg.active = false;
 					add(bg);
 
-					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFront'));
+					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFront', 'qt'));
 					streetFront.setGraphicSize(Std.int(streetFront.width * 1.15));
 					streetFront.updateHitbox();
 					streetFront.antialiasing = true;
@@ -842,7 +842,7 @@ class PlayState extends MusicBeatState
 					add(streetFront);
 
 					qt_tv01 = new FlxSprite();
-					qt_tv01.frames = Paths.getSparrowAtlas('stage/TV_V5');
+					qt_tv01.frames = Paths.getSparrowAtlas('stage/TV_V5', 'qt');
 					qt_tv01.animation.addByPrefix('idle', 'TV_Idle', 24, true);
 					qt_tv01.animation.addByPrefix('error', 'TV_Error', 24, true);
 
@@ -863,27 +863,27 @@ class PlayState extends MusicBeatState
 					if (!Main.qtOptimisation)
 					{
 						// Far Back Layer - Error (blue screen)
-						var errorBG:FlxSprite = new FlxSprite(-600, -150).loadGraphic(Paths.image('stage/streetError'));
+						var errorBG:FlxSprite = new FlxSprite(-600, -150).loadGraphic(Paths.image('stage/streetError', 'qt'));
 						errorBG.antialiasing = true;
 						errorBG.scrollFactor.set(0.9, 0.9);
 						errorBG.active = false;
 						add(errorBG);
 
 						// Back Layer - Error (glitched version of normal Back)
-						streetBGerror = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBackError'));
+						streetBGerror = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBackError', 'qt'));
 						streetBGerror.antialiasing = true;
 						streetBGerror.scrollFactor.set(0.9, 0.9);
 						add(streetBGerror);
 					}
 
 					// Back Layer - Normal
-					streetBG = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBack'));
+					streetBG = new FlxSprite(-750, -145).loadGraphic(Paths.image('stage/streetBack', 'qt'));
 					streetBG.antialiasing = true;
 					streetBG.scrollFactor.set(0.9, 0.9);
 					add(streetBG);
 
 					// Front Layer - Normal
-					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFront'));
+					var streetFront:FlxSprite = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFront', 'qt'));
 					streetFront.setGraphicSize(Std.int(streetFront.width * 1.15));
 					streetFront.updateHitbox();
 					streetFront.antialiasing = true;
@@ -894,7 +894,7 @@ class PlayState extends MusicBeatState
 					if (!Main.qtOptimisation)
 					{
 						// Front Layer - Error (changes to have a glow)
-						streetFrontError = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFrontError'));
+						streetFrontError = new FlxSprite(-820, 710).loadGraphic(Paths.image('stage/streetFrontError', 'qt'));
 						streetFrontError.setGraphicSize(Std.int(streetFrontError.width * 1.15));
 						streetFrontError.updateHitbox();
 						streetFrontError.antialiasing = true;
@@ -905,7 +905,7 @@ class PlayState extends MusicBeatState
 					}
 
 					qt_tv01 = new FlxSprite();
-					qt_tv01.frames = Paths.getSparrowAtlas('stage/TV_V5');
+					qt_tv01.frames = Paths.getSparrowAtlas('stage/TV_V5', 'qt');
 					qt_tv01.animation.addByPrefix('idle', 'TV_Idle', 24, true);
 					qt_tv01.animation.addByPrefix('eye', 'TV_brutality', 24, true); // Replaced the hex eye with the brutality symbols for more accurate lore.
 					qt_tv01.animation.addByPrefix('eyeRight', 'TV_eyeRight', 24, true);
@@ -1015,32 +1015,6 @@ class PlayState extends MusicBeatState
 					camPos.x += 600;
 					tweenCamIn();
 				}
-
-			case "spooky":
-				dad.y += 200;
-			case "monster":
-				dad.y += 100;
-			case 'monster-christmas':
-				dad.y += 130;
-			case 'dad':
-				camPos.x += 400;
-			case 'pico':
-				camPos.x += 600;
-				dad.y += 300;
-			case 'parents-christmas':
-				dad.x -= 500;
-			case 'senpai':
-				dad.x += 150;
-				dad.y += 360;
-				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
-			case 'senpai-angry':
-				dad.x += 150;
-				dad.y += 360;
-				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
-			case 'spirit':
-				dad.x -= 150;
-				dad.y += 100;
-				camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
 			case 'qt-meme':
 				dad.y += 260;
 			case 'qt_classic':
@@ -1308,7 +1282,7 @@ class PlayState extends MusicBeatState
 		{
 			// Left gas
 			qt_gas01 = new FlxSprite();
-			qt_gas01.frames = Paths.getSparrowAtlas('stage/Gas_Release');
+			qt_gas01.frames = Paths.getSparrowAtlas('stage/Gas_Release', 'qt');
 			qt_gas01.animation.addByPrefix('burst', 'Gas_Release', 38, false);
 			qt_gas01.animation.addByPrefix('burstALT', 'Gas_Release', 49, false);
 			qt_gas01.animation.addByPrefix('burstFAST', 'Gas_Release', 76, false);
@@ -1322,7 +1296,7 @@ class PlayState extends MusicBeatState
 
 			// Right gas
 			qt_gas02 = new FlxSprite();
-			qt_gas02.frames = Paths.getSparrowAtlas('stage/Gas_Release');
+			qt_gas02.frames = Paths.getSparrowAtlas('stage/Gas_Release', 'qt');
 			qt_gas02.animation.addByPrefix('burst', 'Gas_Release', 38, false);
 			qt_gas02.animation.addByPrefix('burstALT', 'Gas_Release', 49, false);
 			qt_gas02.animation.addByPrefix('burstFAST', 'Gas_Release', 76, false);
@@ -1459,15 +1433,13 @@ class PlayState extends MusicBeatState
 			if (SONG.song.toLowerCase() == 'censory-overload')
 			{
 				camHUD.visible = false;
-				// BG
-				horrorStage.frames = Paths.getSparrowAtlas('stage/horrorbg');
+				horrorStage.frames = Paths.getSparrowAtlas('stage/horrorbg', 'qt');
 				horrorStage.animation.addByPrefix('idle', 'Symbol 10 instance ', 24, false);
 				horrorStage.antialiasing = true;
 				horrorStage.scrollFactor.set();
 				horrorStage.screenCenter();
 
-				// QT sprite
-				senpaiEvil.frames = Paths.getSparrowAtlas('cutscenev3');
+				senpaiEvil.frames = Paths.getSparrowAtlas('cutscenev3', 'qt');
 				senpaiEvil.animation.addByPrefix('idle', 'final_edited', 24, false);
 				senpaiEvil.setGraphicSize(Std.int(senpaiEvil.width * 0.875));
 				senpaiEvil.scrollFactor.set();
@@ -1495,15 +1467,8 @@ class PlayState extends MusicBeatState
 				if (dialogueBox != null)
 				{
 					inCutscene = true;
-
 					if (SONG.song.toLowerCase() == 'censory-overload' && !cutsceneSkip)
 					{
-						// Background old
-						// var horrorStage:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stage/horrorbg'));
-						// horrorStage.antialiasing = true;
-						// horrorStage.scrollFactor.set();
-						// horrorStage.y-=125;
-						// add(horrorStage);
 						add(senpaiEvil);
 						senpaiEvil.alpha = 0;
 						new FlxTimer().start(0.3, function(swagTimer:FlxTimer)
@@ -5244,7 +5209,7 @@ class PlayState extends MusicBeatState
 				popUpScore(note);
 				combo += 1;
 
-				if ((boyfriend.curCharacter.startsWith('robot') || (boyfriend.curCharacter.startsWith('qt'))))
+				if ((boyfriend.curCharacter.startsWith('robot') || (boyfriend.curCharacter.startsWith('qt'))) && playerStrums != null)
 				{
 					var scalex:Float = 0.694267515923567;
 					var scaley:Float = 0.694267515923567;
@@ -5305,8 +5270,8 @@ class PlayState extends MusicBeatState
 			#end
 
 			if (botPlay || !loadRep)
+			{
 				if (FlxG.save.data.cpuStrums)
-				{
 					playerStrums.forEach(function(spr:FlxSprite)
 					{
 						if (spr != null)
@@ -5325,15 +5290,15 @@ class PlayState extends MusicBeatState
 								spr.centerOffsets();
 						}
 					});
-				}
-				else
-					playerStrums.forEach(function(spr:FlxSprite)
+			}
+			else
+				playerStrums.forEach(function(spr:FlxSprite)
+				{
+					if (Math.abs(note.noteData) == spr.ID)
 					{
-						if (Math.abs(note.noteData) == spr.ID)
-						{
-							spr.animation.play('confirm', true);
-						}
-					});
+						spr.animation.play('confirm', true);
+					}
+				});
 
 			note.wasGoodHit = true;
 			vocals.volume = 1;
