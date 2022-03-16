@@ -4384,6 +4384,39 @@ class PlayState extends MusicBeatState
 
 		// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
 
+		var sploosh:FlxSprite = new FlxSprite(daNote.x, playerStrums.members[daNote.noteData].y);
+		var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('Notes/NOTE_Splashes', 'shared');
+		sploosh.frames = tex;
+		sploosh.animation.addByPrefix('splash 0 0', 'note impact 1 purple', 24, false);
+		sploosh.animation.addByPrefix('splash 0 1', 'note impact 1  blue', 24, false);
+		sploosh.animation.addByPrefix('splash 0 2', 'note impact 1 green', 24, false);
+		sploosh.animation.addByPrefix('splash 0 3', 'note impact 1 red', 24, false);
+		sploosh.animation.addByPrefix('splash 1 0', 'note impact 2 purple', 24, false);
+		sploosh.animation.addByPrefix('splash 1 1', 'note impact 2 blue', 24, false);
+		sploosh.animation.addByPrefix('splash 1 2', 'note impact 2 green', 24, false);
+		sploosh.animation.addByPrefix('splash 1 3', 'note impact 2 red', 24, false);
+
+		if (FlxG.save.data.noteSplashes && daRating == 'sick')
+		{
+			add(sploosh);
+			sploosh.cameras = [camHUD];
+			sploosh.offset.x += 90;
+			switch (FlxG.random.int(0, 1))
+			{
+				case 0:
+					sploosh.animation.play('splash 0 ' + daNote.noteData);
+					sploosh.offset.y += 90;
+				case 1:
+					sploosh.animation.play('splash 1 ' + daNote.noteData);
+					sploosh.offset.y += 80;
+			} // for some reason one of the both animation's are a off center the note
+			if (playerStrums.members[daNote.noteData].alpha > 0.6)
+				sploosh.alpha = playerStrums.members[daNote.noteData].alpha - 0.4;
+			else
+				sploosh.alpha = 0.2;
+			sploosh.animation.finishCallback = function(name) sploosh.kill();
+		}
+
 		if (daRating != 'shit' || daRating != 'bad')
 		{
 			songScore += Math.round(score);
@@ -4399,12 +4432,6 @@ class PlayState extends MusicBeatState
 
 			var pixelShitPart1:String = "";
 			var pixelShitPart2:String = '';
-
-			if (curStage.startsWith('school'))
-			{
-				pixelShitPart1 = 'weeb/pixelUI/';
-				pixelShitPart2 = '-pixel';
-			}
 
 			rating.loadGraphic(Paths.image(pixelShitPart1 + daRating + pixelShitPart2));
 			rating.screenCenter();

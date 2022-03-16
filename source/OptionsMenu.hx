@@ -26,6 +26,7 @@ class OptionsMenu extends MusicBeatState
 			new Oldvoices("Use the old voices of vs qt"),
 			new Oldinst("Use the old instrumentals of vs qt"),
 			new CpuStrums("Toggle the CPU's strumline lighting up when it hits a note."),
+			new NoteSplashes("Note Splashes."), // idk what to put here
 			new BotPlay("Showcase your charts and mods with autoplay.")
 		]),
 		new OptionCatagory("Gameplay", [

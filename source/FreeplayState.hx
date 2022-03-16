@@ -215,6 +215,7 @@ class FreeplayState extends MusicBeatState
 	}
 
 	var instPlaying:Int = -1;
+	var instPlayingtxt:String = "N/A";
 
 	private static var vocals:FlxSound = null;
 
@@ -325,9 +326,8 @@ class FreeplayState extends MusicBeatState
 				Conductor.songPosition = FlxG.sound.music.time;
 				Conductor.mapBPMChanges(PlayState.SONG);
 				Conductor.changeBPM(PlayState.SONG.bpm);
-
+				instPlayingtxt = songs[curSelected].songName.toLowerCase();
 				FlxG.sound.list.add(vocals);
-
 				if (FlxG.save.data.qtOldInst
 					&& songs[curSelected].songName.toLowerCase() != "inkingmistake"
 					&& songs[curSelected].songName.toLowerCase() != "tutorial")
@@ -494,7 +494,7 @@ class FreeplayState extends MusicBeatState
 	override function stepHit()
 	{
 		super.stepHit();
-		if (songs[curSelected].songName.toLowerCase() == "termination" && instPlaying == curSelected)
+		if (instPlayingtxt.toLowerCase() == "termination")
 		{
 			switch (curStep)
 			{
@@ -564,7 +564,7 @@ class FreeplayState extends MusicBeatState
 		if (FlxG.camera.zoom < 1.35 && curBeat % 4 == 0)
 			FlxG.camera.zoom += 0.015;
 
-		if (songs[curSelected].songName.toLowerCase() == "censory-overload" && instPlaying == curSelected)
+		if (instPlayingtxt.toLowerCase() == "censory-overload")
 		{
 			if (curBeat >= 80 && curBeat <= 208 && curBeat % 16 == 0)
 				Gas_Release('burst');

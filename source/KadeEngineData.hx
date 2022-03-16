@@ -78,6 +78,9 @@ class KadeEngineData
 		if (FlxG.save.data.cpuStrums == null)
 			FlxG.save.data.cpuStrums = true;
 
+		if (FlxG.save.data.noteSplashes == null)
+			FlxG.save.data.noteSplashes = true;
+
 		Conductor.recalculateTimings();
 
 		Main.watermarks = FlxG.save.data.watermark;
