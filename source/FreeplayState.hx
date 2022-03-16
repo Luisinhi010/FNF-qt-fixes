@@ -215,7 +215,8 @@ class FreeplayState extends MusicBeatState
 	}
 
 	var instPlaying:Int = -1;
-	var instPlayingtxt:String = "N/A";
+
+	public static var instPlayingtxt:String = "N/A";
 
 	private static var vocals:FlxSound = null;
 

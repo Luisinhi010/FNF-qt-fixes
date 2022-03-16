@@ -3483,6 +3483,61 @@ class PlayState extends MusicBeatState
 								spr.centerOffsets();
 						});
 					}
+
+					var splooshalt:FlxSprite = new FlxSprite(cpuStrums.members[daNote.noteData].x, cpuStrums.members[daNote.noteData].y);
+					var texalt:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('Notes/NOTE_Splashes', 'shared');
+					switch (dad.curCharacter)
+					{
+						case 'qt' | 'qt-meme' | 'qt-kb' | 'qt_annoyed':
+							texalt = Paths.getSparrowAtlas('Notes/NOTE_splashes_Qt', 'shared');
+						case 'robot' | 'robot_classic':
+							texalt = Paths.getSparrowAtlas('Notes/NOTE_splashes_Kb', 'shared');
+						case 'robot_404' | 'robot_404-TERMINATION' | 'robot_classic_404':
+							texalt = Paths.getSparrowAtlas('Notes/NOTE_splashes_Kb', 'shared');
+							splooshalt.color = FlxColor.BLUE;
+						default:
+							texalt = Paths.getSparrowAtlas('Notes/NOTE_Splashes', 'shared');
+					}
+					splooshalt.frames = texalt;
+					splooshalt.animation.addByPrefix('splash 0 0', 'note splash purple 1', 24, false);
+					splooshalt.animation.addByPrefix('splash 0 1', 'note splash blue 1', 24, false);
+					splooshalt.animation.addByPrefix('splash 0 2', 'note splash green 2', 24, false);
+					splooshalt.animation.addByPrefix('splash 0 3', 'note splash red 2', 24, false);
+					splooshalt.animation.addByPrefix('splash 1 0', 'note splash purple 2', 24, false);
+					splooshalt.animation.addByPrefix('splash 1 1', 'note splash blue 2', 24, false);
+					splooshalt.animation.addByPrefix('splash 1 2', 'note splash green 1', 24, false);
+					splooshalt.animation.addByPrefix('splash 1 3', 'note splash red 1', 24, false);
+					if (FlxG.save.data.noteSplashes && !daNote.isSustainNote && FlxG.save.data.cpuStrums && !FlxG.save.data.midscroll)
+					{
+						add(splooshalt);
+						splooshalt.cameras = [camHUD];
+						switch (FlxG.random.int(0, 1))
+						{
+							case 0:
+								splooshalt.animation.play('splash 0 ' + daNote.noteData);
+								splooshalt.offset.y += 110;
+								splooshalt.offset.x += 100;
+								if (daNote.noteData == 1)
+									splooshalt.offset.x -= 10; // ok,this is bad.
+							case 1:
+								splooshalt.animation.play('splash 1 ' + daNote.noteData);
+								splooshalt.offset.y += 110;
+								splooshalt.offset.x += 120;
+								if (daNote.noteData == 3)
+								{
+									splooshalt.offset.x -= 20;
+									splooshalt.offset.y -= 20;
+								}
+						} // psych version is better
+						if (cpuStrums.members[daNote.noteData].alpha > 0.6)
+							splooshalt.alpha = cpuStrums.members[daNote.noteData].alpha - 0.4;
+						else
+							splooshalt.alpha = 0.2;
+
+						if (SONG.song.toLowerCase() != "terminate")
+							splooshalt.animation.finishCallback = function(name) splooshalt.kill();
+					}
+
 					#if cpp
 					if (lua != null)
 						callLua('playerTwoSing', [Math.abs(daNote.noteData), Conductor.songPosition]);
@@ -4242,34 +4297,7 @@ class PlayState extends MusicBeatState
 						if (storyDifficulty == 2)
 							difficulty = '-hard';
 
-						// For whatever reason, this stuff never gets called or something??? wtf Kade Engine?
-						// UPDATE: Apparently this shit works, but the loading instantly stops anything from happening.
-						if (SONG.song.toLowerCase() == 'eggnog')
-						{
-							var blackShit:FlxSprite = new FlxSprite(-FlxG.width * FlxG.camera.zoom,
-								-FlxG.height * FlxG.camera.zoom).makeGraphic(FlxG.width * 3, FlxG.height * 3, FlxColor.BLACK);
-							blackShit.scrollFactor.set();
-							add(blackShit);
-							camHUD.visible = false;
-
-							FlxG.sound.play(Paths.sound('Lights_Shut_off'));
-
-							// Slight delay to allow sound to play. -Haz
-							new FlxTimer().start(2, function(tmr:FlxTimer)
-							{
-								trace('LOADING NEXT SONG');
-								trace(PlayState.storyPlaylist[0].toLowerCase() + difficulty);
-								FlxTransitionableState.skipNextTransIn = true;
-								FlxTransitionableState.skipNextTransOut = true;
-								prevCamFollow = camFollow;
-
-								PlayState.SONG = Song.loadFromJson(PlayState.storyPlaylist[0].toLowerCase() + difficulty, PlayState.storyPlaylist[0]);
-								FlxG.sound.music.stop();
-
-								LoadingState.loadAndSwitchState(new PlayState());
-							});
-						}
-						else if (SONG.song.toLowerCase() == 'careless')
+						if (SONG.song.toLowerCase() == 'careless')
 						{
 							camZooming = false;
 							paused = true;
@@ -4384,32 +4412,51 @@ class PlayState extends MusicBeatState
 
 		// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
 
-		var sploosh:FlxSprite = new FlxSprite(daNote.x, playerStrums.members[daNote.noteData].y);
+		var sploosh:FlxSprite = new FlxSprite(playerStrums.members[daNote.noteData].x, playerStrums.members[daNote.noteData].y);
 		var tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('Notes/NOTE_Splashes', 'shared');
+		switch (boyfriend.curCharacter)
+		{
+			case 'qt' | 'qt-meme' | 'qt-kb' | 'qt_annoyed':
+				tex = Paths.getSparrowAtlas('Notes/NOTE_splashes_Qt', 'shared');
+			case 'robot' | 'robot_classic':
+				tex = Paths.getSparrowAtlas('Notes/NOTE_splashes_Kb', 'shared');
+			case 'robot_404' | 'robot_404-TERMINATION' | 'robot_classic_404':
+				tex = Paths.getSparrowAtlas('Notes/NOTE_splashes_Kb', 'shared');
+				sploosh.color = FlxColor.BLUE;
+			default:
+				tex = Paths.getSparrowAtlas('Notes/NOTE_Splashes', 'shared');
+		}
 		sploosh.frames = tex;
-		sploosh.animation.addByPrefix('splash 0 0', 'note impact 1 purple', 24, false);
-		sploosh.animation.addByPrefix('splash 0 1', 'note impact 1  blue', 24, false);
-		sploosh.animation.addByPrefix('splash 0 2', 'note impact 1 green', 24, false);
-		sploosh.animation.addByPrefix('splash 0 3', 'note impact 1 red', 24, false);
-		sploosh.animation.addByPrefix('splash 1 0', 'note impact 2 purple', 24, false);
-		sploosh.animation.addByPrefix('splash 1 1', 'note impact 2 blue', 24, false);
-		sploosh.animation.addByPrefix('splash 1 2', 'note impact 2 green', 24, false);
-		sploosh.animation.addByPrefix('splash 1 3', 'note impact 2 red', 24, false);
-
+		sploosh.animation.addByPrefix('splash 0 0', 'note splash purple 1', 24, false);
+		sploosh.animation.addByPrefix('splash 0 1', 'note splash blue 1', 24, false);
+		sploosh.animation.addByPrefix('splash 0 2', 'note splash green 2', 24, false);
+		sploosh.animation.addByPrefix('splash 0 3', 'note splash red 2', 24, false);
+		sploosh.animation.addByPrefix('splash 1 0', 'note splash purple 2', 24, false);
+		sploosh.animation.addByPrefix('splash 1 1', 'note splash blue 2', 24, false);
+		sploosh.animation.addByPrefix('splash 1 2', 'note splash green 1', 24, false);
+		sploosh.animation.addByPrefix('splash 1 3', 'note splash red 1', 24, false);
 		if (FlxG.save.data.noteSplashes && daRating == 'sick')
 		{
 			add(sploosh);
 			sploosh.cameras = [camHUD];
-			sploosh.offset.x += 90;
 			switch (FlxG.random.int(0, 1))
 			{
 				case 0:
 					sploosh.animation.play('splash 0 ' + daNote.noteData);
-					sploosh.offset.y += 90;
+					sploosh.offset.y += 120;
+					sploosh.offset.x += 100;
+					if (daNote.noteData == 1)
+						sploosh.offset.x -= 10; // ok,this is bad.
 				case 1:
 					sploosh.animation.play('splash 1 ' + daNote.noteData);
-					sploosh.offset.y += 80;
-			} // for some reason one of the both animation's are a off center the note
+					sploosh.offset.y += 120;
+					sploosh.offset.x += 120;
+					if (daNote.noteData == 3)
+					{
+						sploosh.offset.x -= 20;
+						sploosh.offset.y -= 20;
+					}
+			} // psych version is better
 			if (playerStrums.members[daNote.noteData].alpha > 0.6)
 				sploosh.alpha = playerStrums.members[daNote.noteData].alpha - 0.4;
 			else

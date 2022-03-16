@@ -186,6 +186,7 @@ class Character extends FlxSprite
 			case 'gf_404':
 				// GIRLFRIEND CODE
 				iconColor = "FFA5004D";
+				songPosbarempty = "FF0000FF";
 				tex = Paths.getSparrowAtlas('GF_assets_404', 'qt');
 				frames = tex;
 				animation.addByPrefix('cheer', 'GF Cheer', 24, false);
@@ -217,6 +218,7 @@ class Character extends FlxSprite
 				playAnim('danceRight');
 			case 'bf_404':
 				iconColor = "FF31B0D1";
+				songPosbarempty = "FF0000FF";
 				var tex = Paths.getSparrowAtlas('BOYFRIEND_404', 'qt');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
@@ -260,7 +262,7 @@ class Character extends FlxSprite
 			case 'robot_404':
 				iconColor = "FF808080";
 				songPosbar = "FF808080";
-				songPosbarempty = "FF000000";
+				songPosbarempty = "FF0000FF";
 				tex = Paths.getSparrowAtlas('robot_404', 'qt');
 				frames = tex;
 
@@ -281,7 +283,7 @@ class Character extends FlxSprite
 			case 'robot_404-TERMINATION':
 				iconColor = "FF808080";
 				songPosbar = "FF808080";
-				songPosbarempty = "FF000000";
+				songPosbarempty = "FF0000FF";
 				tex = Paths.getSparrowAtlas('robot_404-angry', 'qt');
 				frames = tex;
 
