@@ -4451,7 +4451,7 @@ class PlayState extends MusicBeatState
 					sploosh.animation.play('splash 1 ' + daNote.noteData);
 					sploosh.offset.y += 120;
 					sploosh.offset.x += 120;
-					if (daNote.noteData == 3)
+					if (daNote.noteData == 3 || daNote.noteData == 2)
 					{
 						sploosh.offset.x -= 20;
 						sploosh.offset.y -= 20;
@@ -4460,7 +4460,7 @@ class PlayState extends MusicBeatState
 			if (playerStrums.members[daNote.noteData].alpha > 0.6)
 				sploosh.alpha = playerStrums.members[daNote.noteData].alpha - 0.4;
 			else
-				sploosh.alpha = 0.2;
+				sploosh.alpha = playerStrums.members[daNote.noteData].alpha;
 			sploosh.animation.finishCallback = function(name) sploosh.kill();
 		}
 
