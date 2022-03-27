@@ -233,6 +233,9 @@ class StoryMenuState extends MusicBeatState
 			if (controls.ACCEPT)
 			{
 				selectWeek();
+				#if PRELOAD_ALL
+				FreeplayState.destroyFreeplayVocals();
+				#end
 			}
 		}
 

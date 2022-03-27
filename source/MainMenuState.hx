@@ -206,7 +206,7 @@ class MainMenuState extends MusicBeatState
 		vignette1.antialiasing = true;
 		add(vignette1);
 
-		switch (FlxG.random.int(1, 4))
+		switch (FlxG.random.int(1, 5))
 		{
 			case 1:
 				icon.animation.play('bf');
@@ -242,6 +242,11 @@ class MainMenuState extends MusicBeatState
 						vignette1.alpha = 0.7;
 						icon.animation.curAnim.curFrame = 1;
 				}
+			case 5:
+				icon.animation.play('qt_annoyed');
+				icon.setGraphicSize(Std.int(icon.width * 1.9));
+				iconBG.color = FlxColor.PINK;
+				vignette1.alpha = 0.7;
 		} // YES, I WILL PUT THE HAXE COLORS INSTEAD THE NORMAL ONES
 
 		trace(iconBG.color);

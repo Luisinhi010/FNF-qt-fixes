@@ -1196,7 +1196,7 @@ class PlayState extends MusicBeatState
 		if (isStoryMode)
 		{
 			switch (curSong.toLowerCase())
-			{
+			{ // update this
 				case 'carefree' | 'careless' | 'terminate':
 					schoolIntro(doof);
 				case 'censory-overload':
@@ -1433,13 +1433,15 @@ class PlayState extends MusicBeatState
 			if (SONG.song.toLowerCase() == 'censory-overload')
 			{
 				camHUD.visible = false;
-				horrorStage.frames = Paths.getSparrowAtlas('stage/horrorbg', 'qt');
+				// BG
+				horrorStage.frames = Paths.getSparrowAtlas('stage/horrorbg');
 				horrorStage.animation.addByPrefix('idle', 'Symbol 10 instance ', 24, false);
 				horrorStage.antialiasing = true;
 				horrorStage.scrollFactor.set();
 				horrorStage.screenCenter();
 
-				senpaiEvil.frames = Paths.getSparrowAtlas('cutscenev3', 'qt');
+				// QT sprite
+				senpaiEvil.frames = Paths.getSparrowAtlas('cutscenev3');
 				senpaiEvil.animation.addByPrefix('idle', 'final_edited', 24, false);
 				senpaiEvil.setGraphicSize(Std.int(senpaiEvil.width * 0.875));
 				senpaiEvil.scrollFactor.set();
@@ -1448,8 +1450,26 @@ class PlayState extends MusicBeatState
 				senpaiEvil.x -= 140;
 				senpaiEvil.y -= 55;
 			}
+			else
+			{
+				senpaiEvil.frames = Paths.getSparrowAtlas('weeb/senpaiCrazy');
+				senpaiEvil.animation.addByPrefix('idle', 'Senpai Pre Explosion', 24, false);
+				senpaiEvil.setGraphicSize(Std.int(senpaiEvil.width * 6));
+				senpaiEvil.scrollFactor.set();
+				senpaiEvil.updateHitbox();
+				senpaiEvil.screenCenter();
+			}
 		}
-		if (SONG.song.toLowerCase() == 'censory-overload' && !cutsceneSkip)
+		if (SONG.song.toLowerCase() == 'roses' || SONG.song.toLowerCase() == 'thorns')
+		{
+			remove(black);
+
+			if (SONG.song.toLowerCase() == 'thorns')
+			{
+				add(red);
+			}
+		}
+		else if (SONG.song.toLowerCase() == 'censory-overload' && !cutsceneSkip)
 		{
 			add(horrorStage);
 		}
@@ -1467,8 +1487,15 @@ class PlayState extends MusicBeatState
 				if (dialogueBox != null)
 				{
 					inCutscene = true;
+
 					if (SONG.song.toLowerCase() == 'censory-overload' && !cutsceneSkip)
 					{
+						// Background old
+						// var horrorStage:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stage/horrorbg'));
+						// horrorStage.antialiasing = true;
+						// horrorStage.scrollFactor.set();
+						// horrorStage.y-=125;
+						// add(horrorStage);
 						add(senpaiEvil);
 						senpaiEvil.alpha = 0;
 						new FlxTimer().start(0.3, function(swagTimer:FlxTimer)
@@ -1500,6 +1527,36 @@ class PlayState extends MusicBeatState
 							}
 						});
 					}
+					else if (SONG.song.toLowerCase() == 'thorns' && !cutsceneSkip)
+					{
+						add(senpaiEvil);
+						senpaiEvil.alpha = 0;
+						new FlxTimer().start(0.3, function(swagTimer:FlxTimer)
+						{
+							senpaiEvil.alpha += 0.15;
+							if (senpaiEvil.alpha < 1)
+							{
+								swagTimer.reset();
+							}
+							else
+							{
+								senpaiEvil.animation.play('idle');
+								FlxG.sound.play(Paths.sound('Senpai_Dies'), 1, false, null, true, function()
+								{
+									remove(senpaiEvil);
+									remove(red);
+									FlxG.camera.fade(FlxColor.WHITE, 0.01, true, function()
+									{
+										add(dialogueBox);
+									}, true);
+								});
+								new FlxTimer().start(3.2, function(deadTime:FlxTimer)
+								{
+									FlxG.camera.fade(FlxColor.WHITE, 1.6, false);
+								});
+							}
+						});
+					}
 					else
 					{
 						add(dialogueBox);
@@ -1513,6 +1570,7 @@ class PlayState extends MusicBeatState
 				{
 					loadSongHazard();
 				}
+
 				remove(black);
 			}
 		});
@@ -3674,7 +3732,7 @@ class PlayState extends MusicBeatState
 	}
 
 	// Call this function to update the visuals for Censory overload!
-	function CensoryOverload404():Void
+	function CensoryOverload404(willreuse:Bool = false):Void
 	{
 		if (qtIsBlueScreened)
 		{
@@ -3695,9 +3753,18 @@ class PlayState extends MusicBeatState
 		else
 		{ // Reset back to normal
 			// Return to original sprites.
-			boyfriend404.alpha = 0;
-			gf404.alpha = 0;
-			dad404.alpha = 0;
+			if (willreuse) // if someone wants to made bluescreen again already have a simple var here
+			{
+				boyfriend404.alpha = 0.001;
+				gf404.alpha = 0.001;
+				dad404.alpha = 0.001;
+			}
+			else
+			{
+				boyfriend404.alpha = 0;
+				gf404.alpha = 0;
+				dad404.alpha = 0;
+			}
 			// Hide 404 versions
 			boyfriend.alpha = 1;
 			gf.alpha = 1;
@@ -5288,14 +5355,11 @@ class PlayState extends MusicBeatState
 					var scalex:Float = 0.694267515923567;
 					var scaley:Float = 0.694267515923567;
 
-					if (FlxG.save.data.cpuStrums)
-					{
-						playerStrums.members[note.noteData].scale.x = scalex + 0.2;
-						playerStrums.members[note.noteData].scale.y = scaley + 0.2;
+					playerStrums.members[note.noteData].scale.x = scalex + 0.2;
+					playerStrums.members[note.noteData].scale.y = scaley + 0.2;
 
-						if (SONG.song.toLowerCase() != "terminate")
-							FlxTween.tween(playerStrums.members[note.noteData].scale, {y: scaley, x: scalex}, 0.125, {ease: FlxEase.cubeOut});
-					}
+					if (SONG.song.toLowerCase() != "terminate")
+						FlxTween.tween(playerStrums.members[note.noteData].scale, {y: scaley, x: scalex}, 0.125, {ease: FlxEase.cubeOut});
 
 					if (boyfriend.curCharacter.startsWith('robot'))
 					{
@@ -5333,7 +5397,7 @@ class PlayState extends MusicBeatState
 						case 2:
 							boyfriend404.playAnim('singUP', true);
 						case 3:
-							boyfriend404.playAnim('singRIGH', true);
+							boyfriend404.playAnim('singRIGHT', true); // I FUCKED THE ANIMATION LMAOOOOOOOOOO -luis
 					}
 				}
 			}
@@ -5343,36 +5407,39 @@ class PlayState extends MusicBeatState
 				callLua('playerOneSing', [note.noteData, Conductor.songPosition]);
 			#end
 
-			if (botPlay || !loadRep)
+			if (!loadRep)
 			{
-				if (FlxG.save.data.cpuStrums)
+				if (botPlay)
+				{
+					if (FlxG.save.data.cpuStrums)
+						playerStrums.forEach(function(spr:FlxSprite)
+						{
+							if (spr != null)
+							{
+								if (Math.abs(note.noteData) == spr.ID)
+								{
+									spr.animation.play('confirm', true);
+								}
+								if (spr.animation.curAnim.name == 'confirm')
+								{
+									spr.centerOffsets();
+									spr.offset.x -= 13;
+									spr.offset.y -= 13;
+								}
+								else
+									spr.centerOffsets();
+							}
+						});
+				}
+				else
 					playerStrums.forEach(function(spr:FlxSprite)
 					{
-						if (spr != null)
+						if (Math.abs(note.noteData) == spr.ID)
 						{
-							if (Math.abs(note.noteData) == spr.ID)
-							{
-								spr.animation.play('confirm', true);
-							}
-							if (spr.animation.curAnim.name == 'confirm')
-							{
-								spr.centerOffsets();
-								spr.offset.x -= 13;
-								spr.offset.y -= 13;
-							}
-							else
-								spr.centerOffsets();
+							spr.animation.play('confirm', true);
 						}
 					});
 			}
-			else
-				playerStrums.forEach(function(spr:FlxSprite)
-				{
-					if (Math.abs(note.noteData) == spr.ID)
-					{
-						spr.animation.play('confirm', true);
-					}
-				});
 
 			note.wasGoodHit = true;
 			vocals.volume = 1;

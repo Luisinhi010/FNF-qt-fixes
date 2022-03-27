@@ -1,8 +1,7 @@
 Tutorial:gf:1
 Carefree:qt:7
-Careless:qt:7
+Careless:qt_annoyed:7
 Censory-Overload:robot:7
 Terminate:robot:7
 Termination:robot:7
 Cessation:qt-kb:7
-inkingmistake:robot:7

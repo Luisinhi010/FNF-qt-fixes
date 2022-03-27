@@ -12,7 +12,6 @@ class HealthIcon extends FlxSprite
 	public function new(char:String = 'bf', isPlayer:Bool = false)
 	{
 		super();
-
 		loadGraphic(Paths.image('iconGrid'), true, 150, 150);
 
 		animation.add('bf', [0, 1], 0, false, isPlayer);
@@ -24,25 +23,15 @@ class HealthIcon extends FlxSprite
 		animation.add('robot_404', [24, 25], 0, false, isPlayer); // Just in case;
 		animation.add('robot_404-TERMINATION', [24, 25], 0, false, isPlayer); // Just in case;
 		animation.add('qt', [26, 27], 0, false, isPlayer);
-		animation.add('qt_annoyed', [26, 27], 0, false, isPlayer);
+		animation.add('qt_annoyed', [32, 27], 0, false, isPlayer);
 		animation.add('qt-meme', [26, 27], 0, false, isPlayer);
 		animation.add('qt-kb', [28, 29], 0, false, isPlayer);
 		animation.add('qt_classic', [26, 27], 0, false, isPlayer);
 		animation.add('robot_classic', [24, 25], 0, false, isPlayer);
 		animation.add('robot_classic_404', [24, 25], 0, false, isPlayer);
 		animation.play(char);
-		switch (char)
-		{
-			case 'bf-pixel' | 'senpai' | 'senpai-angry' | 'spirit' | 'gf-pixel':
-				{
-					antialiasing = false;
-				}
-			default:
-				{
-					antialiasing = true;
-				}
-		}
-		scrollFactor.set();
+
+		antialiasing = true;
 	}
 
 	override function update(elapsed:Float)

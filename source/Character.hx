@@ -222,14 +222,14 @@ class Character extends FlxSprite
 				var tex = Paths.getSparrowAtlas('BOYFRIEND_404', 'qt');
 				frames = tex;
 				animation.addByPrefix('idle', 'BF idle dance', 24, false);
-				animation.addByPrefix('singUP', 'BF NOTE UP0', 24, false);
-				animation.addByPrefix('singLEFT', 'BF NOTE LEFT0', 24, false);
-				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHT0', 24, false);
-				animation.addByPrefix('singDOWN', 'BF NOTE DOWN0', 24, false);
-				animation.addByPrefix('singUPmiss', 'BF NOTE UP MISS', 24, false);
-				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFT MISS', 24, false);
-				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHT MISS', 24, false);
-				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWN MISS', 24, false);
+				animation.addByPrefix('singUP', 'BF NOTE UPSING', 24, false);
+				animation.addByPrefix('singLEFT', 'BF NOTE LEFTSING', 24, false);
+				animation.addByPrefix('singRIGHT', 'BF NOTE RIGHTSING', 24, false);
+				animation.addByPrefix('singDOWN', 'BF NOTE DOWNSING', 24, false);
+				animation.addByPrefix('singUPmiss', 'BF NOTE UPMISS', 24, false);
+				animation.addByPrefix('singLEFTmiss', 'BF NOTE LEFTMISS', 24, false);
+				animation.addByPrefix('singRIGHTmiss', 'BF NOTE RIGHTMISS', 24, false);
+				animation.addByPrefix('singDOWNmiss', 'BF NOTE DOWNMISS', 24, false);
 				animation.addByPrefix('hey', 'BF HEY', 24, false);
 
 				animation.addByPrefix('firstDeath', "BF dies", 24, false);

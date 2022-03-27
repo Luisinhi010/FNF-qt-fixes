@@ -40,20 +40,15 @@ class DialogueBox extends FlxSpriteGroup
 	{
 		super();
 
-		if(PlayState.isStoryMode){ //Added an extra check here to avoid music playing when in freeplay.
+		if (PlayState.isStoryMode)
+		{ // Added an extra check here to avoid music playing when in freeplay.
 			switch (PlayState.SONG.song.toLowerCase())
 			{
-				case 'senpai':
-					FlxG.sound.playMusic(Paths.music('Lunchbox'), 0);
-					FlxG.sound.music.fadeIn(1, 0, 0.8);
-				case 'thorns':
-					FlxG.sound.playMusic(Paths.music('LunchboxScary'), 0);
-					FlxG.sound.music.fadeIn(1, 0, 0.8);
 				case 'carefree':
-					FlxG.sound.playMusic(Paths.music('carefree-dialogue-loop'), 0);
+					FlxG.sound.playMusic(Paths.music('carefree-dialogue-loop', 'qt'), 0);
 					FlxG.sound.music.fadeIn(1, 0, 0.1);
 				case 'censory-overload' | 'terminate':
-					FlxG.sound.playMusic(Paths.music('spooky_ambience'), 0);
+					FlxG.sound.playMusic(Paths.music('spooky_ambience', 'qt'), 0);
 					FlxG.sound.music.fadeIn(1, 0, 0.47);
 			}
 		}
@@ -71,55 +66,31 @@ class DialogueBox extends FlxSpriteGroup
 		}, 5);
 
 		box = new FlxSprite(-20, 45);
-		
+
 		var hasDialog = false;
 		switch (PlayState.SONG.song.toLowerCase())
 		{
-			case 'senpai':
-				hasDialog = true;
-				box.frames = Paths.getSparrowAtlas('weeb/pixelUI/dialogueBox-pixel');
-				box.animation.addByPrefix('normalOpen', 'Text Box Appear', 24, false);
-				box.animation.addByIndices('normal', 'Text Box Appear', [4], "", 24);
-			case 'roses':
-				hasDialog = true;
-				FlxG.sound.play(Paths.sound('ANGRY_TEXT_BOX'));
-
-				box.frames = Paths.getSparrowAtlas('weeb/pixelUI/dialogueBox-senpaiMad');
-				box.animation.addByPrefix('normalOpen', 'SENPAI ANGRY IMPACT SPEECH', 24, false);
-				box.animation.addByIndices('normal', 'SENPAI ANGRY IMPACT SPEECH', [4], "", 24);
-
-			case 'thorns':
-				hasDialog = true;
-				box.frames = Paths.getSparrowAtlas('weeb/pixelUI/dialogueBox-evil');
-				box.animation.addByPrefix('normalOpen', 'Spirit Textbox spawn', 24, false);
-				box.animation.addByIndices('normal', 'Spirit Textbox spawn', [11], "", 24);
-
-				var face:FlxSprite = new FlxSprite(320, 170).loadGraphic(Paths.image('weeb/spiritFaceForward'));
-				face.setGraphicSize(Std.int(face.width * 6));
-				add(face);
-
-
-			//QT / Robot Week
+			// QT / Robot Week
 			case 'carefree' | 'careless' | 'cessation':
 				hasDialog = true;
 				box.frames = Paths.getSparrowAtlas('speech_bubble_talking');
 				box.animation.addByPrefix('normalOpen', 'Speech Bubble Normal Open', 24, false);
 				box.animation.addByPrefix('normal', 'speech bubble normal', 24, false);
 
-				//fix scale and offset (probably a better way to do this, but I don't know what the fuck is going on in here) -Haz
+				// fix scale and offset (probably a better way to do this, but I don't know what the fuck is going on in here) -Haz
 				box.setGraphicSize(Std.int(box.width * 0.2));
 				box.updateHitbox();
 				box.y += 340;
 
 				box.scrollFactor.set(1);
 
-			case 'censory-overload' | 'terminate': //Why are they seperated? ...Erm...  ¯\_(ツ)_/¯
+			case 'censory-overload' | 'terminate': // Why are they seperated? ...Erm...  ¯\_(ツ)_/¯
 				hasDialog = true;
 				box.frames = Paths.getSparrowAtlas('speech_bubble_talking');
 				box.animation.addByPrefix('normalOpen', 'Speech Bubble Normal Open', 24, false);
 				box.animation.addByPrefix('normal', 'speech bubble normal', 24, false);
 
-				//fix scale and offset (probably a better way to do this, but I don't know what the fuck is going on in here) -Haz
+				// fix scale and offset (probably a better way to do this, but I don't know what the fuck is going on in here) -Haz
 				box.setGraphicSize(Std.int(box.width * 0.2));
 				box.updateHitbox();
 				box.y += 340;
@@ -127,75 +98,82 @@ class DialogueBox extends FlxSpriteGroup
 		}
 
 		this.dialogueList = dialogueList;
-		
+
 		if (!hasDialog)
 			return;
-		
-		//Loading portraits for Custom Week -Haz
-		if (PlayState.SONG.song.toLowerCase()=='carefree' || PlayState.SONG.song.toLowerCase()=='careless' || PlayState.SONG.song.toLowerCase()=='censory-overload' || PlayState.SONG.song.toLowerCase()=='terminate' || PlayState.SONG.song.toLowerCase()=='cessation')
+
+		// Loading portraits for Custom Week -Haz
+		if (PlayState.SONG.song.toLowerCase() == 'carefree'
+			|| PlayState.SONG.song.toLowerCase() == 'careless'
+			|| PlayState.SONG.song.toLowerCase() == 'censory-overload'
+			|| PlayState.SONG.song.toLowerCase() == 'terminate'
+			|| PlayState.SONG.song.toLowerCase() == 'cessation')
 		{
-			//This is awful. There is most definitely a better way of doing this but I can't be bothered to find, learn, and use it. Don't be like me, do it the proper way (whatever that is)-Haz
-			if(PlayState.SONG.song.toLowerCase()=='censory-overload'){ //Defining portraits for Censory-Overload
+			// This is awful. There is most definitely a better way of doing this but I can't be bothered to find, learn, and use it. Don't be like me, do it the proper way (whatever that is)-Haz
+			if (PlayState.SONG.song.toLowerCase() == 'censory-overload')
+			{ // Defining portraits for Censory-Overload
 				portraitLeft = new FlxSprite(-20, 50);
-				portraitLeft.frames = Paths.getSparrowAtlas('ui/roboPortait');
+				portraitLeft.frames = Paths.getSparrowAtlas('ui/roboPortait', 'qt');
 				portraitLeft.animation.addByPrefix('enter', 'robo_potrait', 24, false);
-				//portraitLeft.setGraphicSize(Std.int(portraitLeft.width * PlayState.daPixelZoom * 0.9));
+				// portraitLeft.setGraphicSize(Std.int(portraitLeft.width * PlayState.daPixelZoom * 0.9));
 				portraitLeft.updateHitbox();
 				portraitLeft.scrollFactor.set(1);
 				add(portraitLeft);
 				portraitLeft.visible = false;
 				portraitRight = new FlxSprite(0, 50);
-				portraitRight.frames = Paths.getSparrowAtlas('ui/bfPortrait');
+				portraitRight.frames = Paths.getSparrowAtlas('ui/bfPortrait', 'qt');
 				portraitRight.animation.addByPrefix('enter', 'bf_portrait', 24, false);
-				//portraitRight.setGraphicSize(Std.int(portraitRight.width * PlayState.daPixelZoom * 0.9)); //Lmao, this breaks shit so I disabled it -Haz
+				// portraitRight.setGraphicSize(Std.int(portraitRight.width * PlayState.daPixelZoom * 0.9)); //Lmao, this breaks shit so I disabled it -Haz
 				portraitRight.updateHitbox();
 				portraitRight.scrollFactor.set(1);
 				add(portraitRight);
 				portraitRight.visible = false;
 
 				portraitLeftALT = new FlxSprite(0, 50);
-				portraitLeftALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait');
+				portraitLeftALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait', 'qt');
 				portraitLeftALT.animation.addByPrefix('enter', 'nothingEnter', 24, false);
 				add(portraitLeftALT);
 				portraitLeftALT.visible = false;
 				portraitRightALT = new FlxSprite(0, 50);
-				portraitRightALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait');
+				portraitRightALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait', 'qt');
 				portraitRightALT.animation.addByPrefix('enter', 'nothingEnter', 24, false);
 				add(portraitRightALT);
 				portraitRightALT.visible = false;
-
-			}else if(PlayState.SONG.song.toLowerCase()=='careless'){ //Defining portraits for Careless
+			}
+			else if (PlayState.SONG.song.toLowerCase() == 'careless')
+			{ // Defining portraits for Careless
 				portraitLeft = new FlxSprite(-20, 50);
-				portraitLeft.frames = Paths.getSparrowAtlas('ui/qtPortaitALT');
+				portraitLeft.frames = Paths.getSparrowAtlas('ui/qtPortaitALT', 'qt');
 				portraitLeft.animation.addByPrefix('enter', 'finished_qt_sprite_potrait', 24, false);
-				//portraitLeft.setGraphicSize(Std.int(portraitLeft.width * PlayState.daPixelZoom * 0.9));
+				// portraitLeft.setGraphicSize(Std.int(portraitLeft.width * PlayState.daPixelZoom * 0.9));
 				portraitLeft.updateHitbox();
 				portraitLeft.scrollFactor.set(1);
 				add(portraitLeft);
 				portraitLeft.visible = false;
 				portraitRight = new FlxSprite(0, 50);
-				portraitRight.frames = Paths.getSparrowAtlas('ui/bfPortrait');
+				portraitRight.frames = Paths.getSparrowAtlas('ui/bfPortrait', 'qt');
 				portraitRight.animation.addByPrefix('enter', 'bf_portrait', 24, false);
-				//portraitRight.setGraphicSize(Std.int(portraitRight.width * PlayState.daPixelZoom * 0.9)); //Lmao, this breaks shit so I disabled it -Haz
+				// portraitRight.setGraphicSize(Std.int(portraitRight.width * PlayState.daPixelZoom * 0.9)); //Lmao, this breaks shit so I disabled it -Haz
 				portraitRight.updateHitbox();
 				portraitRight.scrollFactor.set(1);
 				add(portraitRight);
 				portraitRight.visible = false;
 
 				portraitLeftALT = new FlxSprite(0, 50);
-				portraitLeftALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait');
+				portraitLeftALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait', 'qt');
 				portraitLeftALT.animation.addByPrefix('enter', 'nothingEnter', 24, false);
 				add(portraitLeftALT);
 				portraitLeftALT.visible = false;
 				portraitRightALT = new FlxSprite(0, 50);
-				portraitRightALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait');
+				portraitRightALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait', 'qt');
 				portraitRightALT.animation.addByPrefix('enter', 'nothingEnter', 24, false);
 				add(portraitRightALT);
 				portraitRightALT.visible = false;
-				
-			}else if(PlayState.SONG.song.toLowerCase()=='terminate'){ //Defining portraits for Terminate 
+			}
+			else if (PlayState.SONG.song.toLowerCase() == 'terminate')
+			{ // Defining portraits for Terminate
 				portraitLeft = new FlxSprite(-20, 50);
-				portraitLeft.frames = Paths.getSparrowAtlas('ui/roboPortait');
+				portraitLeft.frames = Paths.getSparrowAtlas('ui/roboPortait', 'qt');
 				portraitLeft.animation.addByPrefix('enter', 'robo_potrait', 24, false);
 				portraitLeft.updateHitbox();
 				portraitLeft.scrollFactor.set(1);
@@ -203,7 +181,7 @@ class DialogueBox extends FlxSpriteGroup
 				portraitLeft.visible = false;
 
 				portraitRight = new FlxSprite(0, 50);
-				portraitRight.frames = Paths.getSparrowAtlas('ui/bfPortrait');
+				portraitRight.frames = Paths.getSparrowAtlas('ui/bfPortrait', 'qt');
 				portraitRight.animation.addByPrefix('enter', 'bf_portrait', 24, false);
 				portraitRight.updateHitbox();
 				portraitRight.scrollFactor.set(1);
@@ -211,7 +189,7 @@ class DialogueBox extends FlxSpriteGroup
 				portraitRight.visible = false;
 
 				portraitLeftALT = new FlxSprite(0, 82);
-				portraitLeftALT.frames = Paths.getSparrowAtlas('ui/gfPortrait');
+				portraitLeftALT.frames = Paths.getSparrowAtlas('ui/gfPortrait', 'qt');
 				portraitLeftALT.animation.addByPrefix('enter', 'gf_portrait', 24, false);
 				portraitLeftALT.updateHitbox();
 				portraitLeftALT.scrollFactor.set(1);
@@ -220,7 +198,7 @@ class DialogueBox extends FlxSpriteGroup
 				portraitLeftALT.visible = false;
 
 				portraitRightALT = new FlxSprite(0, 50);
-				portraitRightALT.frames = Paths.getSparrowAtlas('ui/qtPortait');
+				portraitRightALT.frames = Paths.getSparrowAtlas('ui/qtPortait', 'qt');
 				portraitRightALT.animation.addByPrefix('enter', 'finished_qt_sprite_potrait', 24, false);
 				portraitRightALT.updateHitbox();
 				portraitRightALT.scrollFactor.set(1);
@@ -228,9 +206,10 @@ class DialogueBox extends FlxSpriteGroup
 				portraitRightALT.flipX = true;
 				portraitRightALT.visible = false;
 			}
-			else if(PlayState.SONG.song.toLowerCase()=='cessation'){ //Defining portraits for Cessation (ending)
+			else if (PlayState.SONG.song.toLowerCase() == 'cessation')
+			{ // Defining portraits for Cessation (ending)
 				portraitLeft = new FlxSprite(-20, 50);
-				portraitLeft.frames = Paths.getSparrowAtlas('ui/roboFUTUREPortait');
+				portraitLeft.frames = Paths.getSparrowAtlas('ui/roboFUTUREPortait', 'qt');
 				portraitLeft.animation.addByPrefix('enter', 'robo_potraitALT', 24, false);
 				portraitLeft.updateHitbox();
 				portraitLeft.scrollFactor.set(1);
@@ -238,7 +217,7 @@ class DialogueBox extends FlxSpriteGroup
 				portraitLeft.visible = false;
 
 				portraitRight = new FlxSprite(0, 50);
-				portraitRight.frames = Paths.getSparrowAtlas('ui/bfPortrait');
+				portraitRight.frames = Paths.getSparrowAtlas('ui/bfPortrait', 'qt');
 				portraitRight.animation.addByPrefix('enter', 'bf_portrait', 24, false);
 				portraitRight.updateHitbox();
 				portraitRight.scrollFactor.set(1);
@@ -246,7 +225,7 @@ class DialogueBox extends FlxSpriteGroup
 				portraitRight.visible = false;
 
 				portraitLeftALT = new FlxSprite(-20, 50);
-				portraitLeftALT.frames = Paths.getSparrowAtlas('ui/qtPortait');
+				portraitLeftALT.frames = Paths.getSparrowAtlas('ui/qtPortait', 'qt');
 				portraitLeftALT.animation.addByPrefix('enter', 'finished_qt_sprite_potrait', 24, false);
 				portraitLeftALT.updateHitbox();
 				portraitLeftALT.scrollFactor.set(1);
@@ -254,48 +233,49 @@ class DialogueBox extends FlxSpriteGroup
 				portraitLeftALT.visible = false;
 
 				portraitRightALT = new FlxSprite(0, 60);
-				portraitRightALT.frames = Paths.getSparrowAtlas('ui/gfPortrait');
+				portraitRightALT.frames = Paths.getSparrowAtlas('ui/gfPortrait', 'qt');
 				portraitRightALT.animation.addByPrefix('enter', 'gf_portrait', 24, false);
 				portraitRightALT.updateHitbox();
 				portraitRightALT.scrollFactor.set(1);
 				add(portraitRightALT);
 				portraitRightALT.visible = false;
 			}
-			else{ //Pretty sure this is for Carefree
+			else
+			{ // Pretty sure this is for Carefree
 				portraitLeft = new FlxSprite(-20, 50);
-				portraitLeft.frames = Paths.getSparrowAtlas('ui/qtPortait');
+				portraitLeft.frames = Paths.getSparrowAtlas('ui/qtPortait', 'qt');
 				portraitLeft.animation.addByPrefix('enter', 'finished_qt_sprite_potrait', 24, false);
-				//portraitLeft.setGraphicSize(Std.int(portraitLeft.width * PlayState.daPixelZoom * 0.9));
+				// portraitLeft.setGraphicSize(Std.int(portraitLeft.width * PlayState.daPixelZoom * 0.9));
 				portraitLeft.updateHitbox();
 				portraitLeft.scrollFactor.set(1);
 				add(portraitLeft);
 				portraitLeft.visible = false;
 
 				portraitRight = new FlxSprite(0, 50);
-				portraitRight.frames = Paths.getSparrowAtlas('ui/bfPortrait');
+				portraitRight.frames = Paths.getSparrowAtlas('ui/bfPortrait', 'qt');
 				portraitRight.animation.addByPrefix('enter', 'bf_portrait', 24, false);
-				//portraitRight.setGraphicSize(Std.int(portraitRight.width * PlayState.daPixelZoom * 0.9)); //Lmao, this breaks shit so I disabled it -Haz
+				// portraitRight.setGraphicSize(Std.int(portraitRight.width * PlayState.daPixelZoom * 0.9)); //Lmao, this breaks shit so I disabled it -Haz
 				portraitRight.updateHitbox();
 				portraitRight.scrollFactor.set(1);
 				add(portraitRight);
 				portraitRight.visible = false;
 
 				portraitLeftALT = new FlxSprite(0, 50);
-				portraitLeftALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait');
+				portraitLeftALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait', 'qt');
 				portraitLeftALT.animation.addByPrefix('enter', 'nothingEnter', 24, false);
 				add(portraitLeftALT);
 				portraitLeftALT.visible = false;
 				portraitRightALT = new FlxSprite(0, 50);
-				portraitRightALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait');
+				portraitRightALT.frames = Paths.getSparrowAtlas('ui/emptyPortrait', 'qt');
 				portraitRightALT.animation.addByPrefix('enter', 'nothingEnter', 24, false);
 				add(portraitRightALT);
 				portraitRightALT.visible = false;
 			}
 		}
-		else //Week 6 portraits used instead -Haz
+		else // Week 6 portraits used instead -Haz
 		{
 			portraitLeft = new FlxSprite(-20, 40);
-			portraitLeft.frames = Paths.getSparrowAtlas('weeb/senpaiPortrait');
+			portraitLeft.frames = Paths.getSparrowAtlas('weeb/senpaiPortrait', 'qt');
 			portraitLeft.animation.addByPrefix('enter', 'Senpai Portrait Enter', 24, false);
 			portraitLeft.setGraphicSize(Std.int(portraitLeft.width * PlayState.daPixelZoom * 0.9));
 			portraitLeft.updateHitbox();
@@ -304,7 +284,7 @@ class DialogueBox extends FlxSpriteGroup
 			portraitLeft.visible = false;
 
 			portraitRight = new FlxSprite(0, 40);
-			portraitRight.frames = Paths.getSparrowAtlas('weeb/bfPortrait');
+			portraitRight.frames = Paths.getSparrowAtlas('weeb/bfPortrait', 'qt');
 			portraitRight.animation.addByPrefix('enter', 'Boyfriend portrait enter', 24, false);
 			portraitRight.setGraphicSize(Std.int(portraitRight.width * PlayState.daPixelZoom * 0.9));
 			portraitRight.updateHitbox();
@@ -312,7 +292,7 @@ class DialogueBox extends FlxSpriteGroup
 			add(portraitRight);
 			portraitRight.visible = false;
 		}
-		
+
 		box.animation.play('normalOpen');
 		box.setGraphicSize(Std.int(box.width * PlayState.daPixelZoom * 0.9));
 		box.updateHitbox();
@@ -321,15 +301,19 @@ class DialogueBox extends FlxSpriteGroup
 		box.screenCenter(X);
 		portraitLeft.screenCenter(X);
 		portraitLeftALT.screenCenter(X);
-		if (PlayState.SONG.song.toLowerCase()=='carefree' || PlayState.SONG.song.toLowerCase()=='careless' || PlayState.SONG.song.toLowerCase()=='censory-overload'){
-			box.x+=50; //Scuffed, but oh well -Haz
+		if (PlayState.SONG.song.toLowerCase() == 'carefree'
+			|| PlayState.SONG.song.toLowerCase() == 'careless'
+			|| PlayState.SONG.song.toLowerCase() == 'censory-overload')
+		{
+			box.x += 50; // Scuffed, but oh well -Haz
 			portraitLeft.y += 110;
 			portraitLeft.x -= 400;
 			portraitRight.y += 160;
 			portraitRight.x += 800;
 		}
-		if(PlayState.SONG.song.toLowerCase()=='terminate' || PlayState.SONG.song.toLowerCase()=='cessation'){
-			box.x+=50;
+		if (PlayState.SONG.song.toLowerCase() == 'terminate' || PlayState.SONG.song.toLowerCase() == 'cessation')
+		{
+			box.x += 50;
 			portraitLeft.y += 110;
 			portraitLeft.x -= 400;
 			portraitLeftALT.y += 110;
@@ -339,11 +323,9 @@ class DialogueBox extends FlxSpriteGroup
 			portraitRightALT.y += 160;
 			portraitRightALT.x += 800;
 		}
-		
 
 		handSelect = new FlxSprite(FlxG.width * 0.9, FlxG.height * 0.9).loadGraphic(Paths.image('weeb/pixelUI/hand_textbox'));
 		add(handSelect);
-
 
 		if (!talkingRight)
 		{
@@ -371,16 +353,6 @@ class DialogueBox extends FlxSpriteGroup
 
 	override function update(elapsed:Float)
 	{
-		// HARD CODING CUZ IM STUPDI
-		if (PlayState.SONG.song.toLowerCase() == 'roses')
-			portraitLeft.visible = false;
-		if (PlayState.SONG.song.toLowerCase() == 'thorns')
-		{
-			portraitLeft.color = FlxColor.BLACK;
-			swagDialogue.color = FlxColor.WHITE;
-			dropText.color = FlxColor.BLACK;
-		}
-
 		dropText.text = swagDialogue.text;
 
 		if (box.animation.curAnim != null)
@@ -398,10 +370,10 @@ class DialogueBox extends FlxSpriteGroup
 			dialogueStarted = true;
 		}
 
-		if (FlxG.keys.justPressed.ANY  && dialogueStarted == true)
+		if (FlxG.keys.justPressed.ANY && dialogueStarted == true)
 		{
 			remove(dialogue);
-				
+
 			FlxG.sound.play(Paths.sound('clickText'), 0.8);
 
 			if (dialogueList[1] == null && dialogueList[0] != null)
@@ -410,9 +382,9 @@ class DialogueBox extends FlxSpriteGroup
 				{
 					isEnding = true;
 
-					if (PlayState.SONG.song.toLowerCase() == 'senpai' || PlayState.SONG.song.toLowerCase() == 'thorns')
-						FlxG.sound.music.fadeOut(2.2, 0);
-					else if(PlayState.SONG.song.toLowerCase() == 'censory-overload' || PlayState.SONG.song.toLowerCase()=='terminate' || PlayState.SONG.song.toLowerCase()=='carefree')
+					if (PlayState.SONG.song.toLowerCase() == 'censory-overload'
+						|| PlayState.SONG.song.toLowerCase() == 'terminate'
+						|| PlayState.SONG.song.toLowerCase() == 'carefree')
 						FlxG.sound.music.fadeOut(2, 0);
 
 					new FlxTimer().start(0.2, function(tmr:FlxTimer)
@@ -421,7 +393,8 @@ class DialogueBox extends FlxSpriteGroup
 						bgFade.alpha -= 1 / 5 * 0.7;
 						portraitLeft.visible = false;
 						portraitRight.visible = false;
-						if(PlayState.SONG.song.toLowerCase() == 'terminate' || PlayState.SONG.song.toLowerCase()=='cessation'){
+						if (PlayState.SONG.song.toLowerCase() == 'terminate' || PlayState.SONG.song.toLowerCase() == 'cessation')
+						{
 							portraitLeftALT.visible = false;
 							portraitRightALT.visible = false;
 						}
@@ -442,7 +415,7 @@ class DialogueBox extends FlxSpriteGroup
 				startDialogue();
 			}
 		}
-		
+
 		super.update(elapsed);
 	}
 
@@ -459,46 +432,46 @@ class DialogueBox extends FlxSpriteGroup
 		swagDialogue.resetText(dialogueList[0]);
 		swagDialogue.start(0.04, true);
 
-		if(PlayState.SONG.song.toLowerCase()=='terminate' || PlayState.SONG.song.toLowerCase()=='cessation')
+		if (PlayState.SONG.song.toLowerCase() == 'terminate' || PlayState.SONG.song.toLowerCase() == 'cessation')
 		{
 			switch (curCharacter)
-		    {
-				case 'kb': //Left
+			{
+				case 'kb': // Left
 					box.flipX = true;
 					portraitRight.visible = false;
 					portraitLeftALT.visible = false;
 					portraitRightALT.visible = false;
-					if (!portraitLeft.visible) //No need to re-enter if already visible.
+					if (!portraitLeft.visible) // No need to re-enter if already visible.
 					{
 						portraitLeft.visible = true;
 						portraitLeft.animation.play('enter');
 					}
-				case 'gf': //RightALT
+				case 'gf': // RightALT
 					box.flipX = false;
 					portraitRight.visible = false;
 					portraitLeftALT.visible = false;
 					portraitLeft.visible = false;
-					if (!portraitRightALT.visible) //No need to re-enter if already visible.
+					if (!portraitRightALT.visible) // No need to re-enter if already visible.
 					{
 						portraitRightALT.visible = true;
 						portraitRightALT.animation.play('enter');
 					}
-				case 'bf': //Right
+				case 'bf': // Right
 					box.flipX = false;
 					portraitLeft.visible = false;
 					portraitLeftALT.visible = false;
 					portraitRightALT.visible = false;
-					if (!portraitRight.visible) //No need to re-enter if already visible.
+					if (!portraitRight.visible) // No need to re-enter if already visible.
 					{
 						portraitRight.visible = true;
 						portraitRight.animation.play('enter');
 					}
-				case 'qt': //LeftALT
+				case 'qt': // LeftALT
 					box.flipX = true;
 					portraitLeft.visible = false;
 					portraitRightALT.visible = false;
 					portraitRight.visible = false;
-					if (!portraitLeftALT.visible) //No need to re-enter if already visible.
+					if (!portraitLeftALT.visible) // No need to re-enter if already visible.
 					{
 						portraitLeftALT.visible = true;
 						portraitLeftALT.animation.play('enter');
@@ -510,20 +483,24 @@ class DialogueBox extends FlxSpriteGroup
 			switch (curCharacter)
 			{
 				case 'dad':
-					//For flipping custom speech bubble.
-					if(PlayState.SONG.song.toLowerCase()=='carefree' || PlayState.SONG.song.toLowerCase()=='careless' || PlayState.SONG.song.toLowerCase()=='censory-overload')
+					// For flipping custom speech bubble.
+					if (PlayState.SONG.song.toLowerCase() == 'carefree'
+						|| PlayState.SONG.song.toLowerCase() == 'careless'
+						|| PlayState.SONG.song.toLowerCase() == 'censory-overload')
 						box.flipX = true;
 					portraitRight.visible = false;
-					if (!portraitLeft.visible) //No need to re-enter if already visible.
+					if (!portraitLeft.visible) // No need to re-enter if already visible.
 					{
 						portraitLeft.visible = true;
 						portraitLeft.animation.play('enter');
 					}
 				case 'bf':
-					if(PlayState.SONG.song.toLowerCase()=='carefree' || PlayState.SONG.song.toLowerCase()=='careless' || PlayState.SONG.song.toLowerCase()=='censory-overload')
+					if (PlayState.SONG.song.toLowerCase() == 'carefree'
+						|| PlayState.SONG.song.toLowerCase() == 'careless'
+						|| PlayState.SONG.song.toLowerCase() == 'censory-overload')
 						box.flipX = false;
 					portraitLeft.visible = false;
-					if (!portraitRight.visible) //No need to re-enter if already visible.
+					if (!portraitRight.visible) // No need to re-enter if already visible.
 					{
 						portraitRight.visible = true;
 						portraitRight.animation.play('enter');
