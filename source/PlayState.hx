@@ -1373,7 +1373,7 @@ class PlayState extends MusicBeatState
 		}
 
 		deathBySawBlade = false; // Some reason, it keeps it's value after death, so this forces itself to reset to false.
-		// it's a static var man :/
+		// it's a static var :/
 
 		dacamera = defaultCamZoom; // ass
 
@@ -1450,26 +1450,8 @@ class PlayState extends MusicBeatState
 				senpaiEvil.x -= 140;
 				senpaiEvil.y -= 55;
 			}
-			else
-			{
-				senpaiEvil.frames = Paths.getSparrowAtlas('weeb/senpaiCrazy');
-				senpaiEvil.animation.addByPrefix('idle', 'Senpai Pre Explosion', 24, false);
-				senpaiEvil.setGraphicSize(Std.int(senpaiEvil.width * 6));
-				senpaiEvil.scrollFactor.set();
-				senpaiEvil.updateHitbox();
-				senpaiEvil.screenCenter();
-			}
 		}
-		if (SONG.song.toLowerCase() == 'roses' || SONG.song.toLowerCase() == 'thorns')
-		{
-			remove(black);
-
-			if (SONG.song.toLowerCase() == 'thorns')
-			{
-				add(red);
-			}
-		}
-		else if (SONG.song.toLowerCase() == 'censory-overload' && !cutsceneSkip)
+		if (SONG.song.toLowerCase() == 'censory-overload' && !cutsceneSkip)
 		{
 			add(horrorStage);
 		}
@@ -1523,36 +1505,6 @@ class PlayState extends MusicBeatState
 								new FlxTimer().start(13, function(deadTime:FlxTimer)
 								{
 									FlxG.camera.fade(FlxColor.WHITE, 3, false);
-								});
-							}
-						});
-					}
-					else if (SONG.song.toLowerCase() == 'thorns' && !cutsceneSkip)
-					{
-						add(senpaiEvil);
-						senpaiEvil.alpha = 0;
-						new FlxTimer().start(0.3, function(swagTimer:FlxTimer)
-						{
-							senpaiEvil.alpha += 0.15;
-							if (senpaiEvil.alpha < 1)
-							{
-								swagTimer.reset();
-							}
-							else
-							{
-								senpaiEvil.animation.play('idle');
-								FlxG.sound.play(Paths.sound('Senpai_Dies'), 1, false, null, true, function()
-								{
-									remove(senpaiEvil);
-									remove(red);
-									FlxG.camera.fade(FlxColor.WHITE, 0.01, true, function()
-									{
-										add(dialogueBox);
-									}, true);
-								});
-								new FlxTimer().start(3.2, function(deadTime:FlxTimer)
-								{
-									FlxG.camera.fade(FlxColor.WHITE, 1.6, false);
 								});
 							}
 						});
@@ -3581,17 +3533,13 @@ class PlayState extends MusicBeatState
 								splooshalt.animation.play('splash 1 ' + daNote.noteData);
 								splooshalt.offset.y += 110;
 								splooshalt.offset.x += 120;
-								if (daNote.noteData == 3)
+								if (daNote.noteData == 3 || daNote.noteData == 2)
 								{
 									splooshalt.offset.x -= 20;
 									splooshalt.offset.y -= 20;
 								}
 						} // psych version is better
-						if (cpuStrums.members[daNote.noteData].alpha > 0.6)
-							splooshalt.alpha = cpuStrums.members[daNote.noteData].alpha - 0.4;
-						else
-							splooshalt.alpha = 0.2;
-
+						splooshalt.alpha = cpuStrums.members[daNote.noteData].alpha / 2;
 						if (SONG.song.toLowerCase() != "terminate")
 							splooshalt.animation.finishCallback = function(name) splooshalt.kill();
 					}
@@ -4524,10 +4472,7 @@ class PlayState extends MusicBeatState
 						sploosh.offset.y -= 20;
 					}
 			} // psych version is better
-			if (playerStrums.members[daNote.noteData].alpha > 0.6)
-				sploosh.alpha = playerStrums.members[daNote.noteData].alpha - 0.4;
-			else
-				sploosh.alpha = playerStrums.members[daNote.noteData].alpha;
+			sploosh.alpha = playerStrums.members[daNote.noteData].alpha / 2;
 			sploosh.animation.finishCallback = function(name) sploosh.kill();
 		}
 
